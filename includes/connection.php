@@ -1,4 +1,4 @@
 <?php
-define('DOMAIN_URL', 'http://rental.graymatterworks.com/');
-define('API_URL', 'http://rental.graymatterworks.com/admin_v1/api/');
+define('DOMAIN_URL', 'https://rental.graymatterworks.com/');
+define('API_URL', 'https://rental.graymatterworks.com/admin_v1/api/');
 ?>
