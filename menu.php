@@ -96,7 +96,7 @@
                 <div class="col-md-6">
                     <div class="card mt-3">
                         <div class="profile-header">
-                            <h2>Other Menus</h2>
+                            <h2>More Options</h2>
                         </div>
                         <div class="card-body">
                             <!-- Menu Items -->
@@ -104,21 +104,9 @@
                                 <i class="bi bi-cash"></i>
                                 <span>Instant Recharge</span>
                             </a>
-                            <a href="print_books.php" class="nav-links">
-                                <i class="bi bi-book"></i>
-                                <span>Print Books</span>
-                            </a>
                             <a href="my_plans.php" class="nav-links">
                                 <i class="bi bi-file-earmark-text"></i>
                                 <span>My Plans</span>
-                            </a>
-                            <a href="leader_plan.php" class="nav-links">
-                                <i class="bi bi-grid"></i>
-                                <span>Leader Plans</span>
-                            </a>
-                            <a href="coupon.php" class="nav-links">
-                                <i class="bi bi-cash-stack"></i>
-                                <span>Coupon</span>
                             </a>
                             <a href="withdrawals.php" class="nav-links">
                                 <i class="bi bi-cash-stack"></i>

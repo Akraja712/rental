@@ -145,8 +145,8 @@ body {
             <span>My Referrals</span>
         </a>
         <a href="menu.php" class="nav-link">
-            <i class="bi bi-people-fill"></i>
-            <span>Profile</span>
+           <i class="bi bi-gear-fill"></i>
+            <span>More</span>
         </a>
         
     </div>
