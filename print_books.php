@@ -13,9 +13,9 @@ if (!isset($_SESSION['id'])) {
 $user_id = $_SESSION['id']; // Get user_id from session
 
 $servername = "localhost";
-$username = "root";
-$password = "";  
-$dbname = "tamil_money"; 
+$username = "u743445510_rental";
+$password = "Rental@2024";  
+$dbname = "u743445510_rental"; 
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
