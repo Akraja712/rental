@@ -113,7 +113,7 @@ if (isset($_POST['btnLogin'])) {
 <h2 class="text-center mt-5">Login</h2> <!-- Moved Register text outside the container -->
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
         <div class="custom-container">
-        <center> <img src="admin_v1/dist/img/money.jpeg" alt="Logo" style="max-width: 150px; height: auto; margin-right: 10px; border-radius:10px;"></center>
+        <center> <img src="admin_v1/dist/img/" alt="Logo" style="max-width: 150px; height: auto; margin-right: 10px; border-radius:10px;"></center>
             
         <form method="post" enctype="multipart/form-data">
             <div class="form-group">
