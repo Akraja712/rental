@@ -141,6 +141,13 @@ curl_close($curl);
             background: linear-gradient(45deg, #d4e157, #afb42b);
             color: white;
         }
+
+        /* Adjusting column behavior for mobile */
+        @media (max-width: 768px) {
+            .col-sm-6 {
+                max-width: 50%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -151,7 +158,7 @@ curl_close($curl);
         <div class="col py-3">
             <div class="row">
                 <!-- Total Income -->
-                <div class="col-md-4">
+                <div class="col-6 col-md-4 mb-3">
                     <div class="info-box total-income">
                         <i class="bi bi-cash-coin"></i>
                         <h4>Total Income</h4>
@@ -159,7 +166,7 @@ curl_close($curl);
                     </div>
                 </div>
                 <!-- Total Recharge -->
-                <div class="col-md-4">
+                <div class="col-6 col-md-4 mb-3">
                     <div class="info-box total-recharge">
                         <i class="bi bi-piggy-bank"></i>
                         <h4>Total Recharge</h4>
@@ -167,7 +174,7 @@ curl_close($curl);
                     </div>
                 </div>
                 <!-- Total Assets -->
-                <div class="col-md-4">
+                <div class="col-6 col-md-4 mb-3">
                     <div class="info-box total-assets">
                         <i class="bi bi-briefcase-fill"></i>
                         <h4>Total Assets</h4>
@@ -175,7 +182,7 @@ curl_close($curl);
                     </div>
                 </div>
                 <!-- Total Withdrawals -->
-                <div class="col-md-4">
+                <div class="col-6 col-md-4 mb-3">
                     <div class="info-box total-withdrawal">
                         <i class="bi bi-wallet-fill"></i>
                         <h4>Total Withdrawals</h4>
@@ -183,7 +190,7 @@ curl_close($curl);
                     </div>
                 </div>
                 <!-- Today's Income -->
-                <div class="col-md-4">
+                <div class="col-6 col-md-4 mb-3">
                     <div class="info-box today-income">
                         <i class="bi bi-graph-up-arrow"></i>
                         <h4>Today's Income</h4>
@@ -191,7 +198,7 @@ curl_close($curl);
                     </div>
                 </div>
                 <!-- Team Income -->
-                <div class="col-md-4">
+                <div class="col-6 col-md-4 mb-3">
                     <div class="info-box team-income">
                         <i class="bi bi-people-fill"></i>
                         <h4>Team Income</h4>
