@@ -143,11 +143,32 @@ curl_close($curl);
         }
 
         /* Adjusting column behavior for mobile */
-        @media (max-width: 768px) {
-            .col-sm-6 {
-                max-width: 50%;
-            }
+           /* Adjusting column behavior and height for mobile */
+    @media (max-width: 768px) {
+        .col-sm-6 {
+            max-width: 50%;
         }
+
+        /* Decrease the height and padding of the info boxes on mobile */
+        .info-box {
+            padding: 15px; /* Reduce padding */
+            min-height: 150px; /* You can adjust this height as needed */
+        }
+
+        /* Adjust the font sizes on mobile */
+        .info-box h4 {
+            font-size: 1rem;
+        }
+
+        .info-box p {
+            font-size: 1.2rem;
+        }
+
+        .info-box i {
+            font-size: 2rem; /* Reduce icon size */
+        }
+    }
+
     </style>
 </head>
 <body>
