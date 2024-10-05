@@ -46,50 +46,6 @@ if ($response === false) {
 
 curl_close($curl);
 
-if (isset($_POST['btnIncome'])) {
-    $plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : null;
-
-    if (!$plan_id) {
-        die("Plan ID not provided.");
-    }
-
-    $data = array(
-        "plan_id" => $plan_id,
-        "user_id" => $user_id,
-    );
-    $apiUrl = API_URL . "claim.php";
-
-    $curl = curl_init($apiUrl);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-    $response = curl_exec($curl);
-
-    if ($response === false) {
-        // Error in cURL request
-        echo "Error: " . curl_error($curl);
-    } else {
-        // Successful API response
-        $responseData = json_decode($response, true);
-        if ($responseData !== null && isset($responseData["success"])) {
-            $message = $responseData["message"];
-            if (isset($responseData["balance"])) {
-                $_SESSION['balance'] = $responseData['balance'];
-                $balance = $_SESSION['balance'];
-            }
-            echo "<script>alert('$message');</script>";
-        } else {
-            // Failed to fetch transaction details
-            if ($responseData !== null) {
-                echo "<script>alert('".$responseData["message"]."')</script>";
-            }
-        }
-    }
-    curl_close($curl);
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -192,11 +148,11 @@ if (isset($_POST['btnIncome'])) {
                                     <p>Num Of Times: <strong><?php echo htmlspecialchars($plan['num_times']); ?></strong></p>
                                     <p>Validity: <span class="highlight">Unlimited Days</span></p>
                                     
-                                    <form method="post" style="display: inline;">
+                                    <form method="post" action="claim.php" style="display: inline;">
                                         <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['plan_id']); ?>">
-                                        <button type="submit" name="btnIncome" class="btn btn-success" 
+                                        <button type="submit"  class="btn btn-success" 
                                             <?php echo ($plan['claim'] == '0') ? 'disabled' : ''; ?>>
-                                            Get Income
+                                            Start Work
                                         </button>
                                     </form>
                                 </div>
