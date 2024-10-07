@@ -51,18 +51,27 @@ $max_submission_count = 50;
 // Define claim_button_enabled based on submission count
 $claim_button_enabled = ($_SESSION['submission_count'] >= $max_submission_count);
 
-// Generate default values dynamically
-$default_store_code = strval(rand(100000, 999999)); 
-$default_invoice_number = strval(rand(1000000000, 9999999999));
-$default_invoice_date = date('Y-m-d', strtotime("+".rand(0, 30)." days")); 
-$default_qty = rand(1, 100); 
+// **Generate and store values ONLY ONCE or after submission**
+if (!isset($_SESSION['store_code'])) {
+    $_SESSION['store_code'] = strval(rand(100000, 999999)); // Generate Store Code
+}
+if (!isset($_SESSION['invoice_number'])) {
+    $_SESSION['invoice_number'] = strval(rand(1000000000, 9999999999)); // Generate Invoice Number
+}
+if (!isset($_SESSION['invoice_date'])) {
+    $_SESSION['invoice_date'] = date('Y-m-d', strtotime("+".rand(0, 30)." days")); // Generate Invoice Date (random within 30 days)
+}
+if (!isset($_SESSION['qty'])) {
+    $_SESSION['qty'] = rand(1, 100); // Generate Qty
+}
 
-// Initialize form values
-$store_code = $default_store_code;
-$invoice_number = $default_invoice_number;
-$invoice_date = $default_invoice_date;
-$qty = $default_qty;
+// Retrieve the stored session values to use for comparison later
+$stored_store_code = $_SESSION['store_code'];
+$stored_invoice_number = $_SESSION['invoice_number'];
+$stored_invoice_date = $_SESSION['invoice_date'];
+$stored_qty = $_SESSION['qty'];
 
+// Initialize form validation errors
 $errors = [
     "plan_id" => "",
     "store_code" => "",
@@ -73,30 +82,48 @@ $errors = [
 
 // Check for form submission
 if (isset($_POST['btnNext'])) {
-    $plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : null;
 
-    if (!$plan_id) {
+    // Capture form values from the user input
+    $plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : null;
+    $store_code = isset($_POST['store_code']) ? $_POST['store_code'] : null;
+    $invoice_number = isset($_POST['invoice_number']) ? $_POST['invoice_number'] : null;
+    $invoice_date = isset($_POST['invoice_date']) ? $_POST['invoice_date'] : null;
+    $qty = isset($_POST['qty']) ? intval($_POST['qty']) : null;
+
+    // Validate Plan ID
+    if (empty($plan_id)) {
         $errors['plan_id'] = "Plan ID is missing.";
     }
 
-    // Validate inputs
+    // Validate Store Code
     if (empty($store_code)) {
         $errors['store_code'] = "Store Code is required.";
+    } elseif ($store_code !== $stored_store_code) {
+        $errors['store_code'] = "Incorrect Store Code.";
     }
 
+    // Validate Invoice Number
     if (empty($invoice_number)) {
         $errors['invoice_number'] = "Invoice Number is required.";
+    } elseif ($invoice_number !== $stored_invoice_number) {
+        $errors['invoice_number'] = "Incorrect Invoice Number.";
     }
 
+    // Validate Invoice Date
     if (empty($invoice_date)) {
         $errors['invoice_date'] = "Invoice Date is required.";
+    } elseif ($invoice_date !== $stored_invoice_date) {
+        $errors['invoice_date'] = "Incorrect Invoice Date.";
     }
 
+    // Validate Qty
     if (empty($qty) || $qty < 1) {
         $errors['qty'] = "Qty Dispatching is required and should be greater than 0.";
+    } elseif ($qty !== $stored_qty) {
+        $errors['qty'] = "Incorrect Qty.";
     }
 
-    // If no errors, process the submission
+    // If no validation errors, process the form submission
     if (!array_filter($errors)) {
         $_SESSION['submission_count']++; 
 
@@ -139,14 +166,19 @@ if (isset($_POST['btnNext'])) {
                 }
             }
         }
-    
-  // **REDIRECT HERE** to prevent resubmission on refresh
-  header("Location: " . $_SERVER['PHP_SELF']);
-  exit(); // Stop further script execution
-}
+
+        // Generate new session values after successful form submission
+        $_SESSION['store_code'] = strval(rand(100000, 999999));
+        $_SESSION['invoice_number'] = strval(rand(1000000000, 9999999999));
+        $_SESSION['invoice_date'] = date('Y-m-d', strtotime("+".rand(0, 30)." days"));
+        $_SESSION['qty'] = rand(1, 100);
+
+        // Redirect to prevent form resubmission on refresh
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit(); // Stop further script execution
+    }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -243,25 +275,25 @@ if (isset($_POST['btnNext'])) {
                                         <p>Progress: <?php echo $_SESSION['submission_count'] . '/' . $max_submission_count; ?></p>
 
                                         <div class="mb-3">
-                                            <label class="no-copy">Store Code: <span class="highlighted-value"><?php echo htmlspecialchars ($default_store_code); ?></span></label>
+                                            <label class="no-copy">Store Code: <span class="highlighted-value"><?php echo htmlspecialchars ($stored_store_code); ?></span></label>
                                             <input type="text" class="form-control" name="store_code" required>
                                             <span class="text-danger"><?php echo $errors['store_code']; ?></span>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="no-copy">Invoice Number: <span class="highlighted-value"><?php echo htmlspecialchars ($default_invoice_number); ?></span></label>
+                                            <label class="no-copy">Invoice Number: <span class="highlighted-value"><?php echo htmlspecialchars ($stored_invoice_number); ?></span></label>
                                             <input type="text" class="form-control" name="invoice_number" required >
                                             <span class="text-danger"><?php echo $errors['invoice_number']; ?></span>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="no-copy">Invoice Date: <span class="highlighted-value"><?php echo htmlspecialchars ($default_invoice_date); ?></span></label>
+                                            <label class="no-copy">Invoice Date: <span class="highlighted-value"><?php echo htmlspecialchars ($stored_invoice_date); ?></span></label>
                                             <input type="date" class="form-control" name="invoice_date" required>
                                             <span class="text-danger"><?php echo $errors['invoice_date']; ?></span>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="no-copy">Qty Dispatching: <span class="highlighted-value" ><?php echo htmlspecialchars($qty); ?></span></label>
+                                            <label class="no-copy">Qty Dispatching: <span class="highlighted-value" ><?php echo htmlspecialchars($stored_qty); ?></span></label>
                                             <div class="d-flex align-items-center">
                                                 <button type="button" class="quantity-btn" onclick="decrementQty(this)">-</button>
                                                 <input type="number" class="form-control quantity-input" name="qty" id="qtyInput" required min="1">
