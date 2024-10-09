@@ -263,7 +263,7 @@ if (isset($_POST['btnNext'])) {
                     <?php foreach ($plans as $plan): ?>
                         <div class="col-md-6 col-lg-4 mb-4">
                             <div class="product-name-box">
-                                <?php echo htmlspecialchars($plan['products']); ?>
+                                <?php echo htmlspecialchars($plan['name']); ?>
                             </div>
 
                             <div class="plan-box">

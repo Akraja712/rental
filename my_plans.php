@@ -133,7 +133,7 @@ curl_close($curl);
                         <div class="col-md-6 mb-4">
                             <!-- Separate Product Name Box -->
                             <div class="product-name-box">
-                                <?php echo htmlspecialchars($plan['products']); ?>
+                                <?php echo htmlspecialchars($plan['name']); ?>
                             </div>
 
                             <div class="plan-box">
@@ -143,9 +143,8 @@ curl_close($curl);
                                 <!-- Right side: Details -->
                                 <div class="plan-details">
                                     <p>Price: <strong><?php echo '₹'. htmlspecialchars($plan['price']); ?></strong></p>
-                                    <p>Daily Income: <strong><?php echo '₹'.htmlspecialchars($plan['daily_income']); ?></strong></p>
-                                    <p>Invite Bonus: <strong><?php echo '₹'. htmlspecialchars($plan['invite_bonus']); ?></strong></p>
-                                    <p>Num Of Times: <strong><?php echo htmlspecialchars($plan['num_times']); ?></strong></p>
+                                    <p>Daily Earnings: <strong><?php echo '₹'.htmlspecialchars($plan['daily_earnings']); ?></strong></p>
+                                    <p>Daily Codes: <strong><?php echo '₹'. htmlspecialchars($plan['daily_codes']); ?></strong></p>
                                     <p>Validity: <span class="highlight">Unlimited Days</span></p>
                                     
                                     <form method="post" action="claim.php" style="display: inline;">

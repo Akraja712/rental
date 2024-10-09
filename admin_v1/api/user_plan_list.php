@@ -38,7 +38,7 @@ if($valid == 1){
 
 }
 
-$sql = "SELECT user_plan.* ,plan.image,plan.products,plan.invite_bonus,plan.price,plan.daily_quantity,plan.unit,plan.daily_income,plan.num_times,plan.stock
+$sql = "SELECT user_plan.* ,plan.name,plan.image,plan.demo_video,plan.daily_codes,plan.per_code_cost,plan.price,plan.daily_earnings
         FROM user_plan 
         LEFT JOIN plan ON user_plan.plan_id = plan.id
         WHERE user_plan.user_id = '$user_id' ".$join;

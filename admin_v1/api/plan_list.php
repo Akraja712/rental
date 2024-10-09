@@ -47,17 +47,24 @@ $num = $db->numRows($res);
 if ($num >= 1) {
     foreach ($res as $row) {
         $temp['id'] = $row['id'];
-        $temp['products'] = $row['products'];
-        $temp['price'] = $row['price'];
-        $temp['unit'] = $row['unit'];
+        $temp['name'] = $row['name'];
+        // Remove all HTML tags except for <br>
+        $temp['description'] = strip_tags_except($row['description'], array('br'));
         $temp['image'] = DOMAIN_URL . $row['image'];
-        $temp['daily_income'] = $row['daily_income'];
-        $temp['monthly_income'] = $row['monthly_income'];
-        $temp['invite_bonus'] = $row['invite_bonus'];
-        $temp['daily_quantity'] = $row['daily_quantity'];
-        $temp['num_times'] = $row['num_times'];
-        $temp['stock'] = $row['stock'];
+        $temp['demo_video'] = $row['demo_video'];
+        $temp['daily_codes'] = $row['daily_codes'];
+        $temp['daily_earnings'] = $row['daily_earnings'];
+        $temp['per_code_cost'] = $row['per_code_cost'];
+        $temp['price'] = $row['price'];
+        $temp['type'] = $row['type'];
         $temp['min_refers'] = $row['min_refers'];
+        
+        $plan_id = $row['id'];
+        $sql_check_plan = "SELECT * FROM user_plan WHERE user_id = $user_id AND plan_id = $plan_id";
+        $db->sql($sql_check_plan);
+        $plan_exists = $db->numRows() > 0;
+        $temp['status'] = $plan_exists ? 1: 0;
+        
         $rows[] = $temp;
     }
     $response['success'] = true;
@@ -66,7 +73,25 @@ if ($num >= 1) {
     print_r(json_encode($response));
 } else {
     $response['success'] = false;
-    $response['message'] = "No plans found";
+    $response['message'] = "Plan not found";
     print_r(json_encode($response));
+}
+
+function strip_tags_except($string, $exceptions = array()) {
+    foreach ($exceptions as $tag) {
+        $string = str_replace("<$tag>", "#{$tag}#", $string);
+        $string = str_replace("</$tag>", "#/{$tag}#", $string);
+    }
+    // Remove HTML tags and their attributes
+    // Remove \r\n characters
+    $string = str_replace(array("\r", "\n"), '', $string);
+    $string = strip_tags($string);
+    // Decode HTML entities to symbols
+    $string = html_entity_decode($string);
+    foreach ($exceptions as $tag) {
+        $string = str_replace("#{$tag}#", "<$tag>", $string);
+        $string = str_replace("#/{$tag}#", "</$tag>", $string);
+    }
+    return $string;
 }
 ?>

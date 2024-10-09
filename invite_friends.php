@@ -160,7 +160,7 @@ curl_close($curl);
                 <form action="submit_withdrawal_request.php" method="post">
                 <div class="mb-3">
                 <label for="link" class="form-label">Invite Link</label>
-                <input type="text" class="form-control" id="inviteLink" name="link" value="https://moneybook.site/register.php?refer_code=<?php echo $refer_code; ?>" disabled>
+                <input type="text" class="form-control" id="inviteLink" name="link" value="https://jiyo.graymatterworks.com/register.php?refer_code=<?php echo $refer_code; ?>" disabled>
             </div>
             <button type="button" id="copyButton" style="background-color:#4A148C; color:white;" class="btn">
                 <i class="fs-5 bi-copy"></i> Copy Link
