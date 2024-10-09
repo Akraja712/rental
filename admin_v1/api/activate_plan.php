@@ -20,24 +20,6 @@ $fn = new functions;
 
 $date = date('Y-m-d');
 
-// if (!isset($_POST['accesskey'])) {
-//     $response['error'] = true;
-//     $response['message'] = "Access key is invalid or not passed!";
-//     print_r(json_encode($response));
-//     return false;
-// }
-// $accesskey = $db->escapeString($_POST['accesskey']);
-// if ($access_key != $accesskey) {
-//     $response['error'] = true;
-//     $response['message'] = "invalid accesskey!";
-//     print_r(json_encode($response));
-//     return false;
-// }
-
-// if (!verify_token()) {
-//     return false;
-// }
-
 if (empty($_POST['user_id'])) {
     $response['success'] = false;
     $response['message'] = "User Id is Empty";
@@ -55,12 +37,6 @@ if (empty($_POST['plan_id'])) {
 $user_id = $db->escapeString($_POST['user_id']);
 $plan_id = $db->escapeString($_POST['plan_id']);
 
-$sql = "SELECT * FROM settings";
-$db->sql($sql);
-$settings = $db->getResult();
-$scratch_card = $settings[0]['scratch_card'];
-
-
 $sql = "SELECT * FROM users WHERE id = $user_id ";
 $db->sql($sql);
 $user = $db->getResult();
@@ -71,7 +47,9 @@ if (empty($user)) {
     print_r(json_encode($response));
     return false;
 }
-
+$recharge = $user[0]['recharge'];
+$refer_code = $user[0]['refer_code'];
+$referred_by = $user[0]['referred_by'];
 
 $sql = "SELECT * FROM plan WHERE id = $plan_id ";
 $db->sql($sql);
@@ -84,142 +62,201 @@ if (empty($plan)) {
     return false;
 }
 
-$products = $plan[0]['products'];
-$min_refers = $plan[0]['min_refers'];
-$relate_plan_id = $plan[0]['relate_plan_id'];
-$type = $plan[0]['type'];
-$invite_bonus = $plan[0]['invite_bonus'];
 $price = $plan[0]['price'];
-$daily_income = $plan[0]['daily_income'];
-$stock = $plan[0]['stock'];
-//$total_income = $plan[0]['total_income'];
-//$validity = $plan[0]['validity'];
-$num_times = $plan[0]['num_times'];
-$balance = $user[0]['balance'];
-$recharge = $user[0]['recharge'];
-$valid = $user[0]['valid'];
-$valid_team = $user[0]['valid_team'];
-$total_assets = $user[0]['total_assets'];
-$refer_code = $user[0]['refer_code'];
-$referred_by = $user[0]['referred_by'];
-$min_withdrawal = $user[0]['min_withdrawal'];
-
+$min_refers = $plan[0]['min_refers'];
+$invite_bonus = $plan[0]['invite_bonus'];
 $datetime = date('Y-m-d H:i:s');
 
-if ($stock == 0) {
-    $response['success'] = false;
-    $response['message'] = "Out of Stock";
-    print_r(json_encode($response));
-    return false;
-}
+/*if ($plan_id == 6) {
+    $sql_check = "SELECT COUNT(*) as count FROM transactions WHERE user_id = $user_id AND type = 'refer_bonus' AND amount = 50 AND datetime > '2024-09-09'";
+    $db->sql($sql_check);
+    $check_refer_user = $db->getResult();
 
-$sql = "SELECT COUNT(*) AS count FROM user_plan WHERE plan_id = $plan_id AND user_id = $user_id";
-$db->sql($sql);
-$res_check_plan = $db->getResult();
-$user_num_times = $res_check_plan[0]['count'];
-
-if ($user_num_times >= $num_times) {
-    $response['success'] = false;
-    $response['message'] = "Already Purchased";
-    print_r(json_encode($response));
-    return false;
-}
-
-
-$t_plan_id = $plan_id - 1;
-
-$sql_check = "SELECT * FROM plan WHERE id = $t_plan_id";
-$db->sql($sql_check);
-$res1 = $db->getResult();
-
-if (!empty($res1)) {
-    $t_products = $res1[0]['products'];
-}
-
-$sql_check = "SELECT * FROM user_plan up LEFT JOIN users u ON up.user_id = u.id WHERE u.referred_by = '$referred_by' AND up.plan_id = $t_plan_id";
-$db->sql($sql_check);
-$res_check_user = $db->getResult();
-$num = $db->numRows($res_check_user);
-
-
-
-if ($recharge >= $price) {
-
-    if($type == 'leader'){
-        $sql = "SELECT * FROM plan WHERE id = $relate_plan_id ";
-        $db->sql($sql);
-        $re_plan = $db->getResult();
-        $p_name = $re_plan[0]['products'];
-
-        $sql = "SELECT id FROM transactions WHERE user_id = $user_id AND type = 'invite_bonus' AND plan_id = $relate_plan_id AND DATE(datetime) >= '2024-09-17'";
-        $db->sql($sql);
-        $res = $db->getResult();
-        $num = $db->numRows($res);
-        if($num < $min_refers){
-            $response['success'] = false;
-            $response['message'] = "Minimum ". $min_refers ." Refers need in ".$p_name." to activate";
-            print_r(json_encode($response));
-            return false;
-
-        }
-
+    if ($check_refer_user[0]['count'] < 3) {
+        $response['success'] = false;
+        $response['message'] = "You need to refer at least $min_refers members in associate job";
+        print_r(json_encode($response));
+        return false;
     }
 
-    if($valid == 0 && $price > 0){
-        $sql = "UPDATE users SET valid_team = valid_team + 1  WHERE refer_code = '$referred_by'";
-        $db->sql($sql);
-        $sql = "UPDATE users SET valid = 1  WHERE id = $user_id";
-        $db->sql($sql);
+    $sql_check = "SELECT * FROM user_plan WHERE user_id = $user_id AND plan_id = 2";
+    $db->sql($sql_check);
+    $check_user = $db->getResult();
+
+    if (empty($check_user)) {
+        $response['success'] = false;
+        $response['message'] = "You must join in Associate Job";
+        print_r(json_encode($response));
+        return false;
     }
+}   
+*/
+if ($plan_id == 7) {
+    $sql_check = "SELECT COUNT(*) as count FROM transactions WHERE user_id = $user_id AND type = 'refer_bonus' AND amount = 300 AND datetime >= '2024-10-01'";
+    $db->sql($sql_check);
+    $check_refer_user = $db->getResult();
 
-    $sql = "UPDATE users SET recharge = recharge - $price, total_assets = total_assets + $price WHERE id = $user_id";
-    $db->sql($sql);
+    if ($check_refer_user[0]['count'] < 3) {
+        $response['success'] = false;
+        $response['message'] = "You need to refer at least $min_refers members in Supervisor Job";
+        print_r(json_encode($response));
+        return false;
+    }
+    
+    $sql_check = "SELECT * FROM user_plan WHERE user_id = $user_id AND plan_id = 3";
+    $db->sql($sql_check);
+    $check_user = $db->getResult();
+
+    if (empty($check_user)) {
+        $response['success'] = false;
+        $response['message'] = "You must join in Supervisor Job";
+        print_r(json_encode($response));
+        return false;
+    }
+}   
+
+if ($plan_id == 8) {
+    $sql_check = "SELECT COUNT(*) as count FROM transactions WHERE user_id = $user_id AND type = 'refer_bonus' AND amount = 500 AND datetime >= '2024-10-01'";
+    $db->sql($sql_check);
+    $check_refer_user = $db->getResult();
+
+    if ($check_refer_user[0]['count'] < 3) {
+        $response['success'] = false;
+        $response['message'] = "You need to refer at least $min_refers members in Asst Manager Job";
+        print_r(json_encode($response));
+        return false;
+    }
+    
+    $sql_check = "SELECT * FROM user_plan WHERE user_id = $user_id AND plan_id = 4";
+    $db->sql($sql_check);
+    $check_user = $db->getResult();
+
+    if (empty($check_user)) {
+        $response['success'] = false;
+        $response['message'] = "You must join in Asst Manager Job";
+        print_r(json_encode($response));
+        return false;
+    }
+}   
+
+if ($plan_id == 9) {
+    $sql_check = "SELECT COUNT(*) as count FROM transactions WHERE user_id = $user_id AND type = 'refer_bonus' AND amount = 1000 AND datetime >= '2024-10-01'";
+    $db->sql($sql_check);
+    $check_refer_user = $db->getResult();
+
+    if ($check_refer_user[0]['count'] < 3) {
+        $response['success'] = false;
+        $response['message'] = "You need to refer at least $min_refers members in Manager Job";
+        print_r(json_encode($response));
+        return false;
+    }
+    
+    $sql_check = "SELECT * FROM user_plan WHERE user_id = $user_id AND plan_id = 5";
+    $db->sql($sql_check);
+    $check_user = $db->getResult();
+
+    if (empty($check_user)) {
+        $response['success'] = false;
+        $response['message'] = "You must join in Manager Job";
+        print_r(json_encode($response));
+        return false;
+    }
+} 
 
 
 
-    if($refer_code){
-        $sql = "SELECT * FROM users WHERE refer_code = '$referred_by'";
-        $db->sql($sql);
-        $res = $db->getResult();
-        $num = $db->numRows($res);
+    $sql_check = "SELECT * FROM user_plan WHERE user_id = $user_id AND plan_id = $plan_id";
+    $db->sql($sql_check);
+    $res_check_user = $db->getResult();
 
-        if ($num == 1) {
-            $r_id = $res[0]['id'];
-            $r_refer_code = $res[0]['refer_code'];
-            if($plan_id == 1){
-                $sql = "SELECT id FROM users WHERE referred_by = '$r_refer_code' AND valid = 0";
-                $db->sql($sql);
-                $res = $db->getResult();
-                $num = $db->numRows($res);
-                if($num > 5){
-                    $invite_bonus = 0;
+    if (!empty($res_check_user)) {
+        $response['success'] = false;
+        $response['message'] = "You have already started this plan";
+        print_r(json_encode($response));
+        return false;
+    }
+    if ($recharge >= $price) {
 
+        if($refer_code){
+            $sql = "SELECT * FROM users WHERE refer_code = '$referred_by'";
+            $db->sql($sql);
+            $res = $db->getResult();
+            $num = $db->numRows($res);
+    
+            if ($num == 1) {
+                $r_id = $res[0]['id'];
+                $r_refer_code = $res[0]['refer_code'];
+                
+                $check_plan_id = 0; 
+                
+                if ($plan_id == 2) {
+                    $check_plan_id = 6;
                 }
-            }
-            $sql = "UPDATE users SET balance = balance + $invite_bonus,today_income = today_income + $invite_bonus,total_income = total_income + $invite_bonus,team_income = team_income + $invite_bonus  WHERE refer_code = '$referred_by'";
-            $db->sql($sql);
+                else if ($plan_id == 3) {
+                    $check_plan_id = 7;
+                }
+                else if ($plan_id == 4) {
+                    $check_plan_id = 8;
+                }
+                else if ($plan_id == 5) {
+                    $check_plan_id = 9;
+                }
 
-            $sql = "INSERT INTO transactions (user_id, amount, datetime, type, plan_id) VALUES ('$r_id', '$invite_bonus', '$datetime', 'invite_bonus', '$plan_id')";
-            $db->sql($sql);
-            
+                $sql_check_user_plan = "SELECT * FROM user_plan WHERE user_id = $r_id AND plan_id = $check_plan_id";
+                $db->sql($sql_check_user_plan);
+                $res_check_user_plan = $db->getResult();
+                
+                if (!empty($res_check_user_plan)) {
+                    $invite_bonus = $price * 0.15;
+                }
+                
+                $sql = "UPDATE users SET team_income = team_income + $invite_bonus ,withdrawal_status = 1  WHERE refer_code = '$referred_by'";
+                $db->sql($sql);
+    
+                $sql = "INSERT INTO transactions (user_id, amount, datetime, type) VALUES ('$r_id', '$invite_bonus', '$datetime', 'refer_bonus')";
+                $db->sql($sql);
+                
+            }
+    
         }
 
-    }
+        if($plan_id == 6){
+            $sql = "UPDATE user_plan SET inactive = 1 WHERE user_id = $user_id AND plan_id = 2";
+            $db->sql($sql);
+        }
+        else if($plan_id == 7){
+            $sql = "UPDATE user_plan SET inactive = 1 WHERE user_id = $user_id AND plan_id = 3";
+            $db->sql($sql);
+        }
+        else if($plan_id == 8){
+            $sql = "UPDATE user_plan SET inactive = 1 WHERE user_id = $user_id AND plan_id = 4";
+            $db->sql($sql);
+        }
+        else if($plan_id == 9){
+            $sql = "UPDATE user_plan SET inactive = 1 WHERE user_id = $user_id AND plan_id = 5";
+            $db->sql($sql);
+        }
 
-
+        $sql = "UPDATE users SET recharge = recharge - $price, total_assets = total_assets + $price,withdrawal_status = 1 WHERE id = $user_id";
+        $db->sql($sql);
 
     $sql_insert_user_plan = "INSERT INTO user_plan (user_id,plan_id,joined_date,claim) VALUES ('$user_id','$plan_id','$date',1)";
     $db->sql($sql_insert_user_plan);
 
-    $sql_insert_transaction = "INSERT INTO transactions (user_id, amount, datetime, type) VALUES ('$user_id', '$price', '$datetime', 'start_plan')";
+    $sql_insert_transaction = "INSERT INTO transactions (user_id, amount, datetime, type) VALUES ('$user_id', '$price', '$datetime', 'plan_activated')";
     $db->sql($sql_insert_transaction);
 
-    $response['success'] = true;
-    $response['message'] = "Purchased successfully";
- }else {
-    $response['success'] = false;
-    $response['message'] = "Insufficient balance ";
-}
+    $sql_user = "SELECT * FROM users WHERE id = $user_id";
+    $db->sql($sql_user);
+    $res_user = $db->getResult();
 
+    $response['success'] = true;
+    $response['message'] = "Plan started successfully";
+    $response['data'] = $res_user;
+    }
+    else {
+        $response['success'] = false;
+        $response['message'] = "Your Recharge Balance Is Low. Please Click On Recharge Icon To Purchase Your Plan";
+    }
 print_r(json_encode($response));
 ?>
