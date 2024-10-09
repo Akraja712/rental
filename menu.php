@@ -100,10 +100,10 @@
                         </div>
                         <div class="card-body">
                             <!-- Menu Items -->
-                            <a href="ins_recharge.php" class="nav-links">
+                            <!--<a href="ins_recharge.php" class="nav-links">
                                 <i class="bi bi-cash"></i>
                                 <span>Instant Recharge</span>
-                            </a>
+                            </a>-->
                             <a href="my_plans.php" class="nav-links">
                                 <i class="bi bi-file-earmark-text"></i>
                                 <span>My Plans</span>

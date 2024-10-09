@@ -72,7 +72,7 @@ curl_close($curl);
         }
 
         .plan-box img {
-            width: 100px;
+            width: 150px;
             height: 150px;
             object-fit: cover;
             margin-right: 20px;
@@ -119,6 +119,13 @@ curl_close($curl);
             background-color: #ccc;
             border-color: #ccc;
         }
+        @media (max-width: 576px) {
+
+        .plan-details p {
+            margin: 5px 0;
+            font-size:0.8rem;
+        }
+      }
     </style>
 </head>
 <body>
