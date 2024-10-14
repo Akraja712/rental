@@ -289,12 +289,13 @@ if (isset($_POST['btnNext'])) {
                             </div>
 
                             <div class="mb-3">
-                                <label for="qty" class="form-label">Quantity:</label><span class="highlighted-value"><?php echo $stored_qty; ?></span>
+                                <label for="qty" class="form-label">Quantity:</label>
+                                <span class="highlighted-value"><?php echo $stored_qty; ?></span>
                                 <div class="input-group">
                                     <button type="button" class="btn btn-outline-secondary" onclick="decrementQty()">-</button>
-                                    <input type="number" name="qty" class="form-control" id="qty" placeholder="Enter Quantity"  min="1">
+                                    <input type="number" name="qty" class="form-control" id="qty" value="1" min="1" readonly>
                                     <button type="button" class="btn btn-outline-secondary" onclick="incrementQty()">+</button>
-                                    <span class="text-danger"><?php echo $errors['qty']; ?></span>
+                                    <span class="text-danger"><?php echo $errors['qty'] ?? ''; ?></span>
                                 </div>
                             </div>
 

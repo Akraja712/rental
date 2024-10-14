@@ -36,7 +36,6 @@ if ($response === false) {
         // Store all plan details
         $plans = $responseData["data"];
     } else {
-        ;
         if ($responseData !== null) {
             echo "<script>alert('".$responseData["message"]."')</script>";
         }
@@ -45,7 +44,6 @@ if ($response === false) {
 }
 
 curl_close($curl);
-
 ?>
 
 <!DOCTYPE html>
@@ -59,6 +57,9 @@ curl_close($curl);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Lightbox CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+
     <style>
         /* Additional styles for the boxes */
         .plan-box {
@@ -110,6 +111,7 @@ curl_close($curl);
             border-radius: 5px;
             margin-bottom: 15px;
         }
+        
         .btn-success {
             background-color: #4A148C;
             border-color: #4A148C;
@@ -119,13 +121,18 @@ curl_close($curl);
             background-color: #ccc;
             border-color: #ccc;
         }
-        @media (max-width: 576px) {
 
-        .plan-details p {
-            margin: 5px 0;
-            font-size:0.8rem;
+        .activated-jobs-link {
+        margin-bottom: 20px;
+        background-color: #4A148C; /* Background color for the link */
+        border-radius: 10px;
+    }
+        @media (max-width: 576px) {
+            .plan-details p {
+                margin: 5px 0;
+                font-size: 0.8rem;
+            }
         }
-      }
     </style>
 </head>
 <body>
@@ -133,6 +140,14 @@ curl_close($curl);
     <div class="row flex-nowrap">
         <?php include_once('sidebar.php'); ?>
         <div class="col py-3">
+                  <!-- Activated Jobs Link -->
+                  <div class="activated-jobs-link">
+    <a href="plan.php" class="btn w-100 d-flex justify-content-center align-items-center" style="background-color: #4A148C;">
+        <i style="color: #f8f9fa; font-size: 1.5rem;font-weight: bold;" class="bi bi-arrow-left"></i>
+        <span style="color: #f8f9fa; font-size: 1.2rem;  font-weight: bold; flex-grow: 1; text-align: center;">Jobs</span> <!-- Button Text -->
+    </a>
+</div>
+
             <div id="plansSection" class="plansSection-container">
                 <div class="row">
                     <!-- Loop through all plans and display each one -->
@@ -144,8 +159,14 @@ curl_close($curl);
                             </div>
 
                             <div class="plan-box">
-                                <!-- Left side: Image -->
-                                <img src="<?php echo htmlspecialchars($plan['image']); ?>" alt="Plan image">
+                                <!-- Left side: Image with Lightbox -->
+                                <?php if (!empty($plan['image'])): ?>
+                                    <a data-lightbox="plan" href="<?php echo htmlspecialchars($plan['image']); ?>" data-title="<?php echo htmlspecialchars($plan['name']); ?>">
+                                        <img src="<?php echo htmlspecialchars($plan['image']); ?>" alt="Plan image" title="<?php echo htmlspecialchars($plan['name']); ?>">
+                                    </a>
+                                <?php else: ?>
+                                    <p>No Image Available</p>
+                                <?php endif; ?>
 
                                 <!-- Right side: Details -->
                                 <div class="plan-details">
@@ -156,7 +177,7 @@ curl_close($curl);
                                     
                                     <form method="post" action="claim.php" style="display: inline;">
                                         <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['plan_id']); ?>">
-                                        <button type="submit"  class="btn btn-success" 
+                                        <button type="submit" class="btn btn-success" 
                                             <?php echo ($plan['claim'] == '0') ? 'disabled' : ''; ?>>
                                             Start Work
                                         </button>
@@ -173,5 +194,8 @@ curl_close($curl);
 
 <!-- Bootstrap JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Lightbox JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
 </body>
 </html>

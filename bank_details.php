@@ -178,7 +178,7 @@ curl_close($curl);
                 <form action="bank_details.php" method="post">
                     <div class="mb-3">
                         <label for="withdrawalAmount" class="form-label"></label>
-                        <input type="text" id="holder_name" name="holder_name" placeholder="holder_name" class="form-control" required value="<?php echo isset($holder_name) ? htmlspecialchars($holder_name) : ''; ?>" />
+                        <input type="text" id="holder_name" name="holder_name" placeholder="account_holder_name" class="form-control" required value="<?php echo isset($holder_name) ? htmlspecialchars($holder_name) : ''; ?>" />
                     </div>
                     <div class="mb-3">
                         <label for="withdrawalNote" class="form-label"></label>

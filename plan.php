@@ -10,6 +10,9 @@ if (!$user_id) {
     exit();
 }
 
+// Initialize recharge variable
+$recharge = 0; // Default value in case no recharge is found
+
 $data = array(
     "user_id" => $user_id,
     "type" => "jobs",
@@ -18,7 +21,6 @@ $data = array(
 $apiUrl = API_URL . "plan_list.php";
 
 $curl = curl_init($apiUrl);
-
 curl_setopt($curl, CURLOPT_POST, true);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -37,7 +39,6 @@ if ($response === false) {
         // Store all plan details
         $plans = $responseData["data"];
     } else {
-    
         if ($responseData !== null) {
             echo "<script>alert('".$responseData["message"]."')</script>";
         }
@@ -91,6 +92,43 @@ if (isset($_POST['btnactivate'])) {
     curl_close($curl);
 }
 
+// Fetch user recharge details
+$data = array(
+    "user_id" => $user_id,
+);
+
+$apiUrl = API_URL . "user_details.php";
+
+$curl = curl_init($apiUrl);
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$response = curl_exec($curl);
+
+if ($response === false) {
+    // Error in cURL request
+    echo "Error: " . curl_error($curl);
+} else {
+    // Successful API response
+    $responseData = json_decode($response, true);
+    if ($responseData !== null && $responseData["success"]) {
+        // Display transaction details
+        $userdetails = $responseData["data"];
+        if (!empty($userdetails)) {
+            $recharge = $userdetails[0]["recharge"];
+        } else {
+            echo "No recharge details found.";
+        }
+    } else {
+        if ($responseData !== null) {
+            echo "<script>alert('".$responseData["message"]."')</script>";
+        }
+    }
+}
+
+curl_close($curl);
 ?>
 
 <!DOCTYPE html>
@@ -104,8 +142,10 @@ if (isset($_POST['btnactivate'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Lightbox CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+
     <style>
-        /* Additional styles for the boxes */
         .plan-box {
             background-color: #f8f9fa;
             border-radius: 5px;
@@ -144,24 +184,61 @@ if (isset($_POST['btnactivate'])) {
             color: white;
         }
 
-        /* Style for the product name box */
         .product-name-box {
             background-color: #4A148C;
             color: white;
             padding: 15px;
-            text-align: center;
-            font-size: 0.90rem;
-            font-weight: bold;
             border-radius: 5px;
             margin-bottom: 15px;
+            display: flex; /* Use flexbox for alignment */
+            justify-content: space-between; /* Space out children */
+            align-items: center; /* Center items vertically */
         }
-        @media (max-width: 576px) {
 
-        .plan-details p {
-            margin: 5px 0;
-            font-size:0.8rem;
+        .product-name {
+            font-size: 0.90rem; /* Size for the product name */
+            font-weight: bold; /* Bold for product name */
         }
+
+        .watch-demo-link {
+            color: white; /* Change color as needed */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; /* Make it bold */
+            padding-left: 10px; /* Add padding for a gap */
+            font-size: 0.70rem; /* Size for the product name */
+        }
+
+        .watch-demo-link:hover {
+            text-decoration: underline; /* Underline on hover for better UX */
+        }
+
+        .activated-jobs-link {
+    margin-bottom: 20px;
+    background-color: #4A148C; /* Background color for the link */
+    border-radius: 10px;
+}
+
+
+.alert-info{
+    top: 0px; /* Distance from the top */
+    left: 935px; /* Distance from the right */ 
+    width: 100%; /* Full width */
+    max-width: 300px; /* Set a max width */
+}
+@media (max-width: 576px) {
+    .plan-details p {
+        margin: 5px 0;
+        font-size: 0.8rem;
     }
+
+    .alert-info {
+        width: 60%; /* Adjust width for smaller screens */
+        font-size: 0.7rem; /* Slightly smaller font size for better fit */
+        top: 0px; /* Distance from the top */
+        left: 130px; /* Distance from the right */
+    }
+}
+
     </style>
 </head>
 <body>
@@ -169,25 +246,48 @@ if (isset($_POST['btnactivate'])) {
     <div class="row flex-nowrap">
         <?php include_once('sidebar.php'); ?>
         <div class="col py-3">
+            <!-- Recharge Alert positioned above the Activated Jobs Link -->
+            <div class="alert alert-info"> <!-- Use the new class here -->
+                 Recharge Value: <strong>₹<?php echo htmlspecialchars($recharge); ?></strong>
+            </div>
+
+            <!-- Activated Jobs Link -->
+            <div class="activated-jobs-link">
+                <a href="my_plans.php" class="btn w-100 d-flex justify-content-between align-items-center">
+                    <i style="color: #f8f9fa; font-size: 1.5rem; padding: 10px; font-weight: bold;" class="bi bi-briefcase-fill"></i>  <!-- Left icon (briefcase) -->
+                    <span style="color: #f8f9fa; font-size: 0.90rem; padding: 10px; font-weight: bold;">My Activated Jobs</span> <!-- Button Text -->
+                    <i style="color: #f8f9fa; font-size: 1.5rem; padding: 10px; font-weight: bold;" class="bi bi-arrow-right"></i> <!-- Right icon (arrow) -->
+                </a>
+            </div>
+
             <div id="plansSection" class="plansSection-container">
                 <div class="row">
                     <!-- Loop through all plans and display each one -->
                     <?php foreach ($plans as $plan): ?>
                         <div class="col-md-6 mb-4">
                             <!-- Separate Product Name Box -->
-                            <div class="product-name-box">
+                            <span class="product-name-box">
                                 <?php echo htmlspecialchars($plan['name']); ?>
-                            </div>
+                                <a href="<?php echo htmlspecialchars($plan['demo_video']); ?>" target="_blank" class="watch-demo-link">
+                                    Watch Demo Video
+                                </a>
+                            </span>
 
                             <div class="plan-box">
-                                <!-- Left side: Image -->
-                                <img src="<?php echo htmlspecialchars($plan['image']); ?>" alt="Plan image">
+                                <!-- Left side: Image with Lightbox -->
+                                <?php if (!empty($plan['image'])): ?>
+                                    <a data-lightbox="plan" href="<?php echo htmlspecialchars($plan['image']); ?>" data-title="<?php echo htmlspecialchars($plan['name']); ?>">
+                                        <img src="<?php echo htmlspecialchars($plan['image']); ?>" alt="Plan image" title="<?php echo htmlspecialchars($plan['name']); ?>">
+                                    </a>
+                                <?php else: ?>
+                                    <p>No Image Available</p>
+                                <?php endif; ?>
 
                                 <!-- Right side: Details -->
                                 <div class="plan-details">
-                                    <p>Price: <strong><?php echo '₹'. htmlspecialchars($plan['price']); ?></strong></p>
-                                    <p>Daily Earnings: <strong><?php echo '₹'.htmlspecialchars($plan['daily_earnings']); ?></strong></p>
-                                    <p>Daily Codes: <strong><?php echo '₹'. htmlspecialchars($plan['daily_codes']); ?></strong></p>
+                                    <p>Price: <strong><?php echo '₹' . htmlspecialchars($plan['price']); ?></strong></p>
+                                    <p>Daily Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['daily_earnings']); ?></strong></p>
+                                    <p>Daily Codes: <strong><?php echo '₹' . htmlspecialchars($plan['daily_codes']); ?></strong></p>
                                     <p>Validity: <span class="highlight">Unlimited Days</span></p>
                                     
                                     <!-- Purchase Button -->
@@ -207,5 +307,8 @@ if (isset($_POST['btnactivate'])) {
 
 <!-- Bootstrap JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Lightbox JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
 </body>
 </html>

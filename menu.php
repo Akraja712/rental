@@ -104,10 +104,6 @@
                                 <i class="bi bi-cash"></i>
                                 <span>Instant Recharge</span>
                             </a>-->
-                            <a href="my_plans.php" class="nav-links">
-                                <i class="bi bi-file-earmark-text"></i>
-                                <span>My Plans</span>
-                            </a>
                             <a href="withdrawals.php" class="nav-links">
                                 <i class="bi bi-cash-stack"></i>
                                 <span>Withdrawals</span>
