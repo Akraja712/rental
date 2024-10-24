@@ -7,40 +7,35 @@ $fn = new custom_functions;
 <?php
 if (isset($_POST['btnAdd'])) {
 
-        $products = $db->escapeString(($_POST['products']));
-        $price = $db->escapeString(($_POST['price']));
-        $daily_income = $db->escapeString(($_POST['daily_income']));
-        $monthly_income = $db->escapeString(($_POST['monthly_income']));
-        $invite_bonus = $db->escapeString(($_POST['invite_bonus']));
-        $daily_quantity = $db->escapeString(($_POST['daily_quantity']));
-        $unit = $db->escapeString(($_POST['unit']));
-        $num_times = $db->escapeString(($_POST['num_times']));
-        $stock = $db->escapeString(($_POST['stock']));
+    $name = $db->escapeString(($_POST['name']));
+    $price = $db->escapeString(($_POST['price']));
+    $daily_codes = $db->escapeString(($_POST['daily_codes']));
+    $daily_earnings = $db->escapeString(($_POST['daily_earnings']));
+    $per_code_cost = $db->escapeString(($_POST['per_code_cost']));
+	$invite_bonus = $db->escapeString(($_POST['invite_bonus']));
+	$min_refers = $db->escapeString(($_POST['min_refers']));
         $error = array();
        
-        if (empty($products)) {
-            $error['products'] = " <span class='label label-danger'>Required!</span>";
+        if (empty($name)) {
+            $error['name'] = " <span class='label label-danger'>Required!</span>";
         }
         if (empty($price)) {
             $error['price'] = " <span class='label label-danger'>Required!</span>";
         }
-        if (empty($daily_income)) {
-            $error['daily_income'] = " <span class='label label-danger'>Required!</span>";
+        if (empty($daily_codes)) {
+            $error['daily_codes'] = " <span class='label label-danger'>Required!</span>";
         }
-        if (empty($monthly_income)) {
-            $error['monthly_income'] = " <span class='label label-danger'>Required!</span>";
+        if (empty($daily_earnings)) {
+            $error['daily_earnings'] = " <span class='label label-danger'>Required!</span>";
         }
         if (empty($invite_bonus)) {
             $error['invite_bonus'] = " <span class='label label-danger'>Required!</span>";
         }
-        if (empty($daily_quantity)) {
-            $error['daily_quantity'] = " <span class='label label-danger'>Required!</span>";
+        if (empty($per_code_cost)) {
+            $error['per_code_cost'] = " <span class='label label-danger'>Required!</span>";
         }
-        if (empty($unit)) {
-            $error['unit'] = " <span class='label label-danger'>Required!</span>";
-        }
-        if (empty($num_times)) {
-            $error['num_times'] = " <span class='label label-danger'>Required!</span>";
+        if (empty($min_refers)) {
+            $error['min_refers'] = " <span class='label label-danger'>Required!</span>";
         }
        
             // Validate and process the image upload
@@ -60,10 +55,10 @@ if (isset($_POST['btnAdd'])) {
         }
 
         $upload_image = 'upload/images/' . $filename;
-        $sql = "INSERT INTO plan (products,price,daily_quantity,unit,daily_income,monthly_income,invite_bonus,image,num_times,stock) VALUES ('$products','$price', '$daily_quantity','$unit','$daily_income','$monthly_income','$invite_bonus','$upload_image','$num_times','$stock')";
+        $sql = "INSERT INTO plan (name,price,daily_codes,daily_earnings,invite_bonus,per_code_cost,invite_bonus,image,min_refers) VALUES ('$name','$price', '$daily_codes','$daily_earnings','$invite_bonus','$per_code_cost','$invite_bonus','$upload_image','$min_refers')";
         $db->sql($sql);
     } else {
-            $sql_query = "INSERT INTO plan (products,price,daily_quantity,unit,daily_income,monthly_income,invite_bonus,num_times,stock) VALUES ('$products','$price','$daily_quantity','$unit','$daily_income','$monthly_income','$invite_bonus','$num_times','$stock')";
+            $sql_query = "INSERT INTO plan (name,price,daily_codes,daily_earnings,invite_bonus,per_code_cost,invite_bonus,min_refers) VALUES ('$name','$price', '$daily_codes','$daily_earnings','$invite_bonus','$per_code_cost','$invite_bonus','$min_refers')";
             $db->sql($sql);
         }
             $result = $db->getResult();
@@ -108,16 +103,16 @@ if (isset($_POST['btnAdd'])) {
                        <div class="row">
                             <div class="form-group">
                                 <div class='col-md-4'>
-                                    <label for="exampleInputtitle">Products</label> <i class="text-danger asterik">*</i>
-                                    <input type="text" class="form-control" name="products" required>
+                                    <label for="exampleInputtitle">Name</label> <i class="text-danger asterik">*</i>
+                                    <input type="text" class="form-control" name="name" required>
                                 </div>
                                 <div class='col-md-4'>
                                     <label for="exampleInputtitle">Price</label> <i class="text-danger asterik">*</i>
                                     <input type="number" class="form-control" name="price" required>
                                 </div>
                                 <div class='col-md-4'>
-                                    <label for="exampleInputtitle">Number of Times</label> <i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="num_times" required>
+                                    <label for="exampleInputtitle">Min Refers</label> <i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="min_refers" required>
                                 </div>
                             </div>
                         </div>
@@ -125,12 +120,12 @@ if (isset($_POST['btnAdd'])) {
                         <div class="row">
                             <div class="form-group">
                                 <div class='col-md-6'>
-                                    <label for="exampleInputtitle">Daily Income</label> <i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="daily_income" required>
+                                    <label for="exampleInputtitle">Daily Codes</label> <i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="daily_codes" required>
                                 </div>
                                 <div class='col-md-6'>
-                                    <label for="exampleInputtitle">Monthly Income</label> <i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="monthly_income" required>
+                                    <label for="exampleInputtitle">Daily Earnings</label> <i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="daily_earnings" required>
                                 </div>
                             </div>
                         </div>
@@ -142,8 +137,8 @@ if (isset($_POST['btnAdd'])) {
                                     <input type="number" class="form-control" name="invite_bonus" required>
                                 </div>
                                 <div class='col-md-6'>
-                                    <label for="exampleInputtitle">Daily Quantity</label> <i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="daily_quantity" required>
+                                    <label for="exampleInputtitle">Per Code Cost</label> <i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="per_code_cost" required>
                                 </div>
                             </div>
                         </div>
@@ -156,22 +151,13 @@ if (isset($_POST['btnAdd'])) {
                                     <img id="blah" src="#" alt="" style="display: none; max-height: 200px; max-width: 200px;" /> <!-- Adjust max-height and max-width as needed -->
                                  </div>
                                  <div class='col-md-4'>
-                                    <label for="exampleInputtitle">Unit</label> <i class="text-danger asterik">*</i>
-                                    <input type="text" class="form-control" name="unit" required>
+                                    <label for="exampleInputtitle">Min Refers</label> <i class="text-danger asterik">*</i>
+                                    <input type="text" class="form-control" name="min_refers" required>
                                 </div>
                               
                             </div> 
                         </div> 
-                        <br> 
-                        <div class="row">
-                            <div class="form-group">
-							 <div class='col-md-3'>
-                               <label for="">Stock</label><br>
-                                    <input type="checkbox" id="stock_button" class="js-switch" <?= isset($res[0]['stock']) && $res[0]['stock'] == 1 ? 'checked' : '' ?>>
-                                    <input type="hidden" id="stock" name="stock" value="<?= isset($res[0]['stock']) && $res[0]['stock'] == 1 ? 1 : 0 ?>">
-                                </div>
-                             </div>
-						  </div> 
+                        
                         <br>
                     <!-- /.box-body -->
 

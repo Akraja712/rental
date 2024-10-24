@@ -59,7 +59,7 @@ if (isset($_POST['btnLogin'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="icon" type="image/x-icon" href="admin_v1/dist/img/">
+    <link rel="icon" type="image/x-icon" href="admin_v1/dist/img/jiyo.jpeg">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -113,7 +113,7 @@ if (isset($_POST['btnLogin'])) {
 <h2 class="text-center mt-5">Login</h2> <!-- Moved Register text outside the container -->
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
         <div class="custom-container">
-        <center> <img src="admin_v1/dist/img/" alt="Logo" style="max-width: 150px; height: auto; margin-right: 10px; border-radius:10px;"></center>
+        <center> <img src="admin_v1/dist/img/jiyo.jpeg" alt="Logo" style="max-width: 150px; height: auto; margin-right: 10px; border-radius:10px;"></center>
             
         <form method="post" enctype="multipart/form-data">
             <div class="form-group">

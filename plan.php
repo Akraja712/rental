@@ -137,7 +137,7 @@ curl_close($curl);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web</title>
-    <link rel="icon" type="image/x-icon" href="admin_v1/dist/img/money.jpeg">
+    <link rel="icon" type="image/x-icon" href="admin_v1/dist/img/jiyo.jpeg">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons CSS -->
@@ -225,6 +225,9 @@ curl_close($curl);
     width: 100%; /* Full width */
     max-width: 300px; /* Set a max width */
 }
+.small-font {
+            font-size: 0.8rem; /* Adjust the size as needed */
+        }
 @media (max-width: 576px) {
     .plan-details p {
         margin: 5px 0;
@@ -247,8 +250,8 @@ curl_close($curl);
         <?php include_once('sidebar.php'); ?>
         <div class="col py-3">
             <!-- Recharge Alert positioned above the Activated Jobs Link -->
-            <div class="alert alert-info"> <!-- Use the new class here -->
-                 Recharge Value: <strong>₹<?php echo htmlspecialchars($recharge); ?></strong>
+            <div class="alert alert-info" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#rechargeGuideModal">
+                Recharge Value: <strong>₹<?php echo htmlspecialchars($recharge); ?></strong>
             </div>
 
             <!-- Activated Jobs Link -->
@@ -300,6 +303,23 @@ curl_close($curl);
                         </div>
                     <?php endforeach; ?>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Recharge Guide Modal -->
+<div class="modal fade" id="rechargeGuideModal" tabindex="-1" aria-labelledby="rechargeGuideModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rechargeGuideModalLabel">Recharge Guide</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <center><p>1.Click on the below link & complete the payment.</p></center>
+                <center><a href="https://www.slveenterprises.org/product/30052663/Penta-Logistics---Retail-Courses" class="btn" style = "background-color: #4A148C; color:#f8f9fa;" target="_blank">Click here for making payment</a></center>
+                 <center><a href="https://youtu.be/1elTq_diwjA?si=KW5etuxCu3ChvV41" target="_blank" class="small-font">Watch demo</a></center>
+                <a href="demo_video_url" class="watch-demo-link">Watch Demo Video</a>
             </div>
         </div>
     </div>

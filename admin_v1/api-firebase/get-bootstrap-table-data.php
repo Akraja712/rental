@@ -196,23 +196,18 @@ $db->connect();
                 $operate = ' <a href="edit-plan.php?id=' . $row['id'] . '"><i class="fa fa-edit"></i>Edit</a>';
                 $operate .= ' <a class="text text-danger" href="delete-plan.php?id=' . $row['id'] . '"><i class="fa fa-trash"></i>Delete</a>';
                 $tempRow['id'] = $row['id'];
-                $tempRow['products'] = $row['products'];
+                $tempRow['name'] = $row['name'];
                 $tempRow['price'] = $row['price'];
-                $tempRow['daily_income'] = $row['daily_income'];
-                $tempRow['daily_quantity'] = $row['daily_quantity'];
-                $tempRow['monthly_income'] = $row['monthly_income'];
+                $tempRow['daily_earnings'] = $row['daily_earnings'];
+                $tempRow['daily_codes'] = $row['daily_codes'];
+                $tempRow['per_code_cost'] = $row['per_code_cost'];
                 $tempRow['invite_bonus'] = $row['invite_bonus'];
-                $tempRow['unit'] = $row['unit'];
-                $tempRow['num_times'] = $row['num_times'];
+                $tempRow['min_refers'] = $row['min_refers'];
                 if (!empty($row['image'])) {
                     $tempRow['image'] = "<a data-lightbox='category' href='" . $row['image'] . "' data-caption='" . $row['image'] . "'><img src='" . $row['image'] . "' title='" . $row['image'] . "' height='50' /></a>";
                 } else {
                     $tempRow['image'] = 'No Image';
                 }
-                if($row['stock']==1)
-                $tempRow['stock'] ="<p class='text text-success'>Enabled</p>";
-                else
-              $tempRow['stock']="<p class='text text-danger'>Disabled</p>";
                 $tempRow['operate'] = $operate;
                 $rows[] = $tempRow;
             }
@@ -397,9 +392,9 @@ if (isset($_GET['table']) && $_GET['table'] == 'user_plan') {
     $sort = 'id';
     $order = 'DESC';
 
-    if (isset($_GET['products']) && $_GET['products'] != '') {
-        $products = $db->escapeString($fn->xss_clean($_GET['products']));
-        $where .= " AND p.products = '$products'";
+    if (isset($_GET['name']) && $_GET['name'] != '') {
+        $name = $db->escapeString($fn->xss_clean($_GET['name']));
+        $where .= " AND p.name = '$name'";
     }
     if ((isset($_GET['joined_date']) && $_GET['joined_date'] != '')) {
         $joined_date = $db->escapeString($fn->xss_clean($_GET['joined_date']));
@@ -427,7 +422,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'user_plan') {
             $total = $row['total'];
         }
         
-        $sql = "SELECT l.id AS id, l.*, u.name AS user_name, u.mobile AS user_mobile, p.products AS plan_products, p.price AS plan_price, p.daily_quantity AS plan_daily_quantity, p.unit AS plan_unit, p.daily_income AS plan_daily_income, p.monthly_income AS plan_monthly_income, p.invite_bonus AS plan_invite_bonus FROM `user_plan` l " . $join . " ORDER BY $sort $order LIMIT $offset, $limit";
+        $sql = "SELECT l.id AS id, l.*, u.name AS user_name, u.mobile AS user_mobile, p.name AS plan_name, p.price AS plan_price, p.daily_codes AS plan_daily_codes, p.daily_earnings AS plan_daily_earnings, p.per_code_cost AS plan_per_code_cost, p.invite_bonus AS plan_invite_bonus, p.min_refers AS plan_min_refers FROM `user_plan` l " . $join . " ORDER BY $sort $order LIMIT $offset, $limit";
         $db->sql($sql);
         $res = $db->getResult();
         
@@ -445,13 +440,13 @@ if (isset($_GET['table']) && $_GET['table'] == 'user_plan') {
         $tempRow['id'] = $row['id'];
         $tempRow['user_name'] = $row['user_name'];
         $tempRow['user_mobile'] = $row['user_mobile'];
-        $tempRow['plan_products'] = $row['plan_products'];
+        $tempRow['plan_name'] = $row['plan_name'];
         $tempRow['plan_price'] = $row['plan_price'];
-        $tempRow['plan_daily_quantity'] = $row['plan_daily_quantity'];
-        $tempRow['plan_unit'] = $row['plan_unit'];
-        $tempRow['plan_daily_income'] = $row['plan_daily_income'];
-        $tempRow['plan_monthly_income'] = $row['plan_monthly_income'];
+        $tempRow['plan_daily_codes'] = $row['plan_daily_codes'];
+        $tempRow['plan_daily_earnings'] = $row['plan_daily_earnings'];
+        $tempRow['plan_per_code_cost'] = $row['plan_per_code_cost'];
         $tempRow['plan_invite_bonus'] = $row['plan_invite_bonus'];
+        $tempRow['plan_min_refers'] = $row['plan_min_refers'];
         $tempRow['income'] = $row['income'];
         $tempRow['joined_date'] = $row['joined_date'];
         $tempRow['operate'] = $operate;
