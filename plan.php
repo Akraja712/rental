@@ -48,6 +48,10 @@ if ($response === false) {
 
 curl_close($curl);
 
+if (isset($_POST['btntrail'])) {
+    header("Location: trail.php");
+}
+
 if (isset($_POST['btnactivate'])) {
     $plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : null;
 
@@ -183,6 +187,12 @@ curl_close($curl);
             background-color: #4A148C;
             color: white;
         }
+        .trail-btn {
+    background-color: white;     /* Background color set to white */
+    color: #4A148C;              /* Text color set to #4A148C */
+    border: 2px solid #4A148C;   /* Border color set to #4A148C */
+}
+        
 
         .product-name-box {
             background-color: #4A148C;
@@ -297,6 +307,8 @@ curl_close($curl);
                                     <form action="plan.php" method="post" style="margin-top: 10px;">
                                         <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['id']); ?>">
                                         <button type="submit" name="btnactivate" class="btn purchase-btn">Purchase</button>
+                                        <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['id']); ?>">
+                                        <button type="submit" name="btntrail" class="btn trail-btn">Take Trail</button>
                                     </form>
                                 </div>
                             </div>
