@@ -9,6 +9,7 @@ if (!$user_id) {
     header("Location: index.php");
     exit();
 }
+
 $plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : null;
 
 // Fetch the plan list
@@ -23,7 +24,6 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $response = curl_exec($curl);
 
-// Error handling for curl
 if ($response === false) {
     echo "Error: " . curl_error($curl);
     $plans = [];
@@ -42,7 +42,7 @@ if ($response === false) {
 // Initialize selected_plan
 $selected_plan = null;
 
-// Check if plan_id is valid and select the plan
+// Find and set selected plan data
 if ($plan_id && !empty($plans)) {
     foreach ($plans as $plan) {
         if ($plan['plan_id'] === $plan_id) {
@@ -52,7 +52,7 @@ if ($plan_id && !empty($plans)) {
     }
 }
 
-// Initialize session progress counter for the selected plan
+// Initialize submission count for selected plan
 if (!isset($_SESSION['submission_count'])) {
     $_SESSION['submission_count'] = [];
 }
@@ -60,10 +60,10 @@ if ($selected_plan && !isset($_SESSION['submission_count'][$plan_id])) {
     $_SESSION['submission_count'][$plan_id] = 0;  
 }
 
-// Set maximum submission count
-$max_submission_count = 50;
+// Set custom maximum submission count for plan_id 1, otherwise default to 50
+$max_submission_count = ($plan_id == 1) ? 10 : 50;
 
-// Define claim_button_enabled based on submission count
+// Define claim_button_enabled based on submission count for the selected plan
 $claim_button_enabled = ($selected_plan && $_SESSION['submission_count'][$plan_id] >= $max_submission_count);
 
 // Initialize `store_data` session variable for this plan
@@ -72,29 +72,20 @@ if (!isset($_SESSION['store_data'])) {
 }
 if ($selected_plan && !isset($_SESSION['store_data'][$plan_id])) {
     $_SESSION['store_data'][$plan_id] = [
-        'store_code' => strval(rand(100000, 999999)), // Generate Store Code
-        'invoice_number' => strval(rand(1000000000, 9999999999)), // Generate Invoice Number
-        'invoice_date' => date('Y-m-d', strtotime("+" . rand(0, 30) . " days")), // Generate Invoice Date
-        'qty' => rand(1, 100), // Generate Qty
+        'store_code' => strval(rand(100000, 999999)), 
+        'invoice_number' => strval(rand(1000000000, 9999999999)), 
+        'invoice_date' => date('Y-m-d', strtotime("+" . rand(0, 30) . " days")), 
+        'qty' => rand(1, 100), 
     ];
 }
 
-// Retrieve stored session values for this plan
 $stored_data = $selected_plan ? $_SESSION['store_data'][$plan_id] : null;
-if ($stored_data) {
-    $stored_store_code = $stored_data['store_code'];
-    $stored_invoice_number = $stored_data['invoice_number'];
-    $stored_invoice_date = $stored_data['invoice_date'];
-    $stored_qty = $stored_data['qty'];
-} else {
-    // Set default values to avoid "undefined variable" warnings
-    $stored_store_code = '';
-    $stored_invoice_number = '';
-    $stored_invoice_date = '';
-    $stored_qty = '';
-}
+$stored_store_code = $stored_data['store_code'] ?? '';
+$stored_invoice_number = $stored_data['invoice_number'] ?? '';
+$stored_invoice_date = $stored_data['invoice_date'] ?? '';
+$stored_qty = $stored_data['qty'] ?? '';
 
-// Initialize form validation errors
+// Validation errors
 $errors = [
     "plan_id" => "",
     "store_code" => "",
@@ -103,12 +94,11 @@ $errors = [
     "qty" => ""
 ];
 
-// Check for form submission
+// Handle form submission
 if (isset($_POST['btnNext'])) {
-    // Capture form values from the user input
-    $store_code = isset($_POST['store_code']) ? $_POST['store_code'] : null;
-    $invoice_number = isset($_POST['invoice_number']) ? $_POST['invoice_number'] : null;
-    $invoice_date = isset($_POST['invoice_date']) ? $_POST['invoice_date'] : null;
+    $store_code = $_POST['store_code'] ?? null;
+    $invoice_number = $_POST['invoice_number'] ?? null;
+    $invoice_date = $_POST['invoice_date'] ?? null;
     $qty = isset($_POST['qty']) ? intval($_POST['qty']) : null;
 
     // Validate inputs
@@ -136,13 +126,10 @@ if (isset($_POST['btnNext'])) {
         $errors['qty'] = "Incorrect Qty.";
     }
 
-    // If no validation errors, process the form submission
     if (!array_filter($errors)) {
         $_SESSION['submission_count'][$plan_id]++; // Increment the count for this plan
 
-        // Check if the maximum submission count is reached
         if ($_SESSION['submission_count'][$plan_id] >= $max_submission_count) {
-            // Prepare data for API call to claim.php
             $data = [
                 "plan_id" => $plan_id,
                 "user_id" => $user_id,
@@ -171,7 +158,6 @@ if (isset($_POST['btnNext'])) {
                     if (isset($responseData["balance"])) {
                         $_SESSION['balance'] = $responseData['balance'];  
                     }
-                    // Show an alert with the success message, staying on the same page
                     echo "<script>alert('$message');</script>";
                 } else {
                     if ($responseData !== null) {
@@ -181,7 +167,6 @@ if (isset($_POST['btnNext'])) {
             }
         }
 
-        // Generate new session values after successful form submission
         if ($selected_plan) {
             $_SESSION['store_data'][$plan_id] = [
                 'store_code' => strval(rand(100000, 999999)),
@@ -191,9 +176,7 @@ if (isset($_POST['btnNext'])) {
             ];
         }
 
-        // Do not redirect here; stay on the same page
-        // Instead, update the stored values to be displayed again
-        $stored_data = $_SESSION['store_data'][$plan_id]; // Fetch updated data from session
+        $stored_data = $_SESSION['store_data'][$plan_id]; 
         $stored_store_code = $stored_data['store_code'];
         $stored_invoice_number = $stored_data['invoice_number'];
         $stored_invoice_date = $stored_data['invoice_date'];
@@ -201,6 +184,7 @@ if (isset($_POST['btnNext'])) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
