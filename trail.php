@@ -13,22 +13,16 @@ $max_submission_count = 2; // Set your desired max count
 
 // Initialize submission count on first load
 if (!isset($_SESSION['trial_submission_count'])) {
-    $_SESSION['trial_submission_count'] = 0; // Initialize submission count to 0 on first load
+    $_SESSION['trial_submission_count'] = 0;
 }
 
 // Initialize error messages
 $errors = [];
 
-// Check if random values are already set, if not, generate new ones
-if (!isset($_SESSION['store_code'])) {
-    generateNewValues();
+// Check if random values are already set for the plan, if not, generate new ones
+if (!isset($_SESSION['trial_plan_data'])) {
+    $_SESSION['trial_plan_data'] = [];
 }
-
-// Initialize values to be displayed
-$store_code = $_SESSION['store_code'];
-$invoice_number = $_SESSION['invoice_number'];
-$invoice_date = $_SESSION['invoice_date'];
-$qty = $_SESSION['qty'];
 
 // Check for form submission
 if (isset($_POST['btnNext'])) {
@@ -39,19 +33,19 @@ if (isset($_POST['btnNext'])) {
     $submitted_qty = isset($_POST['qty']) ? intval($_POST['qty']) : 1; // default to 1 if not set
 
     // Validate inputs against session values
-    if ($submitted_store_code !== $store_code) {
+    if ($submitted_store_code !== $_SESSION['store_code']) {
         $errors['store_code'] = "Store Code is incorrect.";
     } 
 
-    if ($submitted_invoice_number !== $invoice_number) {
+    if ($submitted_invoice_number !== $_SESSION['invoice_number']) {
         $errors['invoice_number'] = "Invoice Number is incorrect.";
     } 
 
-    if ($submitted_invoice_date !== $invoice_date) {
+    if ($submitted_invoice_date !== $_SESSION['invoice_date']) {
         $errors['invoice_date'] = "Invoice Date is incorrect.";
     }
 
-    if ($submitted_qty !== $qty) {
+    if ($submitted_qty !== $_SESSION['qty']) {
         $errors['qty'] = "Quantity is incorrect.";
     } 
 
@@ -62,20 +56,17 @@ if (isset($_POST['btnNext'])) {
         // Check if the maximum trial count is reached
         if ($_SESSION['trial_submission_count'] >= $max_submission_count) {
             // Reset submission count before redirecting to plan.php
-            $_SESSION['trial_submission_count'] = 0; // Reset count
-            header("Location: plan.php"); // Redirect to the plan selection page
+            $_SESSION['trial_submission_count'] = 0;
+            header("Location: plan.php");
             exit();
         }
 
         // Generate new random values for next submission
         generateNewValues();
-        
-        // Update displayed values
-        $store_code = $_SESSION['store_code'];
-        $invoice_number = $_SESSION['invoice_number'];
-        $invoice_date = $_SESSION['invoice_date'];
-        $qty = $_SESSION['qty'];
     }
+} else {
+    // Ensure new values are generated upon each new form load
+    generateNewValues();
 }
 
 // Function to generate new random values
@@ -86,7 +77,6 @@ function generateNewValues() {
     $_SESSION['qty'] = rand(1, 100);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,20 +96,17 @@ function generateNewValues() {
             width: 80%;
             max-width: 600px;
         }
-
         .highlighted-value {
             background-color: #fff8c6;
             font-weight: bold;
             padding: 2px 5px;
             border-radius: 5px;
         }
-
         .custom-btn {
             background-color: #4A148C;
             border-color: #4A148C;
             color: white;
         }
-
         .custom-btn:hover {
             background-color: #6A1B9A;
             border-color: #6A148C;
@@ -140,46 +127,40 @@ function generateNewValues() {
                     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="mt-3">
                         <div class="mb-3">
                             <label for="store_code" class="form-label">Store Code:</label>
-                            <span class="highlighted-value"><?php echo htmlspecialchars($store_code); ?></span>
+                            <span class="highlighted-value"><?php echo htmlspecialchars($_SESSION['store_code']); ?></span>
                             <input type="text" name="store_code" class="form-control" id="store_code" placeholder="Enter Store Code">
                             <span class="text-danger"><?php echo $errors['store_code'] ?? ''; ?></span>
                         </div>
-
                         <div class="mb-3">
                             <label for="invoice_number" class="form-label">Invoice Number:</label>
-                            <span class="highlighted-value"><?php echo htmlspecialchars($invoice_number); ?></span>
+                            <span class="highlighted-value"><?php echo htmlspecialchars($_SESSION['invoice_number']); ?></span>
                             <input type="text" name="invoice_number" class="form-control" id="invoice_number" placeholder="Enter Invoice Number">
                             <span class="text-danger"><?php echo $errors['invoice_number'] ?? ''; ?></span>
                         </div>
-
                         <div class="mb-3">
                             <label for="invoice_date" class="form-label">Invoice Date:</label>
-                            <span class="highlighted-value"><?php echo htmlspecialchars($invoice_date); ?></span>
+                            <span class="highlighted-value"><?php echo htmlspecialchars($_SESSION['invoice_date']); ?></span>
                             <input type="date" name="invoice_date" class="form-control" id="invoice_date">
                             <span class="text-danger"><?php echo $errors['invoice_date'] ?? ''; ?></span>
                         </div>
-
                         <div class="mb-3">
                             <label for="qty" class="form-label">Quantity:</label>
-                            <span class="highlighted-value"><?php echo htmlspecialchars($qty); ?></span>
+                            <span class="highlighted-value"><?php echo htmlspecialchars($_SESSION['qty']); ?></span>
                             <div class="input-group">
                                 <button type="button" class="btn btn-outline-secondary" onclick="decrementQty()">-</button>
-                                <input type="number" name="qty" class="form-control" id="qty" value="<?php echo htmlspecialchars($qty); ?>" min="1" readonly>
+                                <input type="number" name="qty" class="form-control" id="qty" value="<?php echo htmlspecialchars($_SESSION['qty']); ?>" min="1" readonly>
                                 <button type="button" class="btn btn-outline-secondary" onclick="incrementQty()">+</button>
                                 <span class="text-danger"><?php echo $errors['qty'] ?? ''; ?></span>
                             </div>
                         </div>
-
                         <button type="submit" name="btnNext" class="btn custom-btn" <?php echo ($_SESSION['trial_submission_count'] >= $max_submission_count) ? 'disabled' : ''; ?>>
                             Next
                         </button>
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function incrementQty() {
@@ -187,7 +168,6 @@ function generateNewValues() {
             var currentValue = parseInt(qtyInput.value);
             qtyInput.value = currentValue + 1;
         }
-
         function decrementQty() {
             var qtyInput = document.getElementById("qty");
             var currentValue = parseInt(qtyInput.value);

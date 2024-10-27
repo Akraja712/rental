@@ -10,7 +10,15 @@ if (!$user_id) {
     exit();
 }
 
+// Set the plan_id variable from POST request
 $plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : null;
+
+// Now reset the submission count for the specific plan on page load
+if (isset($_SESSION['submission_count'][$plan_id])) {
+    $_SESSION['submission_count'][$plan_id] = 0;
+}
+
+// Fetch the plan list and continue with your existing logic...
 
 // Fetch the plan list
 $data = ["user_id" => $user_id];
@@ -61,7 +69,7 @@ if ($selected_plan && !isset($_SESSION['submission_count'][$plan_id])) {
 }
 
 // Set custom maximum submission count for plan_id 1, otherwise default to 50
-$max_submission_count = ($plan_id == 1) ? 10 : 50;
+$max_submission_count = ($plan_id == 1) ? 1 : 1;
 
 // Define claim_button_enabled based on submission count for the selected plan
 $claim_button_enabled = ($selected_plan && $_SESSION['submission_count'][$plan_id] >= $max_submission_count);
@@ -75,7 +83,7 @@ if ($selected_plan && !isset($_SESSION['store_data'][$plan_id])) {
         'store_code' => strval(rand(100000, 999999)), 
         'invoice_number' => strval(rand(1000000000, 9999999999)), 
         'invoice_date' => date('Y-m-d', strtotime("+" . rand(0, 30) . " days")), 
-        'qty' => rand(1, 100), 
+        'qty' => rand(1, 5), 
     ];
 }
 
@@ -128,7 +136,7 @@ if (isset($_POST['btnNext'])) {
 
     if (!array_filter($errors)) {
         $_SESSION['submission_count'][$plan_id]++; // Increment the count for this plan
-
+    
         if ($_SESSION['submission_count'][$plan_id] >= $max_submission_count) {
             $data = [
                 "plan_id" => $plan_id,
@@ -138,19 +146,21 @@ if (isset($_POST['btnNext'])) {
                 "invoice_number" => $invoice_number,
                 "invoice_date" => $invoice_date
             ];
-
+    
             $apiUrl = API_URL . "claim.php";  
             $curl = curl_init($apiUrl);
             curl_setopt($curl, CURLOPT_POST, true);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
+            
             $response = curl_exec($curl);
             curl_close($curl);
-
+            
             if ($response === false) {
-                echo "Error: " . curl_error($curl);
+                echo "<script>alert('Error: " . curl_error($curl) . "');</script>";
+                echo "<script>window.location.href = 'my_plans.php';</script>"; // Redirect on cURL error
+                exit();
             } else {
                 $responseData = json_decode($response, true);
                 if ($responseData !== null && isset($responseData["success"]) && $responseData["success"]) {
@@ -159,10 +169,20 @@ if (isset($_POST['btnNext'])) {
                         $_SESSION['balance'] = $responseData['balance'];  
                     }
                     echo "<script>alert('$message');</script>";
+                    
+                    // Redirect to my_plans.php on success
+                    echo "<script>window.location.href = 'my_plans.php';</script>";
+                    exit();
                 } else {
                     if ($responseData !== null) {
-                        echo "<script>alert('" . $responseData["message"] . "')</script>";
+                        echo "<script>alert('" . $responseData["message"] . "');</script>";
+                    } else {
+                        echo "<script>alert('Unexpected error occurred');</script>";
                     }
+                    
+                    // Redirect to my_plans.php on any error in response
+                    echo "<script>window.location.href = 'my_plans.php';</script>";
+                    exit();
                 }
             }
         }
@@ -172,7 +192,7 @@ if (isset($_POST['btnNext'])) {
                 'store_code' => strval(rand(100000, 999999)),
                 'invoice_number' => strval(rand(1000000000, 9999999999)),
                 'invoice_date' => date('Y-m-d', strtotime("+" . rand(0, 30) . " days")),
-                'qty' => rand(1, 100),
+                'qty' => rand(1, 5),
             ];
         }
 
