@@ -334,7 +334,7 @@ curl_close($curl);
             </div>
             <div class="modal-body">
                 <center><p>1.Click on the below link & complete the payment.</p></center>
-                <center><a href="https://www.slveenterprises.org/product/30052663/Penta-Logistics---Retail-Courses" class="btn" style = "background-color: #4A148C; color:#f8f9fa;" target="_blank">Click here for making payment</a></center>
+                <center><a href="https://www.jiyologistics.org/product/31855011/Jiyo-Retail-Career-Building-Course" class="btn" style = "background-color: #4A148C; color:#f8f9fa;" target="_blank">Click here for making payment</a></center>
                  <center><a href="https://youtu.be/1elTq_diwjA?si=KW5etuxCu3ChvV41" target="_blank" class="small-font">Watch demo</a></center>
                 <a href="demo_video_url" class="watch-demo-link">Watch Demo Video</a>
             </div>
