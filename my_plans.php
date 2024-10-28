@@ -37,7 +37,7 @@ if ($response === false) {
         $plans = $responseData["data"];
     } else {
         if ($responseData !== null) {
-            echo "<script>alert('".$responseData["message"]."')</script>";
+            echo "<script>alert('" . $responseData["message"] . "')</script>";
         }
         $plans = [];
     }
@@ -48,6 +48,7 @@ curl_close($curl);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -111,7 +112,7 @@ curl_close($curl);
             border-radius: 5px;
             margin-bottom: 15px;
         }
-        
+
         .btn-success {
             background-color: #4A148C;
             border-color: #4A148C;
@@ -123,10 +124,12 @@ curl_close($curl);
         }
 
         .activated-jobs-link {
-        margin-bottom: 20px;
-        background-color: #4A148C; /* Background color for the link */
-        border-radius: 10px;
-    }
+            margin-bottom: 20px;
+            background-color: #4A148C;
+            /* Background color for the link */
+            border-radius: 10px;
+        }
+
         @media (max-width: 576px) {
             .plan-details p {
                 margin: 5px 0;
@@ -135,23 +138,24 @@ curl_close($curl);
         }
     </style>
 </head>
-<body>
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        <?php include_once('sidebar.php'); ?>
-        <div class="col py-3">
-                  <!-- Activated Jobs Link -->
-                  <div class="activated-jobs-link">
-    <a href="plan.php" class="btn w-100 d-flex justify-content-center align-items-center" style="background-color: #4A148C;">
-        <i style="color: #f8f9fa; font-size: 1.5rem;font-weight: bold;" class="bi bi-arrow-left"></i>
-        <span style="color: #f8f9fa; font-size: 1.2rem;  font-weight: bold; flex-grow: 1; text-align: center;">Jobs</span> <!-- Button Text -->
-    </a>
-</div>
 
-            <div id="plansSection" class="plansSection-container">
-                <div class="row">
-                    <!-- Loop through all plans and display each one -->
-                    <?php foreach ($plans as $plan): ?>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <?php include_once('sidebar.php'); ?>
+            <div class="col py-3">
+                <!-- Activated Jobs Link -->
+                <div class="activated-jobs-link">
+                    <a href="plan.php" class="btn w-100 d-flex justify-content-center align-items-center" style="background-color: #4A148C;">
+                        <i style="color: #f8f9fa; font-size: 1.5rem;font-weight: bold;" class="bi bi-arrow-left"></i>
+                        <span style="color: #f8f9fa; font-size: 1.2rem;  font-weight: bold; flex-grow: 1; text-align: center;">Jobs</span> <!-- Button Text -->
+                    </a>
+                </div>
+
+                <div id="plansSection" class="plansSection-container">
+                    <div class="row">
+                        <!-- Loop through all plans and display each one -->
+                        <?php foreach ($plans as $plan): ?>
                         <div class="col-md-6 mb-4">
                             <!-- Separate Product Name Box -->
                             <div class="product-name-box">
@@ -161,11 +165,11 @@ curl_close($curl);
                             <div class="plan-box">
                                 <!-- Left side: Image with Lightbox -->
                                 <?php if (!empty($plan['image'])): ?>
-                                    <a data-lightbox="plan" href="<?php echo htmlspecialchars($plan['image']); ?>" data-title="<?php echo htmlspecialchars($plan['name']); ?>">
-                                        <img src="<?php echo htmlspecialchars($plan['image']); ?>" alt="Plan image" title="<?php echo htmlspecialchars($plan['name']); ?>">
-                                    </a>
+                                <a data-lightbox="plan" href="<?php echo htmlspecialchars($plan['image']); ?>" data-title="<?php echo htmlspecialchars($plan['name']); ?>">
+                                    <img src="<?php echo htmlspecialchars($plan['image']); ?>" alt="Plan image" title="<?php echo htmlspecialchars($plan['name']); ?>">
+                                </a>
                                 <?php else: ?>
-                                    <p>No Image Available</p>
+                                <p>No Image Available</p>
                                 <?php endif; ?>
 
                                 <!-- Right side: Details -->
@@ -173,31 +177,31 @@ curl_close($curl);
                                     <p>Price: <strong><?php echo '₹'. htmlspecialchars($plan['price']); ?></strong></p>
                                     <p>Daily Earnings: <strong><?php echo '₹'.htmlspecialchars($plan['daily_earnings']); ?></strong></p>
                                     <p>Daily Codes: <strong><?php echo '₹'. htmlspecialchars($plan['daily_codes']); ?></strong></p>
-                                    
-                                        <p>Validity: <span class="highlight">Unlimited Days</span></p>
-                                  
-                                    
+                                    <p>Validity: <span class="highlight">
+                                        <?php echo ($plan['plan_id'] == 1) ? '30 Days' : 'Unlimited Days'; ?>
+                                    </span></p>
+
                                     <form method="post" action="claim.php" style="display: inline;">
                                         <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['plan_id']); ?>">
-                                        <button type="submit" class="btn btn-success" 
-                                            <?php echo ($plan['claim'] == '0') ? 'disabled' : ''; ?>>
+                                        <button type="submit" class="btn btn-success" <?php echo ($plan['claim'] == '0') ? 'disabled' : ''; ?>>
                                             Start Work
                                         </button>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap JavaScript Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Lightbox JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+    <!-- Bootstrap JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Lightbox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
 </body>
+
 </html>
