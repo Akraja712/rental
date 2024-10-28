@@ -176,9 +176,10 @@ curl_close($curl);
                                 <div class="plan-details">
                                     <p>Price: <strong><?php echo '₹'. htmlspecialchars($plan['price']); ?></strong></p>
                                     <p>Daily Earnings: <strong><?php echo '₹'.htmlspecialchars($plan['daily_earnings']); ?></strong></p>
-                                    <p>Daily Codes: <strong><?php echo '₹'. htmlspecialchars($plan['daily_codes']); ?></strong></p>
+                                    <p>Monthly Earnings:Rs <strong><?php echo '' . htmlspecialchars($plan['monthly_earnings']); ?></strong></p>
+                                    <p>Daily Codes: <strong><?php echo ''. htmlspecialchars($plan['daily_codes']); ?></strong></p>
                                     <p>Validity: <span class="highlight">
-                                        <?php echo ($plan['plan_id'] == 1) ? '30 Days' : 'Unlimited Days'; ?>
+                                        <?php echo ($plan['plan_id'] == 1) ? '30 Days' : 'Life Time'; ?>
                                     </span></p>
 
                                     <form method="post" action="claim.php" style="display: inline;">

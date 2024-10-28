@@ -41,7 +41,7 @@ if ($response === false) {
         if (!empty($userdetails)) {
             $total_income = $userdetails[0]["total_income"];
             $total_recharge = $userdetails[0]["total_recharge"];
-            $total_assets = $userdetails[0]["total_assets"];
+            $balance = $userdetails[0]["balance"];
             $total_withdrawal = $userdetails[0]["total_withdrawal"];
             $today_income = $userdetails[0]["today_income"];
             $team_income = $userdetails[0]["team_income"];
@@ -178,6 +178,14 @@ curl_close($curl);
 
         <div class="col py-3">
             <div class="row">
+            <div class="col-6 col-md-4 mb-3">
+                    <div class="info-box total-assets">
+                        <i class="bi bi-wallet2"></i>
+                        <h4>Main Wallet Balance</h4>
+                        <p>₹<?php echo $balance; ?></p>
+                    </div>
+                </div>
+
                 <!-- Total Income -->
                 <div class="col-6 col-md-4 mb-3">
                     <div class="info-box total-income">
@@ -192,14 +200,6 @@ curl_close($curl);
                         <i class="bi bi-piggy-bank"></i>
                         <h4>Total Recharge</h4>
                         <p>₹<?php echo $total_recharge; ?></p>
-                    </div>
-                </div>
-                <!-- Total Assets -->
-                <div class="col-6 col-md-4 mb-3">
-                    <div class="info-box total-assets">
-                        <i class="bi bi-briefcase-fill"></i>
-                        <h4>Total Assets</h4>
-                        <p>₹<?php echo $total_assets; ?></p>
                     </div>
                 </div>
                 <!-- Total Withdrawals -->

@@ -300,9 +300,10 @@ curl_close($curl);
                                 <div class="plan-details">
                                     <p>Course Fees: <strong><?php echo '₹' . htmlspecialchars($plan['price']); ?></strong></p>
                                     <p>Daily Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['daily_earnings']); ?></strong></p>
-                                    <p>Daily Codes: <strong><?php echo '₹' . htmlspecialchars($plan['daily_codes']); ?></strong></p>
+                                    <p>Monthly Earnings:Rs <strong><?php echo '' . htmlspecialchars($plan['monthly_earnings']); ?></strong></p>
+                                    <p>Daily Codes: <strong><?php echo '' . htmlspecialchars($plan['daily_codes']); ?></strong></p>
                                     <?php if ($plan['id'] != 1): ?>
-                                        <p>Validity: <span class="highlight">Unlimited Days</span></p>
+                                        <p>Validity: <span class="highlight">Life Time</span></p>
                                     <?php else: ?>
                                         <!-- Optional: Display different text or leave blank for plan_id 1 -->
                                         <p>Validity: <span class="highlight">30 Days</span></p>
