@@ -173,9 +173,10 @@ curl_close($curl);
                                     <p>Price: <strong><?php echo '₹'. htmlspecialchars($plan['price']); ?></strong></p>
                                     <p>Daily Earnings: <strong><?php echo '₹'.htmlspecialchars($plan['daily_earnings']); ?></strong></p>
                                     <p>Daily Codes: <strong><?php echo '₹'. htmlspecialchars($plan['daily_codes']); ?></strong></p>
-                                    <p>Validity: <span class="highlight">
-                                        <?php echo ($plan['id'] == 1) ? '30 Days' : 'Unlimited Days'; ?>
-                                        </span></p> 
+                                    
+                                        <p>Validity: <span class="highlight">Unlimited Days</span></p>
+                                  
+                                    
                                     <form method="post" action="claim.php" style="display: inline;">
                                         <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['plan_id']); ?>">
                                         <button type="submit" class="btn btn-success" 
