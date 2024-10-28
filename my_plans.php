@@ -173,11 +173,11 @@ curl_close($curl);
                                     <p>Price: <strong><?php echo '₹'. htmlspecialchars($plan['price']); ?></strong></p>
                                     <p>Daily Earnings: <strong><?php echo '₹'.htmlspecialchars($plan['daily_earnings']); ?></strong></p>
                                     <p>Daily Codes: <strong><?php echo '₹'. htmlspecialchars($plan['daily_codes']); ?></strong></p>
-                                    <?php if ($plan['id'] != 1): ?>
-                                        <p>Validity: <span class="highlight">Unlimited Days</span></p>
-                                    <?php else: ?>
-                                        <!-- Optional: Display different text or leave blank for plan_id 1 -->
+                                    <?php if ($plan['id'] == 1): ?>
                                         <p>Validity: <span class="highlight">30 Days</span></p>
+                                    <?php else: ?>
+                                        <p>Validity: <span class="highlight">Unlimited Days</span></p>
+                                        <!-- Optional: Display different text or leave blank for plan_id 1 -->
                                     <?php endif; ?>
                                     
                                     <form method="post" action="claim.php" style="display: inline;">
