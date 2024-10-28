@@ -35,6 +35,13 @@ if (empty($_POST['amount'])) {
     return;
 }
 
+if ($_POST['amount'] < 499) {
+    $response['success'] = false;
+    $response['message'] = "Amount should be minimum 499";
+    echo json_encode($response);
+    return;
+}
+
 if (empty($_POST['key'])) {
     $response['success'] = false;
     $response['message'] = "Key is empty";
@@ -42,7 +49,6 @@ if (empty($_POST['key'])) {
     return;
 }
 $datetime = date('Y-m-d H:i:s');
-$date = date('Y-m-d');
 $user_id = $db->escapeString($_POST['user_id']);
 $txn_id = $db->escapeString($_POST['txn_id']);
 $amount = $db->escapeString($_POST['amount']);
@@ -64,7 +70,6 @@ $name = $res[0]['name'];
 $email = $res[0]['email'];
 $mobile = $res[0]['mobile'];
 $redirect_url = 'https://www.google.com/';
-
 
 // API endpoint
 $url = 'https://api.ekqr.in/api/create_order';
@@ -106,14 +111,9 @@ $responseArray = json_decode($resp, true);
 $status = $responseArray['status'];
 if($status == true){
     $order_id = $responseArray['data']['order_id'];
-    $sql = "INSERT INTO recharge_trans (`user_id`,`txn_id`,`order_id`,`amount`,`status`,`txn_date`,`datetime`) VALUES ($user_id,'$txn_id','$order_id',$amount,0,'$date','$datetime')";
+    $sql = "INSERT INTO recharge_trans (`user_id`,`txn_id`,`order_id`,`amount`,`status`,`datetime`) VALUES ($user_id,'$txn_id','$order_id',$amount,0,'$datetime')";
     $db->sql($sql);
-
-
-    
-
 }
-
 
 echo json_encode($responseArray);
 ?>

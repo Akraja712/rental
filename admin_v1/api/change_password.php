@@ -25,10 +25,24 @@ if (empty($_POST['password'])) {
     print_r(json_encode($response));
     return false;
 }
+if (empty($_POST['confirm_password'])) {
+    $response['success'] = false;
+    $response['message'] = "Confirm Password is Empty";
+    print_r(json_encode($response));
+    return false;
+}
 
 
 $user_id=$db->escapeString($_POST['user_id']);
 $password=$db->escapeString($_POST['password']);
+$confirm_password = $db->escapeString($_POST['confirm_password']);
+
+if ($password !== $confirm_password) {
+    $response['success'] = false;
+    $response['message'] = "Password and Confirm Password do not match";
+    print_r(json_encode($response));
+    return false;
+}
 
 $sql = "SELECT * FROM users WHERE id = '" . $user_id . "'";
 $db->sql($sql);

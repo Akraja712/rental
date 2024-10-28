@@ -18,11 +18,10 @@ if (isset($_POST['btnEdit'])) {
 	$name = $db->escapeString($_POST['name']);
     $plan_id = $db->escapeString($_POST['plan_id']);
     $price = $db->escapeString(($_POST['price']));
-	$min_valid_team = $db->escapeString(($_POST['min_valid_team']));
 	$error = array();
 
 	if (!empty($name)) {
-		$sql_query = "UPDATE markets SET name='$name',price='$price',plan_id='$plan_id',min_valid_team='$min_valid_team' WHERE id =  $ID";
+		$sql_query = "UPDATE markets SET name='$name',price='$price',plan_id='$plan_id' WHERE id =  $ID";
 		$db->sql($sql_query);
 		$update_result = $db->getResult();
 		if (!empty($update_result)) {
@@ -104,10 +103,6 @@ if (isset($_POST['btnCancel'])) { ?>
                                 <div class="col-md-6">
 									<label for="exampleInputEmail1">Price</label><i class="text-danger asterik">*</i>
 									<input type="number" class="form-control" name="price" value="<?php echo $res[0]['price']; ?>">
-								</div>
-                                <div class="col-md-6">
-									<label for="exampleInputEmail1">Min Valid Team</label><i class="text-danger asterik">*</i>
-									<input type="number" class="form-control" name="min_valid_team" value="<?php echo $res[0]['min_valid_team']; ?>">
 								</div>
                             </div>
                         </div>

@@ -23,13 +23,16 @@
                                     <th  data-field="operate" data-events="actionEvents">Action</th>
                                     <th  data-field="id" data-sortable="true">ID</th>
                                     <th  data-field="name" data-sortable="true">Name</th>
+                                    <th  data-field="demo_video" data-sortable="true">Demo Video</th>
+                                    <th  data-field="daily_codes" data-sortable="true">Daily Codes</th>
+                                    <th  data-field="daily_earnings" data-sortable="true">Daily Earnings</th>
+                                    <th  data-field="monthly_earnings" data-sortable="true">Monthly Earnings</th>
+                                    <th  data-field="per_code_cost" data-sortable="true">Per Code Cost</th>
                                     <th  data-field="price" data-sortable="true">Price</th>
-                                    <th data-field="daily_earnings" data-sortable="true">Daily Earnings</th>
-                                    <th  data-field="invite_bonus" data-sortable="true">Invite Bonus</th>
-                                    <th data-field="daily_codes" data-sortable="true">Daily Codes</th>
-                                    <th data-field="min_refers" data-sortable="true">Min Refers</th>
-                                    <th data-field="per_code_cost" data-sortable="true">Per Code Cost</th>
+                                    <th  data-field="type" data-sortable="true">Type</th>
+                                    <th  data-field="min_refers" data-sortable="true">Min Refers</th>
                                     <th data-field="image">Image</th>
+                                    <th  data-field="description" data-sortable="true">Description</th>
                                 </tr>
                             </thead>
                         </table>

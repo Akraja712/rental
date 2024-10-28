@@ -51,7 +51,12 @@ $result = $db->getResult();
 $income_status = $result[0]['income_status'];
 
 
-
+if ($income_status == 0) {
+    $response['success'] = false;
+    $response['message'] = "Today Holiday";
+    print_r(json_encode($response));
+    return false;
+}
 
 
 $dayOfWeek = date('w');

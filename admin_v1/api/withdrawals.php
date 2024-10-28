@@ -34,7 +34,6 @@ function isBetween10AMand6PM() {
     return ($currentHour >= date('H', $startTimestamp)) && ($currentHour < date('H', $endTimestamp));
 }
 
-
 $user_id = $db->escapeString($_POST['user_id']);
 $amount = $db->escapeString($_POST['amount']);
 $datetime = date('Y-m-d H:i:s');
@@ -48,28 +47,44 @@ $settings = $db->getResult();
 $sql = "SELECT * FROM settings WHERE id=1";
 $db->sql($sql);
 $result = $db->getResult();
+$min_withdrawal = $result[0]['min_withdrawal'];
 $withdrawal_status = $result[0]['withdrawal_status'];
-
 
 if ($withdrawal_status == 0) {
     $response['success'] = false;
-    $response['message'] = "Today Holiday";
+    $response['message'] = "Withdrawal Disabled";
     print_r(json_encode($response));
     return false;
 }
 
-$sql = "SELECT *,DATE(registered_datetime) AS reg_date FROM users WHERE id='$user_id'";
+$sql = "SELECT * FROM users WHERE id='$user_id'";
 $db->sql($sql);
 $res = $db->getResult();
 $balance = $res[0]['balance'];
 $account_num = $res[0]['account_num'];
-$min_withdrawal = $res[0]['min_withdrawal'];
-$referred_by = $res[0]['referred_by'];
-$reg_date = $res[0]['reg_date'];
+$withdrawal_status = $res[0]['withdrawal_status'];
+
+if ($withdrawal_status == 0) {
+    $response['success'] = false;
+    $response['message'] = "Disabled";
+    print_r(json_encode($response));
+    return false;
+}
+
+
+$sql = "SELECT * FROM withdrawals WHERE user_id='$user_id' AND status = 0";
+$db->sql($sql);
+$pendingWithdrawals = $db->getResult();
+if (!empty($pendingWithdrawals)) {
+    $response['success'] = false;
+    $response['message'] = "Please withdraw again after your pending withdrawal is paid";
+    print_r(json_encode($response));
+    return false;
+}
 
 if (!isBetween10AMand6PM()) {
     $response['success'] = false;
-    $response['message'] = "Withdrawal time morning 10:00AM to 6:00PM";
+    $response['message'] = "Withdrawal time morning 10:00AM to 6PM";
     print_r(json_encode($response));
     return false;
 }
@@ -83,7 +98,6 @@ if ($dayOfWeek == 0 || $dayOfWeek == 7) {
     return false;
 } 
 
-
 if ($amount >= $min_withdrawal) {
     if ($amount <= $balance) {
         if ($account_num == '') {
@@ -93,12 +107,8 @@ if ($amount >= $min_withdrawal) {
             return false;
         } else {
 
-            $deducted_amount = $amount * 0.20;
-            $final_amount = $amount - $deducted_amount;
-
-            $sql = "INSERT INTO withdrawals (`user_id`,`amount`,`balance`,`status`,`datetime`) VALUES ('$user_id','$final_amount',$balance,0,'$datetime')";
+            $sql = "INSERT INTO withdrawals (`user_id`,`amount`,`balance`,`status`,`datetime`) VALUES ('$user_id','$amount',$balance,0,'$datetime')";
             $db->sql($sql);
-
             $sql = "UPDATE users SET balance = balance - '$amount',total_withdrawal = total_withdrawal + '$amount' WHERE id='$user_id'";
             $db->sql($sql);
 

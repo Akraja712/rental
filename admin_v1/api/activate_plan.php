@@ -210,7 +210,7 @@ if ($plan_id == 9) {
                     $invite_bonus = $price * 0.15;
                 }
                 
-                $sql = "UPDATE users SET team_income = team_income + $invite_bonus ,withdrawal_status = 1  WHERE refer_code = '$referred_by'";
+                $sql = "UPDATE users SET bonus_wallet = bonus_wallet + $invite_bonus,team_income = team_income + $invite_bonus ,withdrawal_status = 1  WHERE refer_code = '$referred_by'";
                 $db->sql($sql);
     
                 $sql = "INSERT INTO transactions (user_id, amount, datetime, type) VALUES ('$r_id', '$invite_bonus', '$datetime', 'refer_bonus')";

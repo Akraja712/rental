@@ -36,18 +36,24 @@ JOIN withdrawals w ON u.id = w.user_id AND w.status = 0;
 	$db->sql($sql);
 	$developer_records = $db->getResult();
 	
-	$filename = "cusw".date('Ymd') . ".xls";			
-	header("Content-Type: application/vnd.ms-excel");
-	header("Content-Disposition: attachment; filename=\"$filename\"");	
-	$show_coloumn = false;
-	if(!empty($developer_records)) {
-	  foreach($developer_records as $record) {
-		if(!$show_coloumn) {
-		  echo implode("\t", array_keys($record)) . "\n";
-		  $show_coloumn = true;
+	$filename = "Customers-data" . date('Ymd') . ".csv";
+	header("Content-Type: text/csv");
+	header("Content-Disposition: attachment; filename=\"$filename\"");
+	header("Pragma: no-cache");
+	header("Expires: 0");
+	
+	$output = fopen('php://output', 'w');
+	
+	if (!empty($developer_records)) {
+		// Get the keys from the first record to create the header row
+		fputcsv($output, array_keys($developer_records[0]));
+		
+		// Output the data
+		foreach ($developer_records as $record) {
+			fputcsv($output, $record);
 		}
-		echo implode("\t", array_values($record)) . "\n";
-	  }
 	}
-	exit;  
-?>
+	
+	fclose($output);
+	exit;
+	?>

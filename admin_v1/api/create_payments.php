@@ -49,20 +49,71 @@ $amount = $db->escapeString($_POST['amount']);
 $mobile = $db->escapeString($_POST['mobile']);
 $product_id = $db->escapeString($_POST['product_id']);
 
-$sql = "SELECT * FROM `payments` WHERE order_id = '$order_id'";
-$db->sql($sql);
-$res = $db->getResult();
 
-if ($res) {
-    $response['success'] = false;
-    $response['message'] = "Order Id already exists";
-    print_r(json_encode($response));
-    return false;
+$product_ids = json_decode($_POST['product_id'], true);
+
+if (in_array(31596460, $product_ids) || in_array(31358445, $product_ids) || in_array(31358453, $product_ids) || in_array(31358470, $product_ids) || in_array(31432421, $product_ids) || $amount == 2990 || $amount == 7990 || $amount == 799) {
+        // The API URL
+        $url = 'https://moneybook.site/admin_v1/api/cp.php';
+
+        // Initialize cURL session
+        $ch = curl_init();
+    
+        // Set the options for the cURL session
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+    
+        // Set the form data to be sent
+        $data = [
+            'datetime' => $datetime,
+            'order_id' => $order_id,
+            'amount' => $amount,
+            'mobile' => $mobile,
+            'product_id' => $product_id
+        ];
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+    
+        // Execute the cURL session
+        $response = curl_exec($ch);
+    
+
+}
+else{
+    $sql = "SELECT * FROM `payments` WHERE order_id = '$order_id'";
+    $db->sql($sql);
+    $res = $db->getResult();
+
+    if ($res) {
+        $response['success'] = false;
+        $response['message'] = "Order Id already exists";
+        print_r(json_encode($response));
+        return false;
+    }
+
+    $sql = "SELECT * FROM users WHERE mobile = '$mobile'";
+    $db->sql($sql);
+    $user = $db->getResult();
+
+    if (empty($user)) {
+        $sql = "INSERT INTO `payments` (order_id, product_id, mobile, amount, datetime, claim) VALUES ('$order_id','$product_id','$mobile', '$amount', '$datetime', 0)";
+        $db->sql($sql);
+        $res = $db->getResult();
+    }else{
+        $sql = "INSERT INTO `payments` (order_id, product_id, mobile, amount, datetime, claim) VALUES ('$order_id','$product_id','$mobile', '$amount', '$datetime', 1)";
+        $db->sql($sql);
+        $res = $db->getResult();
+
+        $ID = $user[0]['id'];
+        $type = 'recharge';
+        $sql = "INSERT INTO transactions (`user_id`,`amount`,`datetime`,`type`) VALUES ('$ID', '$amount', '$datetime', '$type')";
+        $db->sql($sql);
+        $sql_query = "UPDATE users SET recharge = recharge + $amount, total_recharge = total_recharge + $amount WHERE id = $ID";
+        $db->sql($sql_query);
+    }
+
 }
 
-$sql = "INSERT INTO `payments` (order_id, product_id, mobile, amount, datetime, claim) VALUES ('$order_id','$product_id','$mobile', '$amount', '$datetime', 0)";
-$db->sql($sql);
-$res = $db->getResult();
 $response['success'] = true;
 $response['message'] = "Order added Successfully";
 print_r(json_encode($response));

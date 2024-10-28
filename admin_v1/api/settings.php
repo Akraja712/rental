@@ -24,13 +24,12 @@ if ($num >= 1){
         $temp['id'] = $row['id'];
         $temp['whatsapp_group'] = $row['whatsapp_group'];
         $temp['telegram_channel'] = $row['telegram_channel'];
+        $temp['income_status'] = $row['income_status'];
         $temp['max_withdrawal'] = $row['max_withdrawal'];
         $temp['min_withdrawal'] = $row['min_withdrawal'];
         $temp['withdrawal_ins'] = $row['withdrawal_ins'];
         $temp['pay_video'] = $row['pay_video'];
-        $temp['add_video'] = $row['add_video'];
-        $temp['review_video'] = $row['review_video'];
-        $temp['offer_image'] = DOMAIN_URL . $row['offer_image'];
+        $temp['offer_image'] = $row['offer_image'];
         $temp['pay_gateway'] = $row['pay_gateway'];
 
         $rows[] = $temp;

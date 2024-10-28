@@ -6,45 +6,54 @@ $fn = new custom_functions;
 date_default_timezone_set('Asia/Kolkata');
 ?>
 <?php
- $ID = $db->escapeString($_GET['id']);
-if (isset($_POST['btnAdd'])) {
-        $recharge = $db->escapeString(($_POST['recharge']));
-        $error = array();
-       
-        if (empty($recharge)) {
-            $error['recharge'] = " <span class='label label-danger'>Required!</span>";
-        }
-       
-            if (!empty($recharge)) 
-            {
-                $datetime = date('Y-m-d H:i:s');
-                $type = 'recharge_orders';
-                $sql = "INSERT INTO transactions (`user_id`,`amount`,`datetime`,`type`)VALUES('$ID','$recharge','$datetime','$type')";
-                $db->sql($sql);
-                 $sql_query = "UPDATE users SET recharge = recharge + $recharge ,total_recharge = total_recharge + $recharge  WHERE id = $ID";
-                 $db->sql($sql_query);
-                 $result = $db->getResult();
-                 if (!empty($result)) {
-                     $result = 0;
-                 } else {
-                     $result = 1;
-                 }
-     
-                 if ($result == 1) {
-                     $error['add_balance'] = "<section class='content-header'>
-                                                     <span class='label label-success'>Recharge Added Successfully</span> </section>";
-                 }else{
-                    $error['add_balance'] = "<section class='content-header'>
-                                                     <span class='label label-danger'>Failed</span> </section>";
-                 }
-                 
-                 }
+$error = array();
+$ID = isset($_GET['id']) ? $db->escapeString($_GET['id']) : null;
 
+
+if(isset($_POST['btnAdd'])) {
+    $recharge = $db->escapeString($_POST['recharge']);
+
+    if (empty($recharge)) {
+        $error['recharge'] = " <span class='label label-danger'>Required!</span>";
+    }
+
+    if (!empty($recharge)) {
+        $datetime = date('Y-m-d H:i:s');
+        $type = 'recharge';
+        $sql = "INSERT INTO transactions (`user_id`,`amount`,`datetime`,`type`) VALUES ('$ID', '$recharge', '$datetime', '$type')";
+        $db->sql($sql);
+        $sql_query = "UPDATE users SET recharge = recharge + $recharge, total_recharge = total_recharge + $recharge WHERE id = $ID";
+        $db->sql($sql_query);
+        $result = $db->getResult();
+
+        if (!empty($result)) {
+            $result = 0;
+        } else {
+            $result = 1;
         }
+
+        if ($result == 1) {
+            header("Location: add-recharge.php?status=success");
+            exit();
+        } else {
+            $error['add_balance'] = "<section class='content-header'>
+                                        <span class='label label-danger'>Failed</span>
+                                     </section>";
+        }
+    }
+}
 ?>
 <section class="content-header">
-    <h1>Add Recharge <small><a href='users.php'> <i class='fa fa-angle-double-left'></i>&nbsp;&nbsp;&nbsp;Back to Recharge</a></small></h1>
-    <?php echo isset($error['add_balance']) ? $error['add_balance'] : ''; ?>
+    <h1>Add Recharge <small><a href='users.php'><i class='fa fa-angle-double-left'></i>&nbsp;&nbsp;&nbsp;Back to Recharge</a></small></h1>
+    <?php 
+    if (isset($_GET['status']) && $_GET['status'] == 'success') {
+        echo "<section class='content-header'>
+                <span class='label label-success'>Recharge Added Successfully</span>
+              </section>";
+    } else {
+        echo isset($error['add_balance']) ? $error['add_balance'] : ''; 
+    }
+    ?>
     <ol class="breadcrumb">
         <li><a href="home.php"><i class="fa fa-home"></i> Home</a></li>
     </ol>

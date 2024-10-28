@@ -38,7 +38,7 @@ if ($num >= 1) {
     $refer_code = $res_user[0]['refer_code'];
 
     if ($level === 'b') {
-        $sql = "SELECT *,DATE(registered_datetime) AS registered_date,CONCAT(SUBSTRING(mobile, 1, 2), '******', SUBSTRING(mobile, LENGTH(mobile)-1, 2)) AS mobile FROM users WHERE referred_by = '$refer_code' ORDER BY id DESC LIMIT 100 ";
+        $sql = "SELECT *,DATE(registered_datetime) AS registered_date,CONCAT(SUBSTRING(mobile, 1, 2), '******', SUBSTRING(mobile, LENGTH(mobile)-1, 2)) AS mobile FROM users WHERE referred_by = '$refer_code' ORDER BY id DESC";
         $db->sql($sql);
         $res = $db->getResult();
         $num = $db->numRows($res);
@@ -56,7 +56,7 @@ if ($num >= 1) {
         }
     } 
     if ($level === 'c') {
-        $sql = "SELECT *,DATE(registered_datetime) AS registered_date,CONCAT(SUBSTRING(mobile, 1, 2), '******', SUBSTRING(mobile, LENGTH(mobile)-1, 2)) AS mobile FROM users WHERE c_referred_by = '$refer_code'  ORDER BY id DESC LIMIT 100";
+        $sql = "SELECT *,DATE(registered_datetime) AS registered_date,CONCAT(SUBSTRING(mobile, 1, 2), '******', SUBSTRING(mobile, LENGTH(mobile)-1, 2)) AS mobile FROM users WHERE c_referred_by = '$refer_code'  ORDER BY id DESC";
         $db->sql($sql);
         $res = $db->getResult();
         $num = $db->numRows($res);
@@ -75,7 +75,7 @@ if ($num >= 1) {
     } 
 
     if ($level === 'd') {
-        $sql = "SELECT *,DATE(registered_datetime) AS registered_date,CONCAT(SUBSTRING(mobile, 1, 2), '******', SUBSTRING(mobile, LENGTH(mobile)-1, 2)) AS mobile FROM users WHERE d_referred_by = '$refer_code'  ORDER BY id  DESC LIMIT 100";
+        $sql = "SELECT *,DATE(registered_datetime) AS registered_date,CONCAT(SUBSTRING(mobile, 1, 2), '******', SUBSTRING(mobile, LENGTH(mobile)-1, 2)) AS mobile FROM users WHERE d_referred_by = '$refer_code'  ORDER BY id DESC";
         $db->sql($sql);
         $res = $db->getResult();
         $num = $db->numRows($res);

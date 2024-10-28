@@ -12,12 +12,12 @@ include_once('../includes/crud.php');
 $db = new Database();
 $db->connect();
 
-if (empty($_POST['user_id'])) {
-    $response['success'] = false;
-    $response['message'] = "User Id is Empty";
-    print_r(json_encode($response));
-    return false;
-}
+    if (empty($_POST['user_id'])) {
+        $response['success'] = false;
+        $response['message'] = "User Id is Empty";
+        print_r(json_encode($response));
+        return false;
+    }
 $user_id = $db->escapeString($_POST['user_id']);
 
 $sql = "SELECT * FROM transactions WHERE user_id = $user_id ORDER BY id DESC LIMIT 10";

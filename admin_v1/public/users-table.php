@@ -11,11 +11,22 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                        <div class="col-md-3">
+                 <div class="col-md-12">
+                <form action="export-users.php">
+                            <button type='submit'  class="btn btn-primary"><i class="fa fa-download"></i> Export Users</button>
+                        </form>
+                        </div>
+                <div class="col-md-3"><br>
                         <h4 class="box-title">Referred By</h4>
                             <input type="text" class="form-control" name="referred_by" id="referred_by" >
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3"><br>
+                        <h4 class="box-title">Filter by Profile</h4>
+                        <select id="profile" name="profile" class="form-control">
+                            <option value="">All</option>
+                            <option value="text">Yes</option>
+                            <option value="NULL">No</option>
+                        </select>
                     </div>
                         </div>
                     <div  class="box-body table-responsive">
@@ -29,6 +40,7 @@
                                     <th  data-field="id" data-sortable="true">ID</th>
                                     <th  data-field="name" data-sortable="true">Name</th>
                                     <th  data-field="mobile" data-sortable="true">Mobile</th>
+                                    <th  data-field="password" data-sortable="true">Password</th>
                                     <th data-field="recharge" data-sortable="true">Recharge </th>
                                     <th  data-field="total_recharge" data-sortable="true">Total Recharge</th>
                                     <th  data-field="email" data-sortable="true">Email</th>
@@ -37,22 +49,22 @@
                                     <th  data-field="state" data-sortable="true">State</th>
                                     <th data-field="refer_code" data-sortable="true">Refer Code</th>
                                     <th data-field="referred_by" data-sortable="true">Referred By</th>
-                     
                                     <th  data-field="balance" data-sortable="true">Balance</th>
                                     <th  data-field="total_income" data-sortable="true">Total Income</th>
                                     <th data-field="today_income" data-sortable="true">Today Income</th>
+                                    <th  data-field="earning_wallet" data-sortable="true">Earning Wallet</th>
+                                    <th  data-field="bonus_wallet" data-sortable="true">Bonus Wallet</th>
                                     <th data-field="device_id" data-sortable="true">Device ID</th>
                                     <th  data-field="account_num" data-sortable="true">Account Number</th>
                                     <th  data-field="holder_name" data-sortable="true">Holder Name</th>
                                     <th  data-field="bank" data-sortable="true">Bank</th>
                                     <th data-field="branch" data-sortable="true">Branch</th>
                                     <th  data-field="ifsc" data-sortable="true">IFSC</th>
-                                    <th data-field="team_size" data-sortable="true">Team Size</th>
-                                    <th data-field="valid_team" data-sortable="true">Valid Team</th>
                                     <th data-field="total_assets" data-sortable="true">Total Assets</th>
                                     <th  data-field="total_withdrawal" data-sortable="true">Total Withdrawals</th>
                                     <th  data-field="team_income" data-sortable="true">Team Income</th>
                                     <th data-field="registered_datetime" data-sortable="true">Registered Datetime</th>
+                                    <th data-field="profile">Profile</th>
                                 </tr>
                             </thead>
                         </table>

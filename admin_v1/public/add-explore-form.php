@@ -59,7 +59,7 @@ if (isset($_POST['btnAdd'])) {
                 <!-- form start -->
                 <form name="add_slide_form" method="post" enctype="multipart/form-data">
                     <div class="box-body">
-                        <div class="row">
+                            <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                    <label for="main_content">Main Content :</label> <i class="text-danger asterik">*</i><?php echo isset($error['main_content']) ? $error['main_content'] : ''; ?>

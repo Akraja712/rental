@@ -16,14 +16,17 @@ if (isset($_GET['id'])) {
 if (isset($_POST['btnEdit'])) {
 
     $name = $db->escapeString(($_POST['name']));
-    $price = $db->escapeString(($_POST['price']));
-    $daily_codes = $db->escapeString(($_POST['daily_codes']));
-    $daily_earnings = $db->escapeString(($_POST['daily_earnings']));
-    $per_code_cost = $db->escapeString(($_POST['per_code_cost']));
-	$invite_bonus = $db->escapeString(($_POST['invite_bonus']));
+    $description = $db->escapeString(($_POST['description']));
+	$demo_video = $db->escapeString(($_POST['demo_video']));
+	$daily_codes = $db->escapeString(($_POST['daily_codes']));
+	$per_code_cost = $db->escapeString(($_POST['per_code_cost']));
+	$daily_earnings = $db->escapeString(($_POST['daily_earnings']));
+	$monthly_earnings = $db->escapeString(($_POST['monthly_earnings']));
+	$price = $db->escapeString(($_POST['price']));
+	$type = $db->escapeString(($_POST['type']));
 	$min_refers = $db->escapeString(($_POST['min_refers']));
-	
-		$sql_query = "UPDATE plan SET name='$name',price='$price',daily_codes='$daily_codes',daily_earnings='$daily_earnings',per_code_cost='$per_code_cost',invite_bonus='$invite_bonus',min_refers='$min_refers' WHERE id =  $ID";
+    
+		$sql_query = "UPDATE plan SET name='$name',description='$description',demo_video='$demo_video',daily_codes='$daily_codes',per_code_cost='$per_code_cost',price='$price',daily_earnings='$daily_earnings',type = '$type',min_refers = '$min_refers',monthly_earnings = '$monthly_earnings' WHERE id =  $ID";
 		$db->sql($sql_query);
 		$result = $db->getResult();             
 		if (!empty($result)) {
@@ -107,62 +110,75 @@ if (isset($_POST['btnCancel'])) { ?>
                     <input type="hidden" name="old_image" value="<?php echo isset($res[0]['image']) ? $res[0]['image'] : ''; ?>">
 				    	<div class="row">
 					  	  <div class="form-group">
-                               <div class="col-md-4">
+                               <div class="col-md-3">
 									<label for="exampleInputEmail1">Name</label><i class="text-danger asterik">*</i>
 									<input type="text" class="form-control" name="name" value="<?php echo $res[0]['name']; ?>">
 								</div>
-                                <div class="col-md-4">
+								<div class="col-md-3">
+									<label for="exampleInputEmail1">Demo Video</label><i class="text-danger asterik">*</i>
+									<input type="text" class="form-control" name="demo_video" value="<?php echo $res[0]['demo_video']; ?>">
+								</div>
+								<div class="col-md-3">
 									<label for="exampleInputEmail1">Price</label><i class="text-danger asterik">*</i>
 									<input type="number" class="form-control" name="price" value="<?php echo $res[0]['price']; ?>">
 								</div>
-								<div class="col-md-4">
-									<label for="exampleInputEmail1">Min Refers</label><i class="text-danger asterik">*</i>
-									<input type="number" class="form-control" name="min_refers" value="<?php echo $res[0]['min_refers']; ?>">
-								</div>
-                            </div>
-                         </div>
-                         <br>
-                         <div class="row">
-					  	  <div class="form-group">
-                               <div class="col-md-6">
-									<label for="exampleInputEmail1">Daily Codes</label><i class="text-danger asterik">*</i>
-									<input type="number" class="form-control" name="daily_codes" value="<?php echo $res[0]['daily_codes']; ?>">
-								</div>
-								<div class="col-md-6">
+								<div class="col-md-3">
 									<label for="exampleInputEmail1">Daily Earnings</label><i class="text-danger asterik">*</i>
 									<input type="number" class="form-control" name="daily_earnings" value="<?php echo $res[0]['daily_earnings']; ?>">
 								</div>
                             </div>
                          </div>
                          <br>
-                         <div class="row">
-					  	   <div class="form-group">
-                               <div class="col-md-6">
-									<label for="exampleInputEmail1">Invite Bonus</label><i class="text-danger asterik">*</i>
-									<input type="number" class="form-control" name="invite_bonus" value="<?php echo $res[0]['invite_bonus']; ?>">
-								</div>
-                                <div class="col-md-6">
-									<label for="exampleInputEmail1">Per Code Cost</label><i class="text-danger asterik">*</i>
-									<input type="number" class="form-control" name="per_code_cost" value="<?php echo $res[0]['per_code_cost']; ?>">
-								</div>
-                            </div>
-                         </div>
-						 <br>
 						 <div class="row">
                             <div class="form-group">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="exampleInputFile">Image</label> <i class="text-danger asterik">*</i><?php echo isset($error['image']) ? $error['image'] : ''; ?>
                                     <input type="file" name="image" onchange="readURL(this);" accept="image/png, image/jpeg" id="image" /><br>
                                     <img id="blah" src="<?php echo $res[0]['image']; ?>" alt="" width="150" height="200" <?php echo empty($res[0]['image']) ? 'style="display: none;"' : ''; ?> />
                                 </div>
-							   <div class="col-md-4">
+								<div class="col-md-3">
+									<label for="exampleInputEmail1">Daily Codes</label><i class="text-danger asterik">*</i>
+									<input type="number" class="form-control" name="daily_codes" value="<?php echo $res[0]['daily_codes']; ?>">
+								</div>
+								<div class="col-md-3">
+									<label for="exampleInputEmail1">Per Code Cost</label><i class="text-danger asterik">*</i>
+									<input type="text" class="form-control" name="per_code_cost" value="<?php echo $res[0]['per_code_cost']; ?>">
+								</div>
+								<div class="col-md-3">
+                                <label for="exampleInputEmail1">Select Type</label> <i class="text-danger asterik">*</i>
+                                    <select id='type' name="type" class='form-control'>
+                                     <option value='jobs' <?php if ($res[0]['type'] == 'jobs') echo 'selected'; ?>>jobs</option>
+                                      <option value='senior_jobs' <?php if ($res[0]['type'] == 'senior_jobs') echo 'selected'; ?>>senior_jobs</option>
+                                    </select>
+								</div>
+                            </div>	 
+						  </div>  
+						  <br><div class="row">
+                            <div class="form-group">
+								<div class="col-md-3">
 									<label for="exampleInputEmail1">Min Refers</label><i class="text-danger asterik">*</i>
 									<input type="number" class="form-control" name="min_refers" value="<?php echo $res[0]['min_refers']; ?>">
 								</div>
-                            </div> 
+								<div class="col-md-3">
+									<label for="exampleInputEmail1">Monthly Earnings</label><i class="text-danger asterik">*</i>
+									<input type="number" class="form-control" name="monthly_earnings" value="<?php echo $res[0]['monthly_earnings']; ?>">
+								</div>
+                            </div>	 
 						  </div> 
 						  <br>
-						
+						  <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                   <label for="description">Description :</label> <i class="text-danger asterik">*</i><?php echo isset($error['description']) ? $error['description'] : ''; ?>
+                                    <textarea name="description" id="description" class="form-control" rows="8"><?php echo $res[0]['description']; ?></textarea>
+                                    <script type="text/javascript" src="css/js/ckeditor/ckeditor.js"></script>
+                                    <script type="text/javascript">
+                                       CKEDITOR.replace('description');
+                                    </script>
+                                </div>
+                            </div>	 
+						  </div>  
+						  <br>
                      </div>
 					<div class="box-footer">
 						<button type="submit" class="btn btn-primary" name="btnEdit">Update</button>

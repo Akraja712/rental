@@ -24,7 +24,6 @@
                                     <th  data-field="products" data-sortable="true">Plan</th>
                                     <th  data-field="name" data-sortable="true">Name</th>
                                     <th  data-field="price" data-sortable="true">Price</th>
-                                    <th  data-field="min_valid_team" data-sortable="true">Min Valid Team</th>
                                     <th  data-field="operate" data-events="actionEvents">Action</th>
                                 </tr>
                             </thead>

@@ -31,17 +31,11 @@ if (empty($user)) {
     print_r(json_encode($response));
     return false;
 }
-$valid = $user[0]['valid'];
-$join = "";
-if($valid == 1){
-    $join = "";
-
-}
 
 $sql = "SELECT user_plan.* ,plan.name,plan.image,plan.demo_video,plan.daily_codes,plan.per_code_cost,plan.price,plan.daily_earnings,plan.monthly_earnings
         FROM user_plan 
         LEFT JOIN plan ON user_plan.plan_id = plan.id
-        WHERE user_plan.user_id = '$user_id' ".$join;
+        WHERE user_plan.user_id = '$user_id' AND user_plan.inactive = 0";
 
 $db->sql($sql);
 $res = $db->getResult();

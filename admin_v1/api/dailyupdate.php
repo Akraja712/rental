@@ -19,6 +19,15 @@ include_once('../includes/functions.php');
 $fn = new functions;
 $currentdate = date('Y-m-d');
 
+$dayOfWeek = date('w');
+
+if ($dayOfWeek == 0 || $dayOfWeek == 7) {
+    $response['success'] = false;
+    $response['message'] = "Withdrawal time Monday to Saturday";
+    print_r(json_encode($response));
+    return false;
+} 
+
 $sql = "UPDATE user_plan SET claim = 1 ";
 $db->sql($sql);
 

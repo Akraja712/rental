@@ -70,6 +70,103 @@ if (isset($_POST['cancel_withdrawal']) && $_POST['cancel_withdrawal'] == 1) {
         echo "<p class='alert alert-danger'>Invalid file format! Please upload data in CSV file!</p><br>";
     }
 }
+
+if (isset($_POST['bulk_amount']) && $_POST['bulk_amount'] == 1) {
+    $count = 0;
+    $count1 = 0;
+    $error = false;
+    $filename = $_FILES["upload_file"]["tmp_name"];
+    $result = $fn->validate_image($_FILES["upload_file"], false);
+    
+    if (!$result) {
+        $error = true;
+    }
+    
+    if ($_FILES["upload_file"]["size"] > 0 && !$error) {
+        $file = fopen($filename, "r");
+        
+        while (($emapData = fgetcsv($file, 10000, ",")) !== FALSE) {
+            if ($count1 != 0) {
+                $mobile = trim($db->escapeString($emapData[0]));
+                $amount = trim($db->escapeString($emapData[1]));
+                
+                $sql = "SELECT id FROM `users` WHERE mobile = '$mobile'"; 
+                $db->sql($sql);
+                $res = $db->getResult();
+            
+                if (!empty($res) && count($res) > 0) {
+                    $ID = $res[0]['id'];
+                    $datetime = date('Y-m-d H:i:s');
+                    $type = 'bonus';
+            
+                    $sql = "INSERT INTO transactions (`user_id`, `amount`, `datetime`, `type`) VALUES ('$ID', '$amount', '$datetime', '$type')";
+                    $db->sql($sql);
+                    
+                    $sql = "UPDATE users SET balance = balance + $amount,today_income = today_income + $amount,total_income = total_income + $amount  WHERE id = $ID"; // $ID is now guaranteed to be valid
+                    $db->sql($sql);
+                } else {
+                    echo "<p class='alert alert-warning'>No user found for mobile number: $mobile</p><br>";
+                }
+            }
+
+            $count1++;
+        }
+        
+        fclose($file);
+        echo "<p class='alert alert-success'>CSV file is successfully imported!</p><br>";
+    } else {
+        echo "<p class='alert alert-danger'>Invalid file format! Please upload data in CSV file!</p><br>";
+    }
+}
+
+if (isset($_POST['bulk_balance']) && $_POST['bulk_balance'] == 1) {
+    $count = 0;
+    $count1 = 0;
+    $error = false;
+    $filename = $_FILES["upload_file"]["tmp_name"];
+    $result = $fn->validate_image($_FILES["upload_file"], false);
+    
+    if (!$result) {
+        $error = true;
+    }
+    
+    if ($_FILES["upload_file"]["size"] > 0 && !$error) {
+        $file = fopen($filename, "r");
+        
+        while (($emapData = fgetcsv($file, 10000, ",")) !== FALSE) {
+            if ($count1 != 0) {
+                $mobile = trim($db->escapeString($emapData[0]));
+                $recharge_amount = trim($db->escapeString($emapData[1]));
+                
+                $sql = "SELECT id FROM `users` WHERE mobile = '$mobile'"; 
+                $db->sql($sql);
+                $res = $db->getResult();
+            
+                if (!empty($res) && count($res) > 0) {
+                    $ID = $res[0]['id'];
+                    $datetime = date('Y-m-d H:i:s');
+                    $type = 'recharge';
+            
+                    $sql = "INSERT INTO transactions (`user_id`, `amount`, `datetime`, `type`) VALUES ('$ID', '$recharge_amount', '$datetime', '$type')";
+                    $db->sql($sql);
+                    
+                    $sql = "UPDATE users SET recharge = recharge + $recharge_amount, total_recharge = total_recharge + $recharge_amount  WHERE id = $ID"; // $ID is now guaranteed to be valid
+                    $db->sql($sql);
+                } else {
+                    echo "<p class='alert alert-warning'>No user found for mobile number: $mobile</p><br>";
+                }
+            }
+
+            $count1++;
+        }
+        
+        fclose($file);
+        echo "<p class='alert alert-success'>CSV file is successfully imported!</p><br>";
+    } else {
+        echo "<p class='alert alert-danger'>Invalid file format! Please upload data in CSV file!</p><br>";
+    }
+}
+
 if (isset($_POST['delete_variant'])) {
     $v_id = $db->escapeString(($_POST['id']));
     $sql = "DELETE FROM product_variant WHERE id = $v_id";

@@ -6,7 +6,9 @@ $fn = new custom_functions;
 date_default_timezone_set('Asia/Kolkata');
 ?>
 <?php
- $ID = $db->escapeString($_GET['id']);
+$error = array();
+$ID = isset($_GET['id']) ? $db->escapeString($_GET['id']) : null;
+
 if (isset($_POST['btnAdd'])) {
         $bonus = $db->escapeString(($_POST['bonus']));
         $error = array();
@@ -31,20 +33,29 @@ if (isset($_POST['btnAdd'])) {
                  }
      
                  if ($result == 1) {
-                     $error['add_balance'] = "<section class='content-header'>
-                                                     <span class='label label-success'>Bonus Added Successfully</span> </section>";
-                 }else{
+                    header("Location: add-bonus.php?status=success");
+                    exit();
+                } else {
                     $error['add_balance'] = "<section class='content-header'>
-                                                     <span class='label label-danger'>Failed</span> </section>";
-                 }
+                                                <span class='label label-danger'>Failed</span>
+                                             </section>";
+                }
                  
                  }
 
         }
 ?>
 <section class="content-header">
-    <h1>Add Bonus <small><a href='users.php'> <i class='fa fa-angle-double-left'></i>&nbsp;&nbsp;&nbsp;Back to Bonus</a></small></h1>
-    <?php echo isset($error['add_balance']) ? $error['add_balance'] : ''; ?>
+    <h1>Add Bonus <small><a href='users.php'><i class='fa fa-angle-double-left'></i>&nbsp;&nbsp;&nbsp;Back to Bonus</a></small></h1>
+    <?php 
+    if (isset($_GET['status']) && $_GET['status'] == 'success') {
+        echo "<section class='content-header'>
+                <span class='label label-success'>Bonus Added Successfully</span>
+              </section>";
+    } else {
+        echo isset($error['add_balance']) ? $error['add_balance'] : ''; 
+    }
+    ?>
     <ol class="breadcrumb">
         <li><a href="home.php"><i class="fa fa-home"></i> Home</a></li>
     </ol>

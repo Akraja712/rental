@@ -12,7 +12,6 @@ include_once('../includes/crud.php');
 $db = new Database();
 $db->connect();
 
-
 if (empty($_POST['user_id'])) {
     $response['success'] = false;
     $response['message'] = "User ID is Empty";
@@ -28,97 +27,53 @@ $res_user = $db->getResult();
 $num = $db->numRows($res_user);
 
 if ($num >= 1) {
-
-    // $sql_user = "SELECT * FROM `recharge_trans` WHERE user_id = $user_id AND status = 0 ORDER BY `id` DESC";
-    // $db->sql($sql_user);
-    // $rec = $db->getResult();
-    // $num = $db->numRows($rec);
-    // if ($num >= 1) {
-    //     $txn_id = $rec[0]['txn_id'];
-    //     $date = $rec[0]['txn_date'];
-    //     $old_f_date = $rec[0]['txn_date'];
-    //     $date = date('d-m-Y', strtotime($old_f_date));
-
-    //     $key = '707029bb-78d4-44b6-9f72-0d7fe80e338b';
-    //         // API endpoint
-    //     $url = 'https://api.ekqr.in/api/check_order_status';
-
-    //     // Data to be sent
-    //     $data = array(
-    //         'client_txn_id' => $txn_id,
-    //         'txn_date' => $date,
-    //         'key' => $key
-    //     );
-
-    //     // Initialize curl session
-    //     $ch = curl_init();
-
-    //     // Set curl options
-    //     curl_setopt($ch, CURLOPT_URL, $url);
-    //     curl_setopt($ch, CURLOPT_POST, 1);
-    //     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    //     // Execute curl request
-    //     $resp = curl_exec($ch);
-
-    //     // Check for errors
-    //     if(curl_errno($ch)){
-    //         echo 'Curl error: ' . curl_error($ch);
-    //     }
-
-    //     // Close curl session
-    //     curl_close($ch);
-
-    //     $responseArray = json_decode($resp, true);
-    //     if ($responseArray['status'] === true) {
-    //         $datetime = date('Y-m-d H:i:s');
-    //         $type = 'recharge';
-    //         $data = $responseArray['data'];
-    //         $amount = $data['amount'];
-    //         $status = $data['status'];
-    //         if($status == 'success'){
-    //             $txn_id = $data['client_txn_id'];
-    //             $sql = "SELECT id FROM recharge_trans WHERE txn_id = $txn_id AND status = 0 ";
-    //             $db->sql($sql);
-    //             $res= $db->getResult();
-    //             $num = $db->numRows($res);
-
-    //             if ($num == 1){
-    //                 $rech_trans_id = $res[0]['id'];
-    //                 $sql = "INSERT INTO transactions (`user_id`, `amount`, `datetime`, `type`) VALUES ('$user_id', '$amount', '$datetime', '$type')";
-    //                 $db->sql($sql);
-                
-    //                 $sql_query = "UPDATE users SET recharge = recharge + $amount, total_recharge = total_recharge + $amount WHERE id = '$user_id'";
-    //                 $db->sql($sql_query);
-    //                 $sql_query = "UPDATE recharge_trans SET status = 1 WHERE id = '$rech_trans_id'";
-    //                 $db->sql($sql_query);
-
-    //             }
-
-            
-    //             $response['success'] = true;
-    //             $response['message'] = "Transaction completed successfully";
-
-    //         }else{
-    //             $response['success'] = false;
-    //             $response['message'] = "Transaction failed";
-    //         }
-
-
-    //     } else {
-    //         $response['success'] = false;
-    //         $response['message'] = "Transaction failed";
-    //     }
-    
-
-    // }
-
-
-
-
     $user_details = $res_user[0];
     $user_details['profile'] = DOMAIN_URL . $user_details['profile'];
+
+    $sql_settings = "SELECT min_withdrawal FROM settings WHERE id = 1";
+    $db->sql($sql_settings);
+    $res_settings = $db->getResult();
+    $min_withdrawal = $res_settings[0]['min_withdrawal'];
+
+    $user_details['min_withdrawal'] = $min_withdrawal;
+
+    // Fetch default about_us text
+    $default_about_us = "SLVE Enterprises is a leading 5PL logistics company, specializing in efficient and reliable stock supply to retail stores. We manage end-to-end supply chains, ensuring seamless integration and optimization for our clients. With our expertise, your retail business can achieve timely deliveries and maintain a competitive edge.";
+
+    $default_recharge_url = "https://slveenterprises.org/product/30052663/Penta-Logistics---Retail-Courses?vid=5543940";
+    // If 'about_us' field is empty, use the default text
+    if (empty($user_details['about_us'])) {
+        $user_details['about_us'] = $default_about_us;
+    }
+    if (empty($user_details['recharge_url'])) {
+        $user_details['recharge_url'] = $default_recharge_url;
+    }
+   
+       
+
+    // Fetch associated plans for the user
+    $sql_plans = "SELECT plan.name FROM user_plan
+                  LEFT JOIN plan ON user_plan.plan_id = plan.id
+                  WHERE user_plan.user_id = $user_id";
+    $db->sql($sql_plans);
+    $res_plans = $db->getResult();
+
+    $plan_names_query = "SELECT name FROM plan";
+    $db->sql($plan_names_query);
+    $plan_names_res = $db->getResult();
+    $plan_names = array_column($plan_names_res, 'name');
+
+    $user_plans = array();
+
+    // Initialize plans for the user
+    $user_details['plan_activated'] = array_fill_keys($plan_names, 0);
+
+    // Set associated plans for the user
+    foreach ($res_plans as $user_plan) {
+        $user_details['plan_activated'][$user_plan['name']] = 1;
+    }
+
+    // Final response
     $response['success'] = true;
     $response['message'] = "User Details Retrieved Successfully";
     $response['data'] = array($user_details);

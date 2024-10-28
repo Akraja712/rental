@@ -44,7 +44,10 @@ if (isset($_POST['btnEdit'])) {
     $registered_datetime= $db->escapeString($_POST['registered_datetime']);
     $blocked = $db->escapeString($_POST['blocked']);
     $password= $db->escapeString($_POST['password']);
-    $min_withdrawal = $db->escapeString($_POST['min_withdrawal']);
+    $latitude= $db->escapeString($_POST['latitude']);
+    $longitude = $db->escapeString($_POST['longitude']);
+    $earning_wallet= $db->escapeString($_POST['earning_wallet']);
+    $bonus_wallet = $db->escapeString($_POST['bonus_wallet']);
 
     $error = array();
 
@@ -65,7 +68,7 @@ if (isset($_POST['btnEdit'])) {
     }
 
     
-            $sql_query = "UPDATE users SET name='$name',mobile = '$mobile',email='$email',age='$age',city='$city',referred_by='$referred_by',refer_code='$refer_code',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',withdrawal_status = '$withdrawal_status',recharge  = '$recharge',balance = '$balance',today_income = '$today_income',device_id  = '$device_id',total_income  = '$total_income',state  = '$state',total_recharge  = '$total_recharge',team_size  = '$team_size',valid_team  = '$valid_team',total_assets  = '$total_assets',total_withdrawal  = '$total_withdrawal',team_income  = '$team_income',registered_datetime  = '$registered_datetime',blocked = '$blocked',password = '$password',min_withdrawal = '$min_withdrawal' WHERE id = $ID";
+            $sql_query = "UPDATE users SET name='$name',mobile = '$mobile',password = '$password',email='$email',age='$age',city='$city',referred_by='$referred_by',refer_code='$refer_code',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',withdrawal_status = '$withdrawal_status',recharge  = '$recharge ',balance = '$balance',today_income = '$today_income',device_id  = '$device_id',total_income  = '$total_income',state  = '$state',total_recharge  = '$total_recharge',team_size  = '$team_size',valid_team  = '$valid_team',total_assets  = '$total_assets',total_withdrawal  = '$total_withdrawal',team_income  = '$team_income',registered_datetime  = '$registered_datetime',blocked = '$blocked',latitude = '$latitude',longitude = '$longitude',earning_wallet = '$earning_wallet',bonus_wallet = '$bonus_wallet' WHERE id = $ID";
             $db->sql($sql_query);
             $update_result = $db->getResult();
     
@@ -169,15 +172,15 @@ if (isset($_POST['btnCancel'])) { ?>
                                </div>
                              </div>
                              <br>
-                          <div class="row">
-                              <div class="form-group">
-                              <div class="col-md-3">
-                                    <label for="exampleInputEmail1">Password</label> <i class="text-danger asterik">*</i><?php echo isset($error['password']) ? $error['password'] : ''; ?>
+                             <div class="row">
+                            <div class="form-group">
+                            <div class='col-md-6'>
+                                    <label for="exampleInputEmail1">Password</label> <i class="text-danger asterik">*</i>
                                     <input type="text" class="form-control" name="password" value="<?php echo $res[0]['password']; ?>">
                                 </div>
-                               </div>
-                             </div>
-                             <br>
+                            </div>
+                        </div>
+                        <br>
                              <div class="row">
                             <div class="form-group">
                             <div class='col-md-6'>
@@ -221,10 +224,6 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <input type="number" class="form-control" name="recharge" value="<?php echo $res[0]['recharge']; ?>">
                                 </div>
                                 <div class="col-md-3">
-                                <label for="exampleInputEmail1">Balance</label><i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="balance" value="<?php echo $res[0]['balance']; ?>">
-                                </div>
-                                <div class="col-md-3">
                                 <label for="exampleInputEmail1">Total Recharge</label><i class="text-danger asterik">*</i>
                                     <input type="number" class="form-control" name="total_recharge" value="<?php echo $res[0]['total_recharge']; ?>">
                                 </div>
@@ -245,46 +244,42 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <input type="text" class="form-control" name="device_id" value="<?php echo $res[0]['device_id']; ?>">
                                 </div>
                                 <div class="col-md-3">
-                                <label for="exampleInputEmail1">Team Size</label><i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="team_size" value="<?php echo $res[0]['team_size']; ?>">
+                                <label for="exampleInputEmail1">Total Withdrawals</label><i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="total_withdrawal" value="<?php echo $res[0]['total_withdrawal']; ?>">
                                 </div>
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-md-3">
-                                <label for="exampleInputEmail1">Valid Team</label><i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="valid_team" value="<?php echo $res[0]['valid_team']; ?>">
-                                </div>
-                                <div class="col-md-3">
-                                <label for="exampleInputEmail1">Total Assets</label><i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="total_assets" value="<?php echo $res[0]['total_assets']; ?>">
-                                </div>
-                                <div class="col-md-3">
-                                <label for="exampleInputEmail1">Total Withdrawals</label><i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="total_withdrawal" value="<?php echo $res[0]['total_withdrawal']; ?>">
-                                </div>
                                 <div class="col-md-3">
                                 <label for="exampleInputEmail1">Team Income</label><i class="text-danger asterik">*</i>
                                     <input type="number" class="form-control" name="team_income" value="<?php echo $res[0]['team_income']; ?>">
                                 </div>
+                                <div class="col-md-3">
+                                   <label for="exampleInputEmail1">Earning Wallet</label><i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="earning_wallet" value="<?php echo $res[0]['earning_wallet']; ?>">
+                                </div>
+                                <div class="col-md-3">
+                                   <label for="exampleInputEmail1">Bonus Wallet</label><i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="bonus_wallet" value="<?php echo $res[0]['bonus_wallet']; ?>">
+                                </div>
+                                <div class="col-md-3">
+                                   <label for="exampleInputEmail1">Balance</label><i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="balance" value="<?php echo $res[0]['balance']; ?>">
+                                </div>
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-md-3">
+                              <div class="col-md-3">
                                 <label for="exampleInputEmail1">Registered Datetime</label><i class="text-danger asterik">*</i>
                                     <input type="datetime-local" class="form-control" name="registered_datetime" value="<?php echo $res[0]['registered_datetime']; ?>">
                                 </div>
                                 <div class="col-md-3">
-                                <label for="exampleInputEmail1">Min Withdrawal</label><i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="min_withdrawal" value="<?php echo $res[0]['min_withdrawal']; ?>">
-                                </div>
-                                <div class="col-md-3">
-                                  <div class="form-group">
                                     <label for="">Blocked</label><br>
                                     <input type="checkbox" id="blocked_button" class="js-switch" <?= isset($res[0]['blocked']) && $res[0]['blocked'] == 1 ? 'checked' : '' ?>>
                                     <input type="hidden" id="blocked" name="blocked" value="<?= isset($res[0]['blocked']) && $res[0]['blocked'] == 1 ? 1 : 0 ?>">
                                 </div>
                             </div>
+                          
                         </div>
                         <div class="box-footer">
                         <button type="submit" class="btn btn-primary" name="btnEdit">Update</button>
@@ -324,4 +319,3 @@ if (isset($_POST['btnCancel'])) { ?>
             }
     };
 </script>
-

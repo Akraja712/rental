@@ -57,6 +57,9 @@ if (isset($_POST['btnPaid'])  && isset($_POST['enable'])) {
                                         <div class="form-group col-md-3">
                                             <a href="export-unpaid-withdrawal.php" class="btn btn-primary"><i class="fa fa-download"></i> Export unpaid Withdrawal</a>
                                         </div>                  
+                                        <div class="form-group col-md-3">
+                                            <a href="export-customers.php" class="btn btn-primary"><i class="fa fa-download"></i> Export Customers</a>
+                                        </div> 
                                 </div>
                         </div>
                             <div  class="box-body table-responsive">

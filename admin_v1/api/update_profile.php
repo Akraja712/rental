@@ -45,13 +45,6 @@ if (empty($_POST['state'])) {
     print_r(json_encode($response));
     return false;
 }
-if (empty($_POST['mobile'])) {
-    $response['success'] = false;
-    $response['message'] = "Mobile is Empty";
-    print_r(json_encode($response));
-    return false;
-}
-
 if (empty($_POST['email'])) {
     $response['success'] = false;
     $response['message'] = "Email is Empty";
@@ -64,7 +57,6 @@ $user_id = $db->escapeString($_POST['user_id']);
 $name = $db->escapeString($_POST['name']);
 $age = $db->escapeString($_POST['age']);
 $city = $db->escapeString($_POST['city']);
-$mobile = $db->escapeString($_POST['mobile']);
 $state = $db->escapeString($_POST['state']);           
 $email = $db->escapeString($_POST['email']);
 
@@ -74,7 +66,7 @@ $db->sql($sql);
 $res = $db->getResult();
 $num = $db->numRows($res);
 if ($num == 1) {
-    $sql = "UPDATE users SET name='$name',age='$age',city='$city',state='$state',mobile='$mobile',email='$email' WHERE id=" . $user_id;
+    $sql = "UPDATE users SET name='$name',age='$age',city='$city',state='$state',email='$email' WHERE id=" . $user_id;
     $db->sql($sql);
     $sql = "SELECT * FROM users WHERE id=" . $user_id;
     $db->sql($sql);

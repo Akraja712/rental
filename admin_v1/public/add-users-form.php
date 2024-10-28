@@ -14,6 +14,7 @@ if (isset($_POST['btnAdd'])) {
     $email = $db->escapeString($_POST['email']);
     $city = $db->escapeString($_POST['city']);
     $state = $db->escapeString($_POST['state']);
+    $mobile = $db->escapeString($_POST['mobile']);
     $referred_by = (isset($_POST['referred_by']) && !empty($_POST['referred_by'])) ? $db->escapeString($_POST['referred_by']) : "";
    
 
@@ -33,9 +34,13 @@ if (isset($_POST['btnAdd'])) {
     if (empty($state)) {
         $error['state'] = " <span class='label label-danger'>Required!</span>";
     }
+    if (empty($mobile)) {
+        $error['mobile'] = " <span class='label label-danger'>Required!</span>";
+    }
   
-    if ( !empty($name) && !empty($age) && !empty($email)&& !empty($city) && !empty($state)) {
-        $sql_query = "INSERT INTO users (name,age,email,city,state,referred_by)VALUES('$name','$age','$email','$city','$state','$referred_by')";
+  
+    if ( !empty($name) && !empty($age) && !empty($email)&& !empty($city) && !empty($state) && !empty($mobile)) {
+        $sql_query = "INSERT INTO users (name,age,email,city,state,referred_by,mobile)VALUES('$name','$age','$email','$city','$state','$referred_by','$mobile')";
         $db->sql($sql_query);
         $result = $db->getResult();
 
@@ -49,21 +54,18 @@ if (isset($_POST['btnAdd'])) {
             $db->sql($sql);
             $res = $db->getResult();
             $user_id = $res[0]['id'];
-            if(empty($referred_by)){
-                $refer_code = MAIN_REFER . $user_id;
-        
-            }
-            else{
+            if (empty($referred_by)) {
+                $refer_code = 'PL' . $user_id;
+            } else {
                 $admincode = substr($referred_by, 0, -5);
                 $sql = "SELECT refer_code FROM admin WHERE refer_code='$admincode'";
                 $db->sql($sql);
                 $result = $db->getResult();
                 $num = $db->numRows($result);
-                if($num>=1){
-                    $refer_code = substr($referred_by, 0, -5) . $user_id;
-                }
-                else{
-                    $refer_code = MAIN_REFER . $user_id;
+                if ($num >= 1) {
+                    $refer_code = 'PL' . $user_id;
+                } else {
+                    $refer_code = 'PL' . $user_id;
                 }
             }
             $sql_query = "UPDATE users SET refer_code='$refer_code' WHERE id =  $user_id";
@@ -133,6 +135,15 @@ if (isset($_POST['btnAdd'])) {
                                 <div class="col-md-4">
                                     <label for="exampleInputEmail1">Referred By</label><i class="text-danger asterik">*</i><?php echo isset($error['referred_by']) ? $error['referred_by'] : ''; ?>
                                     <input type="text" class="form-control" name="referred_by" >
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <label for="exampleInputEmail1">Mobile</label> <i class="text-danger asterik">*</i><?php echo isset($error['mobile']) ? $error['mobile'] : ''; ?>
+                                    <input type="number" class="form-control" name="mobile" >
                                 </div>
                             </div>
                         </div>
