@@ -155,7 +155,7 @@ if (isset($_POST['ajax']) && $_POST['ajax'] === 'true') {
 </head>
 <body>
 <div class="heading">
-<h3>Welcome to Money Book</h3>
+<h3>Welcome to Jiyo</h3>
         <h2>Most Trusted App in India</h2>
     </div>
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">

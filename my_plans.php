@@ -148,7 +148,7 @@ curl_close($curl);
                 <div class="activated-jobs-link">
                     <a href="plan.php" class="btn w-100 d-flex justify-content-center align-items-center" style="background-color: #4A148C;">
                         <i style="color: #f8f9fa; font-size: 1.5rem;font-weight: bold;" class="bi bi-arrow-left"></i>
-                        <span style="color: #f8f9fa; font-size: 1.2rem;  font-weight: bold; flex-grow: 1; text-align: center;">Jobs</span> <!-- Button Text -->
+                        <span style="color: #f8f9fa; font-size: 1.2rem; font-weight: bold; flex-grow: 1; text-align: center;">Jobs</span>
                     </a>
                 </div>
 
@@ -174,20 +174,17 @@ curl_close($curl);
 
                                 <!-- Right side: Details -->
                                 <div class="plan-details">
-                                    <p>Price: <strong><?php echo '₹'. htmlspecialchars($plan['price']); ?></strong></p>
-                                    <p>Daily Earnings: <strong><?php echo '₹'.htmlspecialchars($plan['daily_earnings']); ?></strong></p>
-                                    <p>Monthly Earnings:Rs <strong><?php echo '' . htmlspecialchars($plan['monthly_earnings']); ?></strong></p>
-                                    <p>Daily Codes: <strong><?php echo ''. htmlspecialchars($plan['daily_codes']); ?></strong></p>
+                                    <p>Price: <strong><?php echo '₹' . htmlspecialchars($plan['price']); ?></strong></p>
+                                    <p>Daily Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['daily_earnings']); ?></strong></p>
+                                    <p>Monthly Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['monthly_earnings']); ?></strong></p>
+                                    <p>Daily Codes: <strong><?php echo htmlspecialchars($plan['daily_codes']); ?></strong></p>
                                     <p>Validity: <span class="highlight">
                                         <?php echo ($plan['plan_id'] == 1) ? '30 Days' : 'Life Time'; ?>
                                     </span></p>
 
-                                    <form method="post" action="claim.php" style="display: inline;">
-                                        <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['plan_id']); ?>">
-                                        <button type="submit" class="btn btn-success" <?php echo ($plan['claim'] == '0') ? 'disabled' : ''; ?>>
-                                            Start Work
-                                        </button>
-                                    </form>
+                                    <button class="btn btn-success" <?php echo ($plan['claim'] == '0') ? 'disabled' : ''; ?> onclick="startWork(<?php echo htmlspecialchars($plan['plan_id']); ?>)">
+                                        Start Work
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -197,6 +194,34 @@ curl_close($curl);
             </div>
         </div>
     </div>
+
+    <!-- JavaScript to handle redirection based on plan_id -->
+    <script>
+        function startWork(planId) {
+            let redirectUrl = "";
+            switch (planId) {
+                case 1:
+                    redirectUrl = "30_days_free_earnings.php";
+                    break;
+                case 2:
+                    redirectUrl = "associate_job.php";
+                    break;
+                case 3:
+                    redirectUrl = "supervisor_job.php";
+                    break;
+                case 4:
+                    redirectUrl = "asst_manager_job.php";
+                    break;
+                case 5:
+                    redirectUrl = "manager_job.php";
+                    break;
+                default:
+                    alert("Invalid Plan ID");
+                    return;
+            }
+            window.location.href = redirectUrl;
+        }
+    </script>
 
     <!-- Bootstrap JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

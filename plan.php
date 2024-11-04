@@ -48,9 +48,6 @@ if ($response === false) {
 
 curl_close($curl);
 
-if (isset($_POST['btntrail'])) {
-    header("Location: trail.php");
-}
 
 if (isset($_POST['btnactivate'])) {
     $plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : null;
@@ -278,7 +275,6 @@ curl_close($curl);
                     <!-- Loop through all plans and display each one -->
                     <?php foreach ($plans as $plan): ?>
                         <div class="col-md-6 mb-4">
-                            <!-- Separate Product Name Box -->
                             <span class="product-name-box">
                                 <?php echo htmlspecialchars($plan['name']); ?>
                                 <a href="<?php echo htmlspecialchars($plan['demo_video']); ?>" target="_blank" class="watch-demo-link">
@@ -287,7 +283,6 @@ curl_close($curl);
                             </span>
 
                             <div class="plan-box">
-                                <!-- Left side: Image with Lightbox -->
                                 <?php if (!empty($plan['image'])): ?>
                                     <a data-lightbox="plan" href="<?php echo htmlspecialchars($plan['image']); ?>" data-title="<?php echo htmlspecialchars($plan['name']); ?>">
                                         <img src="<?php echo htmlspecialchars($plan['image']); ?>" alt="Plan image" title="<?php echo htmlspecialchars($plan['name']); ?>">
@@ -296,35 +291,59 @@ curl_close($curl);
                                     <p>No Image Available</p>
                                 <?php endif; ?>
 
-                                <!-- Right side: Details -->
                                 <div class="plan-details">
                                     <p>Course Fees: <strong><?php echo '₹' . htmlspecialchars($plan['price']); ?></strong></p>
                                     <p>Daily Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['daily_earnings']); ?></strong></p>
-                                    <p>Monthly Earnings:Rs <strong><?php echo '' . htmlspecialchars($plan['monthly_earnings']); ?></strong></p>
+                                    <p>Monthly Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['monthly_earnings']); ?></strong></p>
                                     <p>Daily Codes: <strong><?php echo '' . htmlspecialchars($plan['daily_codes']); ?></strong></p>
                                     <?php if ($plan['id'] != 1): ?>
                                         <p>Validity: <span class="highlight">Life Time</span></p>
                                     <?php else: ?>
-                                        <!-- Optional: Display different text or leave blank for plan_id 1 -->
                                         <p>Validity: <span class="highlight">30 Days</span></p>
                                     <?php endif; ?>
                                     
-                                    <!-- Purchase Button -->
-                                    <form action="plan.php" method="post" style="margin-top: 10px;">
+                                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" style="margin-top: 10px;">
                                         <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['id']); ?>">
                                         <button type="submit" name="btnactivate" class="btn purchase-btn">Purchase</button>
-                                        <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['id']); ?>">
-                                        <button type="submit" name="btntrail" class="btn trail-btn">Take Trail</button>
+                                        <button type="button" onclick="startWork(<?php echo htmlspecialchars($plan['id']); ?>)" class="btn trail-btn">Take Trial</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+       function startWork(planId) {
+    let redirectUrl = "";
+    switch (planId) {
+        case 1:
+            redirectUrl = "30_days_trail.php";
+            break;
+        case 2:
+            redirectUrl = "associate_job_trail.php";
+            break;
+        case 3:
+            redirectUrl = "supervisor_job_trail.php";
+            break;
+        case 4:
+            redirectUrl = "asst_manager_job_trail.php";
+            break;
+        case 5:
+            redirectUrl = "manager_job_trail.php";
+            break;
+        default:
+            alert("Invalid Plan ID");
+            return;
+    }
+    window.location.href = redirectUrl;
+}
+
+    </script>
 <!-- Recharge Guide Modal -->
 <div class="modal fade" id="rechargeGuideModal" tabindex="-1" aria-labelledby="rechargeGuideModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -343,6 +362,9 @@ curl_close($curl);
     </div>
 </div>
 
+
+    <!-- JavaScript to handle redirection based on plan_id -->
+ 
 <!-- Bootstrap JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Lightbox JS -->

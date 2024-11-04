@@ -1,28 +1,20 @@
-
 <?php
 include_once('includes/connection.php'); 
 session_start();
 
+// Get the user ID from the session, redirect if not set
 $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
-
 if (!$user_id) {
     header("Location: index.php");
     exit();
 }
 
-$plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : null;
+// Set the default plan_id to 1 if not set
+$plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : 4;
 
-if (!isset($_SESSION['submission_count'])) {
-    $_SESSION['submission_count'] = [];
-}
-if (!isset($_SESSION['submission_count'][$plan_id])) {
-    $_SESSION['submission_count'][$plan_id] = 0;
-}
 
-// Set custom maximum submission count for plan_id 1, otherwise default to 50
-$max_submission_count = ($plan_id == 1) ? 1 : 50;
 
-// Fetch the plan list
+// Fetch the plan list using API
 $data = ["user_id" => $user_id];
 $apiUrl = API_URL . "user_plan_list.php"; 
 $curl = curl_init($apiUrl);
@@ -36,10 +28,19 @@ $response = curl_exec($curl);
 curl_close($curl);
 
 $plans = [];
+$plan_name = ''; // Initialize plan_name variable
 if ($response !== false) {
     $responseData = json_decode($response, true);
     if ($responseData !== null && $responseData["success"]) {
         $plans = $responseData["data"];
+        
+        // Find the plan name for the current plan_id
+        foreach ($plans as $plan) {
+            if ($plan['plan_id'] == $plan_id) {
+                $plan_name = $plan['name']; // Assign to plan_name for display
+                break;
+            }
+        }
     } else {
         if ($responseData !== null) {
             echo "<script>alert('" . $responseData["message"] . "')</script>";
@@ -47,46 +48,49 @@ if ($response !== false) {
     }
 }
 
-$selected_plan = null;
-if ($plan_id && !empty($plans)) {
-    foreach ($plans as $plan) {
-        if ($plan['plan_id'] === $plan_id) {
-            $selected_plan = $plan;
-            break;
-        }
-    }
-}
+// Set custom maximum submission count for plan_id 1, otherwise default to 50
+$max_submission_count_4 = 50;
 
+// Initialize session data if not set
 if (!isset($_SESSION['store_data'])) {
     $_SESSION['store_data'] = [];
 }
-if ($selected_plan && !isset($_SESSION['store_data'][$plan_id])) {
+
+// Resetting session data on refresh and generating new data
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $_SESSION['store_data'][$plan_id] = [
-        'store_code' => strval(rand(100000, 999999)),
+         'store_code' => strval(rand(100000, 999999)),
         'invoice_number' => strval(rand(1000000000, 9999999999)),
-        'invoice_date' => date('Y-m-d', strtotime("+" . rand(0, 30) . " days")),
-        'qty' => rand(1, 100),
+        'invoice_date' => date('Y-m-d', strtotime("+" . rand(0, 365) . " days")), // New random expiry date
+        'qty' => rand(10, 100), // New random price
     ];
 }
 
-$stored_data = $selected_plan ? $_SESSION['store_data'][$plan_id] : null;
+// Access stored data and provide defaults
+$stored_data = $_SESSION['store_data'][$plan_id];
 $stored_store_code = $stored_data['store_code'] ?? '';
 $stored_invoice_number = $stored_data['invoice_number'] ?? '';
 $stored_invoice_date = $stored_data['invoice_date'] ?? '';
 $stored_qty = $stored_data['qty'] ?? '';
 
+// Initialize error messages
 $errors = [
-    "plan_id" => "",
     "store_code" => "",
     "invoice_number" => "",
     "invoice_date" => "",
     "qty" => ""
 ];
 
+// Check if the submission count is set in the session for this plan_id; if not, initialize to 0
+if (!isset($_SESSION['submission_count_4'][$plan_id])) {
+    $_SESSION['submission_count_4'][$plan_id] = 0;
+}
+
+// Check for form submission
 if (isset($_POST['btnNext'])) {
     $store_code = $_POST['store_code'] ?? null;
     $invoice_number = $_POST['invoice_number'] ?? null;
-    $invoice_date = $_POST['invoice_date'] ?? null;
+    $invoice_date = $_POST['invoice_date'] ?? '';
     $qty = isset($_POST['qty']) ? intval($_POST['qty']) : null;
 
     if (empty($store_code)) {
@@ -108,15 +112,17 @@ if (isset($_POST['btnNext'])) {
     }
 
     if (empty($qty) || $qty < 1) {
-        $errors['qty'] = "Qty Dispatching is required and should be greater than 0.";
+        $errors['qty'] = "qty is required and should be greater than 0.";
     } elseif ($qty !== $stored_qty) {
-        $errors['qty'] = "Incorrect Qty.";
+        $errors['qty'] = "Incorrect qty.";
     }
 
+    // Check if there are no validation errors
     if (!array_filter($errors)) {
-        $_SESSION['submission_count'][$plan_id]++;
+        $_SESSION['submission_count_4'][$plan_id] = ($_SESSION['submission_count_4'][$plan_id] ?? 0) + 1;
 
-        if ($_SESSION['submission_count'][$plan_id] >= $max_submission_count) {
+        // Process the submission if max count reached
+        if ($_SESSION['submission_count_4'][$plan_id] >= $max_submission_count_4) {
             $data = [
                 "plan_id" => $plan_id,
                 "user_id" => $user_id,
@@ -136,7 +142,6 @@ if (isset($_POST['btnNext'])) {
             $response = curl_exec($curl);
             curl_close($curl);
         
-            
             $responseData = json_decode($response, true);
             if ($responseData !== null && isset($responseData["success"]) && $responseData["success"]) {
                 $message = $responseData["message"];
@@ -146,19 +151,21 @@ if (isset($_POST['btnNext'])) {
                 echo "<script>alert('$message');</script>";
                 echo "<script>window.location.href = 'my_plans.php';</script>";
                 exit();
+            } else {
+                // Log the error if API response is not successful
+                error_log("API response error: " . print_r($responseData, true));
             }
-
         }
 
-        if ($selected_plan) {
-            $_SESSION['store_data'][$plan_id] = [
-                'store_code' => strval(rand(100000, 999999)),
-                'invoice_number' => strval(rand(1000000000, 9999999999)),
-                'invoice_date' => date('Y-m-d', strtotime("+" . rand(0, 30) . " days")),
-                'qty' => rand(1, 100),
-            ];
-        }
+           // Regenerate stored data for the next submission
+           $_SESSION['store_data'][$plan_id] = [
+            'store_code' => strval(rand(100000, 999999)),
+            'invoice_number' => strval(rand(1000000000, 9999999999)),
+            'invoice_date' => date('Y-m-d', strtotime("+" . rand(0, 365) . " days")),
+            'qty' => rand(10, 100),
+        ];
 
+        // Refresh stored data for display
         $stored_data = $_SESSION['store_data'][$plan_id];
         $stored_store_code = $stored_data['store_code'];
         $stored_invoice_number = $stored_data['invoice_number'];
@@ -167,9 +174,13 @@ if (isset($_POST['btnNext'])) {
     }
 }
 
-$claim_button_enabled = ($selected_plan && $_SESSION['submission_count'][$plan_id] >= $max_submission_count);
+// Determine if the claim button should be enabled
+$claim_button_enabled = $_SESSION['submission_count_4'][$plan_id] >= $max_submission_count_4;
 
+// Display the submission count
+$display_count = $_SESSION['submission_count_4'][$plan_id];
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -181,84 +192,70 @@ $claim_button_enabled = ($selected_plan && $_SESSION['submission_count'][$plan_i
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-.plan-box {
-    background-color: #f8f9fa;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    padding: 20px; /* Padding to keep height */
-    margin: 0 auto 20px auto; /* Center the box with auto left and right margins */
-    width: 80%; /* Set the desired width */
-    max-width: 600px; /* Optional: set a max width */
-}
+        .plan-box {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 20px; 
+            margin: 0 auto 20px auto; 
+            width: 80%; 
+            max-width: 600px; 
+        }
 
-.product-name-box {
-    background-color: #4A148C;
-    color: white;
-    padding: 15px; /* Padding for product name box */
-    text-align: center;
-    font-size: 1.2rem; /* Keep font size */
-    font-weight: bold;
-    border-radius: 5px;
-    margin-bottom: 15px; /* Bottom margin */
-}
+        .product-name-box {
+            background-color: #4A148C;
+            color: white;
+            padding: 15px; 
+            text-align: center;
+            font-size: 1.2rem; 
+            font-weight: bold;
+            border-radius: 5px;
+            margin-bottom: 15px; 
+        }
 
-.highlighted-value {
-    background-color: #fff8c6;
-    font-weight: bold;
-    padding: 2px 5px; /* Padding for highlighted value */
-    border-radius: 5px;
-}
-.custom-btn {
-    background-color: #4A148C; /* Custom background color */
-    border-color: #4A148C; /* Match the border color with background */
-    color: white; /* Set text color to white for contrast */
-}
+        .highlighted-value {
+            background-color: #fff8c6;
+            font-weight: bold;
+            padding: 2px 5px; 
+            border-radius: 5px;
+        }
 
-.custom-btn:hover {
-    background-color: #6A1B9A; /* Optional: Darken on hover for better UX */
-    border-color: #6A1B9A; /* Match the border on hover */
-}
+        .custom-btn {
+            background-color: #4A148C; 
+            border-color: #4A148C; 
+            color: white; 
+        }
 
+        .custom-btn:hover {
+            background-color: #6A1B9A; 
+            border-color: #6A1B9A; 
+        }
     </style>
 </head>
 <body>
 <?php include_once('sidebar.php'); ?>
     <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="plan-box">
+                <div class="product-name-box">Asst Manager Job</div>
+                    
+                    <div class="mb-3">
+                        <h5>Submission Count: <span class="highlighted-value"><?php echo $display_count; ?>/<?php echo htmlspecialchars($max_submission_count_4); ?></span></h5>
+                    </div>
 
-        <?php if ($selected_plan): ?>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="plan-box">
-                        <div class="product-name-box"><?php echo htmlspecialchars($selected_plan['name']); ?></div>
-                     
-                        <!-- Submission Count Display -->
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" class="mt-3">
+                        <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan_id); ?>">
+
                         <div class="mb-3">
-                            <h5>Submission Count: <span class="highlighted-value"><?php echo $_SESSION['submission_count'][$plan_id]; ?>/<?php echo $max_submission_count; ?></span></h5>
-                        </div>
-
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="mt-3">
-                            <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($selected_plan['plan_id']); ?>">
-
-                            <div class="mb-3">
                                 <label for="store_code" class="form-label">Store Code:</label><span class="highlighted-value"><?php echo $stored_store_code; ?></span>
                                 <input type="text" name="store_code" class="form-control" id="store_code" placeholder="Enter Store Code">
                                 <span class="text-danger"><?php echo $errors['store_code']; ?></span>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="invoice_number" class="form-label">Invoice Number</label><span class="highlighted-value"><?php echo $stored_invoice_number; ?></span>
-                                <input type="text" name="invoice_number" class="form-control" id="invoice_number" placeholder="Enter Invoice Number">
-                                <span class="text-danger"><?php echo $errors['invoice_number']; ?></span>
-                            </div>
 
-                            <div class="mb-3">
-                                <label for="invoice_date" class="form-label">Invoice Date</label><span class="highlighted-value"><?php echo $stored_invoice_date; ?></span>
-                                <input type="date" name="invoice_date" class="form-control" id="invoice_date">
-                                <span class="text-danger"><?php echo $errors['invoice_date']; ?></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="qty" class="form-label">Quantity:</label>
+                        <div class="mb-3">
+                                <label for="qty" class="form-label">Qty Dispatching:</label>
                                 <span class="highlighted-value"><?php echo $stored_qty; ?></span>
                                 <div class="input-group">
                                     <button type="button" class="btn btn-outline-secondary" onclick="decrementQty()">-</button>
@@ -268,19 +265,27 @@ $claim_button_enabled = ($selected_plan && $_SESSION['submission_count'][$plan_i
                                 </div>
                             </div>
 
-                            <button type="submit" name="btnNext" class="btn custom-btn" <?php echo $claim_button_enabled ? 'disabled' : ''; ?>>
-                                Next
-                            </button>
+                            <div class="mb-3">
+                                <label for="invoice_number" class="form-label">Invoice Number</label><span class="highlighted-value"><?php echo $stored_invoice_number; ?></span>
+                                <input type="text" name="invoice_number" class="form-control" id="invoice_number" placeholder="Enter Invoice Number">
+                                <span class="text-danger"><?php echo $errors['invoice_number']; ?></span>
+                            </div>
 
-                        </form>
-                    </div>
+                            <div class="mb-3">
+                            <label for="invoice_date" class="form-label">Invoice Date:</label>
+                            <span class="highlighted-value"><?php echo htmlspecialchars($stored_invoice_date); ?></span>
+                            <input type="date" name="invoice_date" class="form-control" id="invoice_date" required>
+                            <span class="text-danger"><?php echo htmlspecialchars($errors['invoice_date']); ?></span>
+                        </div>
+
+                        <button type="submit" name="btnNext" class="btn custom-btn">Generate</button>
+                    </form>
                 </div>
             </div>
-        <?php else: ?>
-            <p class="text-center">No plan found.</p>
-        <?php endif; ?>
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function incrementQty() {
