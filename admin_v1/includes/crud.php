@@ -1,7 +1,7 @@
 <?php
 
 
-define('DOMAIN_URL', 'https://jiyo.graymatterworks.com/admin_v1/'); /* chnage to your domain here - don't forget to add forward slash at the end of the URL like this "/" */
+define('DOMAIN_URL', 'https://jiyoapp.in/admin_v1/'); /* chnage to your domain here - don't forget to add forward slash at the end of the URL like this "/" */
 define('ALLOW_MODIFICATION', 1);
 define('JWT_SECRET_KEY', '12345678'); /* chnage to your secret key here set it to anything you like*/
 define('MAIN_REFER', 'ATN');
@@ -17,9 +17,9 @@ class Database
      */
 
      private $db_host = "localhost";
-     private $db_user = "u743445510_jiyo";
+     private $db_user = "u881539779_jiyo";
      private $db_pass = "Jiyo@2024"; 
-     private $db_name = "u743445510_jiyo"; 
+     private $db_name = "u881539779_jiyo"; 
 
     //private $db_host = "localhost";
     //private $db_user = "root";
