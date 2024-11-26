@@ -69,6 +69,14 @@ $db->connect();
                     $where .= "AND (profile = '' OR profile IS NULL) "; 
                 }
             }
+            if (isset($_GET['day_filter']) && $_GET['day_filter'] == 'today') {
+                // Get today's date in Y-m-d format (you can adjust the format as needed)
+                $today = date('Y-m-d');
+                $where .= " AND DATE(registered_datetime) = '$today' ";
+            } elseif (isset($_GET['day_filter']) && $_GET['day_filter'] == 'all') {
+                // No additional condition needed, will show all records
+            }
+            
             if (isset($_GET['offset']))
                 $offset = $db->escapeString($_GET['offset']);
             if (isset($_GET['limit']))
@@ -88,15 +96,17 @@ $db->connect();
             if (isset($_GET['order'])){
                 $order = $db->escapeString($_GET['order']);
             }
-            $sql = "SELECT COUNT(`id`) as total FROM `users`WHERE 1=1 " . $where;
+           
+            $sql = "SELECT COUNT(`id`) as total FROM `users` WHERE 1=1 " . $where;
             $db->sql($sql);
             $res = $db->getResult();
             foreach ($res as $row)
-             $total = $row['total'];
-           
-             $sql = "SELECT * FROM users WHERE 1=1 " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . ", " . $limit;
-             $db->sql($sql);
+                $total = $row['total'];
+
+            $sql = "SELECT * FROM users WHERE 1=1 " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . ", " . $limit;
+            $db->sql($sql);
             $res = $db->getResult();
+
         
             $bulkData = array();
             $bulkData['total'] = $total;

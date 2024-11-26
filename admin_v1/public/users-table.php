@@ -16,6 +16,14 @@
                             <button type='submit'  class="btn btn-primary"><i class="fa fa-download"></i> Export Users</button>
                         </form>
                         </div>
+                        <div class="col-md-3"><br>
+                            <h4 class="box-title">Filter by Day</h4>
+                            <select id="day_filter" name="day_filter" class="form-control">
+                                <option value="">All</option>
+                                <option value="today">Today</option>
+                            </select>
+                        </div>
+
                 <div class="col-md-3"><br>
                         <h4 class="box-title">Referred By</h4>
                             <input type="text" class="form-control" name="referred_by" id="referred_by" >
@@ -89,9 +97,9 @@
     $('#trail_completed').on('change', function() {
         $('#users_table').bootstrapTable('refresh');
     });
-    $('#date').on('change', function() {
-        $('#users_table').bootstrapTable('refresh');
-    });
+    $('#day_filter').on('change', function() {
+    $('#users_table').bootstrapTable('refresh');
+});
     $('#referred_by').on('change', function() {
         $('#users_table').bootstrapTable('refresh');
     });
@@ -103,7 +111,7 @@
     });
     function queryParams(p) {
         return {
-            "date": $('#date').val(),
+            "day_filter": $('#day_filter').val(),  // Pass day_filter parameter
             "seller_id": $('#seller_id').val(),
             "community": $('#community').val(),
             "status": $('#status').val(),
