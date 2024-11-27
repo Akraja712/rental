@@ -17,6 +17,7 @@ if (isset($_POST['btnAdd'])) {
         $price = $db->escapeString(($_POST['price']));
         $type = $db->escapeString(($_POST['type']));
         $min_refers = $db->escapeString(($_POST['min_refers']));
+        $invite_bonus = $db->escapeString(($_POST['invite_bonus']));
    
         $error = array();
        
@@ -60,10 +61,10 @@ if (isset($_POST['btnAdd'])) {
         }
 
         $upload_image = 'upload/images/' . $filename;
-        $sql = "INSERT INTO plan (name,description,image,demo_video,daily_codes,per_code_cost,price,daily_earnings,type,min_refers,monthly_earnings) VALUES ('$name','$description','$upload_image','$demo_video','$daily_codes','$per_code_cost','$price','$daily_earnings','$type','$min_refers','$monthly_earnings')";
+        $sql = "INSERT INTO plan (name,description,image,demo_video,daily_codes,per_code_cost,price,daily_earnings,type,min_refers,monthly_earnings,invite_bonus) VALUES ('$name','$description','$upload_image','$demo_video','$daily_codes','$per_code_cost','$price','$daily_earnings','$type','$min_refers','$monthly_earnings','$invite_bonus')";
         $db->sql($sql);
     } else {
-            $sql_query = "INSERT INTO plan (name,description,demo_video,daily_codes,per_code_cost,price,daily_earnings,type,min_refers,monthly_earnings) VALUES ('$name','$description','$demo_video','$daily_codes','$per_code_cost','$price','$daily_earnings','$type','$min_refers','$monthly_earnings')";
+            $sql_query = "INSERT INTO plan (name,description,demo_video,daily_codes,per_code_cost,price,daily_earnings,type,min_refers,monthly_earnings,invite_bonus) VALUES ('$name','$description','$demo_video','$daily_codes','$per_code_cost','$price','$daily_earnings','$type','$min_refers','$monthly_earnings','$invite_bonus')";
             $db->sql($sql);
         }
             $result = $db->getResult();
@@ -160,6 +161,10 @@ if (isset($_POST['btnAdd'])) {
                                 <div class='col-md-3'>
                                     <label for="exampleInputtitle">Monthly Earnings</label> <i class="text-danger asterik">*</i>
                                     <input type="number" class="form-control" name="monthly_earnings" required>
+                                </div>
+                                <div class='col-md-3'>
+                                    <label for="exampleInputtitle">Invite Bonus</label> <i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="invite_bonus" required>
                                 </div>
                             </div> 
                         </div> 

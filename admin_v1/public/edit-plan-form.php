@@ -25,8 +25,9 @@ if (isset($_POST['btnEdit'])) {
 	$price = $db->escapeString(($_POST['price']));
 	$type = $db->escapeString(($_POST['type']));
 	$min_refers = $db->escapeString(($_POST['min_refers']));
+	$invite_bonus = $db->escapeString(($_POST['invite_bonus']));
     
-		$sql_query = "UPDATE plan SET name='$name',description='$description',demo_video='$demo_video',daily_codes='$daily_codes',per_code_cost='$per_code_cost',price='$price',daily_earnings='$daily_earnings',type = '$type',min_refers = '$min_refers',monthly_earnings = '$monthly_earnings' WHERE id =  $ID";
+		$sql_query = "UPDATE plan SET name='$name',description='$description',demo_video='$demo_video',daily_codes='$daily_codes',per_code_cost='$per_code_cost',price='$price',daily_earnings='$daily_earnings',type = '$type',min_refers = '$min_refers',monthly_earnings = '$monthly_earnings',invite_bonus = '$invite_bonus' WHERE id =  $ID";
 		$db->sql($sql_query);
 		$result = $db->getResult();             
 		if (!empty($result)) {
@@ -162,6 +163,10 @@ if (isset($_POST['btnCancel'])) { ?>
 								<div class="col-md-3">
 									<label for="exampleInputEmail1">Monthly Earnings</label><i class="text-danger asterik">*</i>
 									<input type="number" class="form-control" name="monthly_earnings" value="<?php echo $res[0]['monthly_earnings']; ?>">
+								</div>
+								<div class="col-md-3">
+									<label for="exampleInputEmail1">Invite Bonus</label><i class="text-danger asterik">*</i>
+									<input type="number" class="form-control" name="invite_bonus" value="<?php echo $res[0]['invite_bonus']; ?>">
 								</div>
                             </div>	 
 						  </div> 

@@ -222,6 +222,7 @@ $db->connect();
                 $tempRow['price'] = $row['price'];
                 $tempRow['type'] = $row['type'];
                 $tempRow['min_refers'] = $row['min_refers'];
+                $tempRow['invite_bonus'] = $row['invite_bonus'];
                 if(!empty($row['image'])){
                     $tempRow['image'] = "<a data-lightbox='category' href='" . $row['image'] . "' data-caption='" . $row['image'] . "'><img src='" . $row['image'] . "' title='" . $row['image'] . "' height='50' /></a>";
         
