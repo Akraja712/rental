@@ -1,4 +1,4 @@
 <?php
-define('DOMAIN_URL', 'http://localhost/rental-1/');
-define('API_URL', 'http://localhost/rental-1/admin_v1/api/');
+define('DOMAIN_URL', 'https://jiyoapp.in/');
+define('API_URL', 'https://jiyoapp.in/admin_v1/api/');
 ?>
