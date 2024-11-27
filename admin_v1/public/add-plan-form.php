@@ -12,7 +12,6 @@ if (isset($_POST['btnAdd'])) {
         $demo_video = $db->escapeString(($_POST['demo_video']));
         $daily_codes = $db->escapeString(($_POST['daily_codes']));
         $daily_earnings = $db->escapeString(($_POST['daily_earnings']));
-        $monthly_earnings = $db->escapeString(($_POST['monthly_earnings']));
         $per_code_cost = $db->escapeString(($_POST['per_code_cost']));
         $price = $db->escapeString(($_POST['price']));
         $type = $db->escapeString(($_POST['type']));
@@ -36,9 +35,6 @@ if (isset($_POST['btnAdd'])) {
         if (empty($daily_earnings)) {
             $error['daily_earnings'] = " <span class='label label-danger'>Required!</span>";
         }
-        if (empty($monthly_earnings)) {
-            $error['monthly_earnings'] = " <span class='label label-danger'>Required!</span>";
-        }
         if (empty($per_code_cost)) {
             $error['per_code_cost'] = " <span class='label label-danger'>Required!</span>";
         }
@@ -61,10 +57,10 @@ if (isset($_POST['btnAdd'])) {
         }
 
         $upload_image = 'upload/images/' . $filename;
-        $sql = "INSERT INTO plan (name,description,image,demo_video,daily_codes,per_code_cost,price,daily_earnings,type,min_refers,monthly_earnings,invite_bonus) VALUES ('$name','$description','$upload_image','$demo_video','$daily_codes','$per_code_cost','$price','$daily_earnings','$type','$min_refers','$monthly_earnings','$invite_bonus')";
+        $sql = "INSERT INTO plan (name,description,image,demo_video,daily_codes,per_code_cost,price,daily_earnings,type,min_refers,invite_bonus) VALUES ('$name','$description','$upload_image','$demo_video','$daily_codes','$per_code_cost','$price','$daily_earnings','$type','$min_refers','$invite_bonus')";
         $db->sql($sql);
     } else {
-            $sql_query = "INSERT INTO plan (name,description,demo_video,daily_codes,per_code_cost,price,daily_earnings,type,min_refers,monthly_earnings,invite_bonus) VALUES ('$name','$description','$demo_video','$daily_codes','$per_code_cost','$price','$daily_earnings','$type','$min_refers','$monthly_earnings','$invite_bonus')";
+            $sql_query = "INSERT INTO plan (name,description,demo_video,daily_codes,per_code_cost,price,daily_earnings,type,min_refers,invite_bonus) VALUES ('$name','$description','$demo_video','$daily_codes','$per_code_cost','$price','$daily_earnings','$type','$min_refers','$invite_bonus')";
             $db->sql($sql);
         }
             $result = $db->getResult();
@@ -157,10 +153,6 @@ if (isset($_POST['btnAdd'])) {
                                  <div class='col-md-3'>
                                     <label for="exampleInputtitle">Min Refers</label> <i class="text-danger asterik">*</i>
                                     <input type="number" class="form-control" name="min_refers">
-                                </div>
-                                <div class='col-md-3'>
-                                    <label for="exampleInputtitle">Monthly Earnings</label> <i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="monthly_earnings" required>
                                 </div>
                                 <div class='col-md-3'>
                                     <label for="exampleInputtitle">Invite Bonus</label> <i class="text-danger asterik">*</i>
