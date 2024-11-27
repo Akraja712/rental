@@ -85,6 +85,21 @@
 
 <script>
 
+$(document).ready(function() {
+    // Check if the URL has the 'filter' parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const filter = urlParams.get('filter');
+    
+    if (filter === 'today') {
+        // Set 'today' as the selected option in the dropdown
+        $('#day_filter').val('today');
+
+        // Trigger table refresh to apply the filter
+        $('#users_table').bootstrapTable('refresh');
+    }
+});
+
+
     $('#seller_id').on('change', function() {
         $('#products_table').bootstrapTable('refresh');
     });
@@ -128,3 +143,13 @@
     }
     
 </script>
+<?php
+// Retrieve day filter parameter
+$dayFilter = isset($_GET['day_filter']) ? $_GET['day_filter'] : '';
+
+// Apply condition based on the selected filter
+if ($dayFilter === 'today') {
+    $currentDate = date('Y-m-d');
+    $sql .= " WHERE DATE(registered_datetime) = '$currentDate'";
+}
+?>

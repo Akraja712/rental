@@ -81,7 +81,7 @@ include "header.php";
                           <p>Today Registration </p>
                           </div>
                         
-                        <a href="users.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                          <a href="users.php?filter=today" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-xs-6">
@@ -99,24 +99,7 @@ include "header.php";
                         
                         <a href="withdrawals.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
-                <div class="col-lg-4 col-xs-6">
-                    <div class="small-box bg-blue">
-                        <div class="inner">
-                            <h3><?php
-                             $sql = "SELECT COUNT(id) AS count  FROM recharge WHERE status = 0 ";
-                             $db->sql($sql);
-                             $res = $db->getResult();
-                             $totalamount = $res[0]['count'];
-                             echo $totalamount;
-                              ?></h3>
-                            <p>Pending Recharge</p>
-                        </div>
-                       
-                        <a href="recharge.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        
-                    </div>
-                </div>
+                </div>  
                 <div class="col-lg-4 col-xs-6">
                     <div class="small-box bg-green">
                         <div class="inner">
@@ -147,80 +130,12 @@ include "header.php";
                             <p>Active Valid Users</p>
                         </div>
                        
-                        <a href="users.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="user_plan.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                         
                     </div>
                 </div>
-                <div class="col-lg-4 col-xs-6">
-                    <div class="small-box bg-teal">
-                        <div class="inner">
-                            <h3><?php
-                             $sql = "SELECT SUM(recharge_amount) AS amount FROM `recharge` WHERE datetime >= '$yes_dt' AND datetime <= '$yes_dt_' AND status = 1";
-                             $db->sql($sql);
-                             $res = $db->getResult();
-                             $count = $res[0]['amount'];
-                             echo "₹".$count;
-                              ?></h3>
-                            <p>Yesterday Current Recharge</p>
-                        </div>
-                       
-                        <a href="recharge.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        
-                    </div>
-                </div>
-                <div class="col-lg-4 col-xs-6">
-                    <div class="small-box bg-purple">
-                        <div class="inner">
-                        <?php
-                          $sql = "SELECT COUNT(id) AS total FROM users WHERE registered_datetime >= '$yes_dt' AND registered_datetime <= '$yes_dt_'";
-                          $db->sql($sql);
-                          $res = $db->getResult();
-                          $num = $res[0]['total']; // Fetch the count from the result
-                           ?>
-                          <h3><?php echo $num; ?></h3>
-                          <p>Yesterday Current Registration </p>
-                          </div>
-                        
-                        <a href="users.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-xs-6">
-                    <div class="small-box bg-red">
-                        <div class="inner">
-                            <h3><?php
-                            $sql = "SELECT COUNT(id) AS count  FROM transactions  WHERE type = 'refer_bonus' AND amount > 5 group by user_id";
-                             $db->sql($sql);
-                             $res = $db->getResult();
-                             $sum = 0;
-                             foreach ($res as $row) {
-                                 $sum += $row['count'];
-                             }
-                             echo $sum;
-                              ?></h3>
-                            <p>Total Refer Users</p>
-                        </div>
-                       
-                        <a href="users.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        
-                    </div>
-                </div>
-                <div class="col-lg-4 col-xs-6">
-                    <div class="small-box bg-orange">
-                        <div class="inner">
-                            <h3><?php
-                             $sql = "SELECT COUNT(id) AS count  FROM transactions WHERE type = 'daily_income' AND DATE(datetime) = '$date'  group by user_id";
-                             $db->sql($sql);
-                             $res = $db->getResult();
-                             $count = $res[0]['count'];
-                             echo $count;
-                              ?></h3>
-                            <p>Today Generated Codes Count</p>
-                        </div>
-                       
-                        <a href="users.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        
-                    </div>
-                </div>
+               
+               
              </div>
         </section>
         <?php } ?>
