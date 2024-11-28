@@ -35,6 +35,8 @@ if ($response === false) {
         $userdetails = $responseData["data"];
         if (!empty($userdetails)) {
             $balance = $userdetails[0]["balance"];
+            $earning_wallet = $userdetails[0]["earning_wallet"];
+            $bonus_wallet = $userdetails[0]["bonus_wallet"];
         } else {
             $balance = "No balance information available.";
         }
@@ -93,6 +95,96 @@ if (isset($_POST['btnWithdrawal'])) {
     
     curl_close($curl);
 }
+$_SESSION['earning_wallet'] = $earning_wallet;
+
+    if (isset($_POST['btnearningwallet'])) {
+        $wallet_type = isset($_POST['wallet_type']) ? $_POST['wallet_type'] : 'earning_wallet';
+        $data = array(
+            "user_id" => $user_id,
+            "wallet_type" => $wallet_type,
+        );
+        $apiUrl = API_URL . "add_main_balance.php";
+    
+        $curl = curl_init($apiUrl);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    
+        $response = curl_exec($curl);
+    
+        if ($response === false) {
+            // Error in cURL request
+            echo "Error: " . curl_error($curl);
+        } else {
+            // Successful API response
+            $responseData = json_decode($response, true);
+            if ($responseData !== null && isset($responseData["success"])) {
+                $message = $responseData["message"];
+                if (isset($responseData["earning_wallet"])) {
+                    $_SESSION['earning_wallet'] = $responseData['earning_wallet'];
+                    $earning_wallet = $_SESSION['earning_wallet'];
+                }
+                // Alert and redirect
+                echo "<script>
+                        alert('$message');
+                        window.location.href = 'withdrawal_request.php';
+                      </script>";
+            } else {
+                // Failed to fetch transaction details
+                if ($responseData !== null) {
+                    echo "<script>alert('".$responseData["message"]."')</script>";
+                }
+            }
+        }
+        
+        curl_close($curl);
+}
+$_SESSION['bonus_wallet'] = $bonus_wallet;
+
+    if (isset($_POST['btnbonuswallet'])) {
+        $wallet_type = isset($_POST['wallet_type']) ? $_POST['wallet_type'] : 'bonus_wallet';
+        $data = array(
+            "user_id" => $user_id,
+            "wallet_type" => $wallet_type,
+        );
+        $apiUrl = API_URL . "add_main_balance.php";
+    
+        $curl = curl_init($apiUrl);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    
+        $response = curl_exec($curl);
+    
+        if ($response === false) {
+            // Error in cURL request
+            echo "Error: " . curl_error($curl);
+        } else {
+            // Successful API response
+            $responseData = json_decode($response, true);
+            if ($responseData !== null && isset($responseData["success"])) {
+                $message = $responseData["message"];
+                if (isset($responseData["bonus_wallet"])) {
+                    $_SESSION['bonus_wallet'] = $responseData['bonus_wallet'];
+                    $bonus_wallet = $_SESSION['bonus_wallet'];
+                }
+                // Alert and redirect
+                echo "<script>
+                        alert('$message');
+                        window.location.href = 'withdrawal_request.php';
+                      </script>";
+            } else {
+                // Failed to fetch transaction details
+                if ($responseData !== null) {
+                    echo "<script>alert('".$responseData["message"]."')</script>";
+                }
+            }
+        }
+        
+        curl_close($curl);
+}
 ?>
 
 
@@ -141,26 +233,68 @@ if (isset($_POST['btnWithdrawal'])) {
         .form-container {
             max-width: 400px; 
         }
+        .info-box {
+            background-color: white; /* Dark background */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center; /* Center text */
+            margin: 10px 0; /* Space between boxes */
+            border: 2px solid #4A148C; /* Border color */
+        }
         @media (max-width: 576px) {
             .withdrawal-container h2 {
                 font-size: 0.9rem;
             }
             .withdrawal-button {
                 font-size: 0.600rem;
-                top: 19px;
+                top: 0px;
                 right: 8px;
             }
+
         }
     </style>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row flex-nowrap">
-    <?php include_once('sidebar.php'); ?>
+        <?php include_once('sidebar.php'); ?>
         <div class="col py-3">
             <div class="withdrawal-container">
+                <!-- New Boxes for Wallets -->
+                <div class="row d-flex justify-content-start">
+            <div class="col-md-3 col-sm-6 mb-2">
+                <div class="info-box text-black">
+                <form action="withdrawal_request.php" method="post">
+                    <h4>Earning Wallet</h4>
+                    <div style="position: relative; width: 100px; margin: 10px auto; text-align: center;">
+                        <i class="bi bi-cash-coin" style="position: absolute; font-weight:bold; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1;"></i>
+                        <input type="number" class="form-control" id="earning_wallet" name="earning_wallet" 
+                            style="width: 120%; padding-left: 30px; text-align: center; font-weight:bold;" 
+                            value="<?php echo htmlspecialchars($earning_wallet); ?>" disabled>
+                    </div>
+                    <button type="submit" name="btnearningwallet" style="background-color:#4A148C; color:white;" class="btn">Add to Main Balance</button>
+                </div>
+             </form>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="info-box text-black">
+                <form action="withdrawal_request.php" method="post">
+                    <h4>Bonus Wallet</h4>
+                    <div style="position: relative; width: 100px; margin: 10px auto; text-align: center;">
+                        <i class="bi bi-cash-coin" style="position: absolute; font-weight:bold; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1;"></i>
+                        <input type="number" class="form-control" id="earning_wallet" name="earning_wallet" 
+                            style="width: 120%; padding-left: 30px; text-align: center; font-weight:bold;" 
+                            value="<?php echo htmlspecialchars($bonus_wallet); ?>" disabled>
+                    </div>
+                    <button type="submit" name="btnbonuswallet" style="background-color:#4A148C; color:white;" class="btn">Add to Main Balance</button>
+                </div>
+                </form>
+            </div>
+        </div>
+
+                <!-- Existing Withdrawal Request Title and Form -->
                 <h2>Withdrawal Request</h2>
-                <a href="withdrawals.php"  style="background-color:#4A148C; color:white;" class="btn withdrawal-button">Back To Withdrawals</a>
+                <a href="withdrawals.php" style="background-color:#4A148C; color:white;" class="btn withdrawal-button">Back To Withdrawals</a>
                 
                 <!-- Withdrawal Request Form -->
                 <div class="form-container mt-4">
@@ -174,7 +308,7 @@ if (isset($_POST['btnWithdrawal'])) {
                             <label for="amount" class="form-label">Enter Amount</label>
                             <input type="number" class="form-control" id="amount" name="amount" required>
                         </div>
-                        <button type="submit" name="btnWithdrawal"  style="background-color:#4A148C; color:white;" class="btn">Submit Request</button>
+                        <button type="submit" name="btnWithdrawal" style="background-color:#4A148C; color:white;" class="btn">Submit Request</button>
                     </form>
                 </div>
             </div>
