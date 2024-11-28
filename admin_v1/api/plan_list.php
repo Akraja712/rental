@@ -48,6 +48,7 @@ if ($num >= 1) {
         $temp['demo_video'] = $row['demo_video'];
         $temp['daily_codes'] = $row['daily_codes'];
         $temp['daily_earnings'] = $row['daily_earnings'];
+        $temp['monthly_earnings'] = $row['monthly_earnings'];
         $temp['invite_bonus'] = $row['invite_bonus'];
         $temp['per_code_cost'] = $row['per_code_cost'];
         $temp['price'] = $row['price'];

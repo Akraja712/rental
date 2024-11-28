@@ -32,7 +32,7 @@ if (empty($user)) {
     return false;
 }
 
-$sql = "SELECT user_plan.* ,plan.name,plan.image,plan.demo_video,plan.daily_codes,plan.per_code_cost,plan.price,plan.daily_earnings,plan.invite_bonus
+$sql = "SELECT user_plan.* ,plan.name,plan.image,plan.demo_video,plan.daily_codes,plan.per_code_cost,plan.price,plan.daily_earnings,plan.invite_bonus,plan.monthly_earnings
         FROM user_plan 
         LEFT JOIN plan ON user_plan.plan_id = plan.id
         WHERE user_plan.user_id = '$user_id' AND user_plan.inactive = 0";
