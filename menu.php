@@ -1,3 +1,54 @@
+<?php
+include_once('includes/connection.php');
+session_start();
+
+// Ensure the user is logged in
+if (!isset($_SESSION['id'])) {
+    header("Location: index.php");
+    exit();
+}
+
+$user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null; // Ensure user_id is set
+
+$data = array(
+    "user_id" => $user_id,
+);
+
+
+// Fetch the user's current balance
+$apiUrl = API_URL . "user_details.php"; // Ensure this endpoint provides the user's balance
+
+$curl = curl_init($apiUrl);
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$response = curl_exec($curl);
+
+if ($response === false) {
+    echo "Error: " . curl_error($curl);
+    $balance = "N/A";
+} else {
+    $responseData = json_decode($response, true);
+    if ($responseData !== null && $responseData["success"]) {
+        $userdetails = $responseData["data"];
+        if (!empty($userdetails)) {
+            $balance = $userdetails[0]["balance"];
+            $earning_wallet = $userdetails[0]["earning_wallet"];
+            $bonus_wallet = $userdetails[0]["bonus_wallet"];
+        } else {
+            $balance = "No balance information available.";
+        }
+    } else {
+        $balance = "Failed to fetch balance.";
+        if ($responseData !== null) {
+            echo "<script>alert('".$responseData["message"]."')</script>";
+        }
+    }
+}
+curl_close($curl);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,12 +80,19 @@
             border-top-right-radius: 20px;
             padding: 20px;
             text-align: center;
+            display: flex; /* Add flex display */
+            justify-content: space-around; /* Distribute items evenly */
+            align-items: center; /* Align items vertically */
         }
 
-        .profile-header h2 {
-            font-size: 2rem;
-            margin: 0;
+        .wallet-item {
+            text-align: center; /* Center text within each wallet item */
+            flex: 1; /* Allow equal distribution */
         }
+        .wallet-item h5 {
+                color: #FFD700; /* Golden color */
+        }
+
 
         .nav-links {
             display: flex;
@@ -83,6 +141,10 @@
                 font-size: 1.2rem;
                 margin-right: 10px;
             }
+            .profile-header h5{
+                font-size: 1rem;
+               
+        }
         }
 
     </style>
@@ -95,9 +157,23 @@
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="card mt-3">
-                        <div class="profile-header">
-                            <h2>More Options</h2>
+                       <div class="profile-header">
+                            <div class="wallet-item">
+                                <h5>Earning Wallet</h5>
+                                <p class="fw-bold">$<?php echo htmlspecialchars($earning_wallet); ?></p> <!-- Placeholder value -->
+                            </div>
+                            <div class="vr mx-3"></div> <!-- Vertical Line -->
+                            <div class="wallet-item">
+                                <h5>Bonus Wallet</h5>
+                                <p class="fw-bold">$<?php echo htmlspecialchars($bonus_wallet); ?></p> <!-- Placeholder value -->
+                            </div>
+                            <div class="vr mx-3"></div> <!-- Vertical Line -->
+                            <div class="wallet-item">
+                                <h5>Main Wallet</h5>
+                                <p class="fw-bold">$<?php echo htmlspecialchars($balance); ?></p> <!-- Placeholder value -->
+                            </div>
                         </div>
+
                         <div class="card-body">
                             <!-- Menu Items -->
                             <!--<a href="ins_recharge.php" class="nav-links">
