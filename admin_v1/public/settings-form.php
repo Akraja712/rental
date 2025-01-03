@@ -6,6 +6,8 @@ $fn = new custom_functions;
 
 
 if (isset($_POST['btnUpdate'])) {
+
+
     
     $whatsapp_group = $db->escapeString(($_POST['whatsapp_group']));
     $telegram_channel = $db->escapeString(($_POST['telegram_channel']));
@@ -17,10 +19,11 @@ if (isset($_POST['btnUpdate'])) {
     $income_status = $db->escapeString(($_POST['income_status']));
     $withdrawal_status = $db->escapeString(($_POST['withdrawal_status']));
     $secrete_code = $db->escapeString(($_POST['secrete_code']));
+    $title = $db->escapeString(($_POST['title']));
     
 
             $error = array();
-            $sql_query = "UPDATE settings SET whatsapp_group='$whatsapp_group',telegram_channel='$telegram_channel',min_withdrawal='$min_withdrawal',max_withdrawal='$max_withdrawal',pay_video='$pay_video',pay_gateway='$pay_gateway',scratch_card = '$scratch_card',income_status = '$income_status',withdrawal_status= '$withdrawal_status',secrete_code = '$secrete_code' WHERE id=1";
+            $sql_query = "UPDATE settings SET whatsapp_group='$whatsapp_group',telegram_channel='$telegram_channel',min_withdrawal='$min_withdrawal',max_withdrawal='$max_withdrawal',pay_video='$pay_video',pay_gateway='$pay_gateway',scratch_card = '$scratch_card',income_status = '$income_status',withdrawal_status= '$withdrawal_status',secrete_code = '$secrete_code',title = '$title' WHERE id=1";
             $db->sql($sql_query);
             $result = $db->getResult();
             if (!empty($result)) {
@@ -138,6 +141,13 @@ $res = $db->getResult();
                                     <input type="text" class="form-control" name="secrete_code" value="<?= $res[0]['secrete_code'] ?>">
                                 </div>
                            </div> 
+                           <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="secrete_code">Title</label>
+                                    <input type="text" class="form-control" name="title" value="<?= $res[0]['title'] ?>">
+                                </div>
+                           </div> 
+                           
                         </div>
                         <br>
                     </div>
@@ -220,4 +230,21 @@ $res = $db->getResult();
             $('#withdrawal_status').val(0);
         }
     };
+</script>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result)
+                    .width(150)
+                    .height(150)
+                    .css('display', 'block');
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>

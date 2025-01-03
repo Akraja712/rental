@@ -57,8 +57,42 @@ if ($response === false) {
     }
 }
 
-curl_close($curl);
+curl_close($curl);     
+
 ?>
+<?php
+$apiUrl = API_URL . "settings.php";
+
+$curl = curl_init($apiUrl);
+
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$response = curl_exec($curl);
+
+if ($response === false) {
+    // Error in cURL request
+    echo "Error: " . curl_error($curl);
+    $settingsdetails = [];
+} else {
+    // Successful API response
+    $responseData = json_decode($response, true);
+    if ($responseData !== null && $responseData["success"]) {
+        // Store transaction details
+        $settingsdetails = $responseData["data"];
+        if (!empty($settingsdetails) && isset($settingsdetails[0]["title"])) {
+            // Assign offer image if it exists
+            $title = $settingsdetails[0]["title"];
+        } else {
+            // Fallback to default image if no offer image is available
+            $title = '';
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -141,6 +175,43 @@ curl_close($curl);
             background: linear-gradient(45deg, #d4e157, #afb42b);
             color: white;
         }
+        /* Styling for the settings text box */
+.settings-text {
+    background: linear-gradient(45deg, #ff8a65, #d32f2f);
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.settings-text h4 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.settings-text p {
+    font-size: 1.6rem;
+    margin: 0;
+    font-weight: bold;
+}
+
+.settings-text i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Hover effect */
+.settings-text:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
 
         /* Adjusting column behavior for mobile */
            /* Adjusting column behavior and height for mobile */
@@ -230,6 +301,29 @@ curl_close($curl);
         </div>
     </div>
 </div>
+
+<?php if (!empty($title)) : ?>
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="offerImageModal" tabindex="-1" aria-labelledby="offerImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="col-12 col-md-12 mb-3">
+                <div class="info-box settings-text">
+                    <i class="bi bi-info-circle"></i>
+                    <h4>Special Message</h4>
+                    <p><?php echo !empty($title) ? htmlspecialchars($title) : "No special offer available at the moment."; ?></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to Show Modal -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var offerImageModal = new bootstrap.Modal(document.getElementById('offerImageModal'));
+            offerImageModal.show();
+        });
+    </script>
+<?php endif; ?>
 
 <!-- Bootstrap JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
