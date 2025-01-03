@@ -304,16 +304,17 @@ if ($response === false) {
 </div>
 
 <?php if (!empty($notification_text)) : ?>
-    <!-- Bootstrap Modal -->
     <div class="modal fade" id="offerImageModal" tabindex="-1" aria-labelledby="offerImageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="col-12 col-md-12 mb-3">
                 <div class="info-box settings-text">
                     <p>
                         <?php 
-                            // Strip out all HTML tags and just show the plain text
+                            // Strip out HTML tags
                             $clean_text = strip_tags($notification_text);
-                            echo !empty($clean_text) ? htmlspecialchars($clean_text) : "No special offer available at the moment.";
+                            // Decode HTML entities
+                            $decoded_text = html_entity_decode($clean_text, ENT_QUOTES | ENT_HTML5);
+                            echo htmlspecialchars($decoded_text);
                         ?>
                     </p>
                 </div>
