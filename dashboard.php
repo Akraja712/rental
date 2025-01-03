@@ -82,12 +82,12 @@ if ($response === false) {
     if ($responseData !== null && $responseData["success"]) {
         // Store transaction details
         $settingsdetails = $responseData["data"];
-        if (!empty($settingsdetails) && isset($settingsdetails[0]["title"])) {
+        if (!empty($settingsdetails) && isset($settingsdetails[0]["notification_text"])) {
             // Assign offer image if it exists
-            $title = $settingsdetails[0]["title"];
+            $notification_text = $settingsdetails[0]["notification_text"];
         } else {
             // Fallback to default image if no offer image is available
-            $title = '';
+            $notification_text = '';
         }
     }
 }
@@ -302,7 +302,7 @@ if ($response === false) {
     </div>
 </div>
 
-<?php if (!empty($title)) : ?>
+<?php if (!empty($notification_text)) : ?>
     <!-- Bootstrap Modal -->
     <div class="modal fade" id="offerImageModal" tabindex="-1" aria-labelledby="offerImageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -310,11 +310,19 @@ if ($response === false) {
                 <div class="info-box settings-text">
                     <i class="bi bi-info-circle"></i>
                     <h4>Special Message</h4>
-                    <p><?php echo !empty($title) ? htmlspecialchars($title) : "No special offer available at the moment."; ?></p>
+                    <p>
+                        <?php 
+                            // Strip out all HTML tags and just show the plain text
+                            $clean_text = strip_tags($notification_text);
+                            echo !empty($clean_text) ? htmlspecialchars($clean_text) : "No special offer available at the moment.";
+                        ?>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <!-- Script to Show Modal -->
     <script>

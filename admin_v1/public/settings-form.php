@@ -19,11 +19,11 @@ if (isset($_POST['btnUpdate'])) {
     $income_status = $db->escapeString(($_POST['income_status']));
     $withdrawal_status = $db->escapeString(($_POST['withdrawal_status']));
     $secrete_code = $db->escapeString(($_POST['secrete_code']));
-    $title = $db->escapeString(($_POST['title']));
+    $notification_text = $db->escapeString(($_POST['notification_text']));
     
 
             $error = array();
-            $sql_query = "UPDATE settings SET whatsapp_group='$whatsapp_group',telegram_channel='$telegram_channel',min_withdrawal='$min_withdrawal',max_withdrawal='$max_withdrawal',pay_video='$pay_video',pay_gateway='$pay_gateway',scratch_card = '$scratch_card',income_status = '$income_status',withdrawal_status= '$withdrawal_status',secrete_code = '$secrete_code',title = '$title' WHERE id=1";
+            $sql_query = "UPDATE settings SET whatsapp_group='$whatsapp_group',telegram_channel='$telegram_channel',min_withdrawal='$min_withdrawal',max_withdrawal='$max_withdrawal',pay_video='$pay_video',pay_gateway='$pay_gateway',scratch_card = '$scratch_card',income_status = '$income_status',withdrawal_status= '$withdrawal_status',secrete_code = '$secrete_code',notification_text = '$notification_text' WHERE id=1";
             $db->sql($sql_query);
             $result = $db->getResult();
             if (!empty($result)) {
@@ -141,13 +141,18 @@ $res = $db->getResult();
                                     <input type="text" class="form-control" name="secrete_code" value="<?= $res[0]['secrete_code'] ?>">
                                 </div>
                            </div> 
-                           <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="secrete_code">Title</label>
-                                    <input type="text" class="form-control" name="title" value="<?= $res[0]['title'] ?>">
-                                </div>
                            </div> 
-                           
+                           <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                   <label for="notification_text">Notification Text :</label> <i class="text-danger asterik">*</i><?php echo isset($error['notification_text']) ? $error['notification_text'] : ''; ?>
+                                    <textarea name="notification_text" id="notification_text" class="form-control" rows="8"><?php echo $res[0]['notification_text']; ?></textarea>
+                                    <script type="text/javascript" src="css/js/ckeditor/ckeditor.js"></script>
+                                    <script type="text/javascript">
+                                       CKEDITOR.replace('notification_text');
+                                    </script>
+                                </div>
+                            </div>	  
                         </div>
                         <br>
                     </div>

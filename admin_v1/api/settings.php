@@ -29,7 +29,7 @@ if ($num >= 1){
         $temp['min_withdrawal'] = $row['min_withdrawal'];
         $temp['withdrawal_ins'] = $row['withdrawal_ins'];
         $temp['pay_video'] = $row['pay_video'];
-        $temp['title'] = $row['title'];
+        $temp['notification_text'] = $row['notification_text'];
         $temp['pay_gateway'] = $row['pay_gateway'];
 
         $rows[] = $temp;
