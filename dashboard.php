@@ -177,7 +177,7 @@ if ($response === false) {
         }
         /* Styling for the settings text box */
 .settings-text {
-    background: linear-gradient(45deg, #ff8a65, #d32f2f);
+    background: linear-gradient(45deg,rgb(255, 255, 255),rgb(255, 255, 255));
     color: white;
     padding: 30px;
     border-radius: 10px;
@@ -198,12 +198,13 @@ if ($response === false) {
     font-size: 1.6rem;
     margin: 0;
     font-weight: bold;
+    color: rgba(6, 5, 5, 0.8);
 }
 
 .settings-text i {
     font-size: 2.5rem;
     margin-bottom: 15px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(6, 5, 5, 0.8);
 }
 
 /* Hover effect */
@@ -308,8 +309,6 @@ if ($response === false) {
         <div class="modal-dialog modal-dialog-centered">
             <div class="col-12 col-md-12 mb-3">
                 <div class="info-box settings-text">
-                    <i class="bi bi-info-circle"></i>
-                    <h4>Special Message</h4>
                     <p>
                         <?php 
                             // Strip out all HTML tags and just show the plain text
