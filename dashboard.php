@@ -325,8 +325,8 @@ if ($response === false) {
     <!-- Script to Show Modal -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var offerImageModal = new bootstrap.Modal(document.getElementById('offerImageModal'));
-            offerImageModal.show();
+            var offerModal = new bootstrap.Modal(document.getElementById('offerModal'));
+            offerModal.show();
         });
     </script>
 
