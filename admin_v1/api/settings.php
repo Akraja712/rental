@@ -31,7 +31,7 @@ if ($num >= 1){
         $temp['pay_video'] = $row['pay_video'];
         $temp['notification_text'] = $row['notification_text'];
         $temp['pay_gateway'] = $row['pay_gateway'];
-
+        $temp['offer_image'] = DOMAIN_URL . $row['offer_image'];
         $rows[] = $temp;
     }
     $response['success'] = true;

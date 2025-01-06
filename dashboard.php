@@ -82,12 +82,12 @@ if ($response === false) {
     if ($responseData !== null && $responseData["success"]) {
         // Store transaction details
         $settingsdetails = $responseData["data"];
-        if (!empty($settingsdetails) && isset($settingsdetails[0]["notification_text"])) {
+        if (!empty($settingsdetails) && isset($settingsdetails[0]["offer_image"])) {
             // Assign offer image if it exists
-            $notification_text = $settingsdetails[0]["notification_text"];
+            $offer_image = $settingsdetails[0]["offer_image"];
         } else {
             // Fallback to default image if no offer image is available
-            $notification_text = '';
+            $offer_image = 'path/to/default-image.jpg';
         }
     }
 }
@@ -303,24 +303,22 @@ if ($response === false) {
     </div>
 </div>
 
-<?php if (!empty($notification_text)) : ?>
-    <div class="modal fade" id="offerImageModal" tabindex="-1" aria-labelledby="offerImageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="col-12 col-md-12 mb-3">
-                <div class="info-box settings-text">
-                    <p>
-                        <?php 
-                            // Strip out HTML tags
-                            $clean_text = strip_tags($notification_text);
-                            // Decode HTML entities
-                            $decoded_text = html_entity_decode($clean_text, ENT_QUOTES | ENT_HTML5);
-                            echo htmlspecialchars($decoded_text);
-                        ?>
-                    </p>
+ <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="offerModalLabel">Special New Year Offer!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                <img src="<?php echo htmlspecialchars($offer_image); ?>" alt="New Year Offer" class="img-fluid" style="width:300px; max-width: 900px; height: 350px;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 
 
 
@@ -331,7 +329,7 @@ if ($response === false) {
             offerImageModal.show();
         });
     </script>
-<?php endif; ?>
+
 
 <!-- Bootstrap JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

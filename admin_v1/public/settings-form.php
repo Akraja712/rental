@@ -19,11 +19,11 @@ if (isset($_POST['btnUpdate'])) {
     $income_status = $db->escapeString(($_POST['income_status']));
     $withdrawal_status = $db->escapeString(($_POST['withdrawal_status']));
     $secrete_code = $db->escapeString(($_POST['secrete_code']));
-    $notification_text = $db->escapeString(($_POST['notification_text']));
+    // $notification_text = $db->escapeString(($_POST['notification_text']));
     
 
             $error = array();
-            $sql_query = "UPDATE settings SET whatsapp_group='$whatsapp_group',telegram_channel='$telegram_channel',min_withdrawal='$min_withdrawal',max_withdrawal='$max_withdrawal',pay_video='$pay_video',pay_gateway='$pay_gateway',scratch_card = '$scratch_card',income_status = '$income_status',withdrawal_status= '$withdrawal_status',secrete_code = '$secrete_code',notification_text = '$notification_text' WHERE id=1";
+            $sql_query = "UPDATE settings SET whatsapp_group='$whatsapp_group',telegram_channel='$telegram_channel',min_withdrawal='$min_withdrawal',max_withdrawal='$max_withdrawal',pay_video='$pay_video',pay_gateway='$pay_gateway',scratch_card = '$scratch_card',income_status = '$income_status',withdrawal_status= '$withdrawal_status',secrete_code = '$secrete_code' WHERE id=1";
             $db->sql($sql_query);
             $result = $db->getResult();
             if (!empty($result)) {
@@ -38,6 +38,36 @@ if (isset($_POST['btnUpdate'])) {
                                                 <span class='label label-success'>Settings Updated Successfully</span> </section>";
             } else {
                 $error['update'] = " <span class='label label-danger'>Failed</span>";
+            }
+            if ($_FILES['offer_image']['size'] != 0 && $_FILES['offer_image']['error'] == 0 && !empty($_FILES['offer_image'])) {
+                // image isn't empty and update the image
+                $extension = pathinfo($_FILES["offer_image"]["name"], PATHINFO_EXTENSION);
+                $result = $fn->validate_image($_FILES["offer_image"]);
+                $target_path = 'upload/images/';
+                $filename = microtime(true) . '.' . strtolower($extension);
+                $full_path = $target_path . $filename;
+                if (!move_uploaded_file($_FILES["offer_image"]["tmp_name"], $full_path)) {
+                    echo '<p class="alert alert-danger">Cannot upload image.</p>';
+                    return false;
+                    exit();
+                }
+                if (!empty($res[0]['offer_image']) && file_exists($res[0]['offer_image'])) {
+                    unlink($res[0]['offer_image']);
+                }
+                $upload_image = 'upload/images/' . $filename;
+                $sql = "UPDATE settings SET `offer_image`='$upload_image' WHERE `id`=1";
+                $db->sql($sql);
+                $update_result = $db->getResult();
+                if (!empty($update_result)) {
+                    $update_result = 0;
+                } else {
+                    $update_result = 1;
+                }
+                if ($update_result == 1) {
+                    $error['update'] = "<section class='content-header'><span class='label label-success'>Settings Updated Successfully</span></section>";
+                } else {
+                    $error['update'] = "<span class='label label-danger'>Failed to update</span>";
+                }
             }
         }
   
@@ -141,19 +171,15 @@ $res = $db->getResult();
                                     <input type="text" class="form-control" name="secrete_code" value="<?= $res[0]['secrete_code'] ?>">
                                 </div>
                            </div> 
-                           </div> 
-                           <div class="row">
-                            <div class="col-md-12">
+                           <div class="col-md-3">
                                 <div class="form-group">
-                                   <label for="notification_text">Notification Text :</label> <i class="text-danger asterik">*</i><?php echo isset($error['notification_text']) ? $error['notification_text'] : ''; ?>
-                                    <textarea name="notification_text" id="notification_text" class="form-control" rows="8"><?php echo $res[0]['notification_text']; ?></textarea>
-                                    <script type="text/javascript" src="css/js/ckeditor/ckeditor.js"></script>
-                                    <script type="text/javascript">
-                                       CKEDITOR.replace('notification_text');
-                                    </script>
+                                     <label for="exampleInputFile">Offer Image</label> <i class="text-danger asterik">*</i><?php echo isset($error['offer_image']) ? $error['offer_image'] : ''; ?>
+                                    <input type="file" name="offer_image" onchange="readURL(this);" accept="image/png, image/jpeg" id="offer_image" /><br>
+                                    <img id="blah" src="<?php echo $res[0]['offer_image']; ?>" alt="" width="150" height="200" <?php echo empty($res[0]['offer_image']) ? 'style="display: none;"' : ''; ?> />
                                 </div>
-                            </div>	  
-                        </div>
+                           </div>
+                           </div> 
+                           
                         <br>
                     </div>
                     <!-- /.box-body -->
