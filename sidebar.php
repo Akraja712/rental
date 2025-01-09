@@ -125,6 +125,40 @@ body {
         display: flex;
     }
 }
+.whatsapp-float {
+    position: fixed;
+    bottom: 18px; /* Same height as the bottom nav */
+    right: 20px; /* Adjust spacing from the right */
+    background-color: #25d366;
+    color: white;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    z-index: 1000;
+    font-size: 24px; /* Icon size */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    background-color: #1eb759;
+    transform: scale(1.1); /* Slight zoom effect */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .whatsapp-float {
+        width: 40px;
+        height: 40px;
+        font-size: 20px; /* Adjust icon size for smaller screens */
+    }
+}
+
+
 
     </style>
 </head>
@@ -151,6 +185,9 @@ body {
         
     </div>
 
+<a href="https://wa.me/7975139342?text=Hi%20there!" target="_blank" class="whatsapp-float">
+ <i class="bi bi-whatsapp"></i>
+</a>
     <!-- Bootstrap JS Bundle (with Popper) -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
