@@ -127,7 +127,7 @@ body {
 }
 .whatsapp-float {
     position: fixed;
-    bottom: 18px; /* Same height as the bottom nav */
+    bottom: 90px; /* Same height as the bottom nav */
     right: 20px; /* Adjust spacing from the right */
     background-color: #25d366;
     color: white;
@@ -147,15 +147,6 @@ body {
 .whatsapp-float:hover {
     background-color: #1eb759;
     transform: scale(1.1); /* Slight zoom effect */
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .whatsapp-float {
-        width: 40px;
-        height: 40px;
-        font-size: 20px; /* Adjust icon size for smaller screens */
-    }
 }
 
 
