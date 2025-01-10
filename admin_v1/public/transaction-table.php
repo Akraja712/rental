@@ -25,7 +25,7 @@
                                 <?php } ?>
                             </select>
                         </div>
-                        <div class="form-group col-md-3"><br>
+                        <!-- <div class="form-group col-md-3"><br>
                             <h4 class="box-title">Filter by Plan </h4>
                             <select id='price' name="price" class='form-control'>
                                 <?php
@@ -37,7 +37,7 @@
                                     <option value='<?= $value['price'] ?>'><?= $value['price'] ?></option>
                                 <?php } ?>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="col-md-2"><br>
                             <h4 class="box-title">Filter by Date </h4>
                             <input type="date" class="form-control" id="date" name="date" value="<?php echo (isset($_GET['date'])) ? $_GET['date'] : "" ?>"></input>
@@ -57,7 +57,7 @@
                                 <th data-field="amount" data-sortable="true">Amount</th>
                                 <th data-field="type" data-sortable="true">Type</th>
                                 <th data-field="datetime" data-sortable="true">DateTime</th>
-                                <th data-field="price" data-sortable="true">Price</th>
+                                <!-- <th data-field="price" data-sortable="true">Price</th> -->
                             </tr>
                         </thead>
                     </table>
