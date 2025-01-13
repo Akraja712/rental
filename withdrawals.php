@@ -94,6 +94,29 @@ curl_close($curl);
                 right: 10px;
             }
         }
+         .btn{
+             background-color:#4A148C; 
+            border-color: #4A148C; 
+            color: white; 
+            font-weight: 600;
+            border-radius: 99999px;
+            margin-left: 20px;
+           
+        }
+        .btn:hover{
+            color:white;
+            background-color: #4A148C;
+        }
+         @media (max-width: 576px) {
+            .withdrawal-container h2 {
+                font-size: 1.5rem;
+            }
+            .withdrawal-button {
+                font-size: 0.650rem;
+                top: 21px;
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -101,6 +124,12 @@ curl_close($curl);
     <div class="row flex-nowrap">
     <?php include_once('sidebar.php'); ?>
         <div class="col py-3">
+             <div class="d-flex justify-content-between align-items-center mb-3">
+                    
+                    <a href="menu.php" style="color:white;" class="btn"><i style="color:rgb(249, 249, 249); font-size: 1rem;" class="bi bi-arrow-left"></i>Back</a>
+                    
+                    
+                </div>
             <div class="withdrawal-container" id="withdrawals">
                 <h2>Withdrawal List</h2>
                 <a href="withdrawal_request.php"  style="background-color:#4A148C; color:white;" class="btn withdrawal-button">Request Withdrawal</a>

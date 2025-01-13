@@ -117,6 +117,19 @@ if (isset($_POST['btnUpdate'])) {
             position: relative; 
             padding: 20px; 
         }
+        .btn{
+             background-color:#4A148C; 
+            border-color: #4A148C; 
+            color: white; 
+            font-weight: 600;
+            border-radius: 99999px;
+            margin-left: 20px;
+           
+        }
+        .btn:hover{
+            color:white;
+            background-color: #4A148C;
+        }
     </style>
 </head>
 <body>
@@ -124,6 +137,9 @@ if (isset($_POST['btnUpdate'])) {
     <div class="row flex-nowrap">
     <?php include_once('sidebar.php'); ?>
         <div class="col py-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">  
+                    <a href="menu.php" style="color:white;" class="btn"><i style="color:rgb(248, 248, 248); font-size: 1rem;" class="bi bi-arrow-left"></i>Back</a>   
+                </div>
         <div id="setpassword" class="setpassword-container">
             <h2>Set Password</h2>
             

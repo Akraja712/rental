@@ -146,6 +146,19 @@ curl_close($curl);
                 right: 8px;
             }
         }
+        .btn{
+             background-color:#4A148C; 
+            border-color: #4A148C; 
+            color: white; 
+            font-weight: 600;
+            border-radius: 99999px;
+            margin-left: 20px;
+           
+        }
+        .btn:hover{
+            color:white;
+            background-color: #4A148C;
+        }
     </style>
 </head>
 <body>
@@ -153,6 +166,9 @@ curl_close($curl);
     <div class="row flex-nowrap">
     <?php include_once('sidebar.php'); ?>
         <div class="col py-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">  
+                    <a href="menu.php" style="color:white;" class="btn"><i style="color:rgb(248, 248, 248); font-size: 1rem;" class="bi bi-arrow-left"></i>Back</a>   
+                </div>
         <div class="friends-container" id="invitefriends">
             <h2>Invite Friends</h2>
             <!-- Withdrawal Request Form -->
