@@ -72,6 +72,11 @@ if (isset($_POST['mobile']) && isset($_POST['to_mobile']) && isset($_POST['trans
     $updateReceiver = "UPDATE users SET recharge = $newReceiverBalance WHERE mobile = '$toMobile'";
     $db->sql($updateReceiver);
 
+      // Update the total recharge value for the receiver
+    $totalRecharge = floatval($receiver[0]['total_recharge']) + $transferAmount;
+    $updateTotalRecharge = "UPDATE users SET total_recharge = $totalRecharge WHERE mobile = '$toMobile'";
+    $db->sql($updateTotalRecharge);
+
     // Insert transaction record for the sender (debit)
     $senderID = $sender[0]['id']; // Assuming 'id' is the primary key in the `users` table
     $senderType = 'debit_transfer';
