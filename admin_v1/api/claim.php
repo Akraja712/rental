@@ -179,7 +179,7 @@ $res= $db->getResult();
 $num = $db->numRows($res);
 if ($num == 1){
     $refer_id = $res[0]['id'];
-    $level_income = $daily_income * 0.05;
+    $level_income = $daily_income * 0.10;
     $sql = "UPDATE users SET balance = balance + $level_income WHERE id  = $refer_id";
     $db->sql($sql);
     $sql_insert_transaction = "INSERT INTO transactions (`user_id`, `amount`, `datetime`, `type`) VALUES ('$refer_id', '$level_income', '$datetime', 'level_income')";
@@ -191,7 +191,7 @@ $res= $db->getResult();
 $num = $db->numRows($res);
 if ($num == 1){
     $refer_id = $res[0]['id'];
-    $level_income = $daily_income * 0.03;
+    $level_income = $daily_income * 0.05;
     $sql = "UPDATE users SET balance = balance + $level_income WHERE id  = $refer_id";
     $db->sql($sql);
     $sql_insert_transaction = "INSERT INTO transactions (`user_id`, `amount`, `datetime`, `type`) VALUES ('$refer_id', '$level_income', '$datetime', 'level_income')";
@@ -203,7 +203,7 @@ $res= $db->getResult();
 $num = $db->numRows($res);
 if ($num == 1){
     $refer_id = $res[0]['id'];
-    $level_income = $daily_income * 0.01;
+    $level_income = $daily_income * 0.03;
     $sql = "UPDATE users SET balance = balance + $level_income WHERE id  = $refer_id";
     $db->sql($sql);
     $sql_insert_transaction = "INSERT INTO transactions (`user_id`, `amount`, `datetime`, `type`) VALUES ('$refer_id', '$level_income', '$datetime', 'level_income')";
