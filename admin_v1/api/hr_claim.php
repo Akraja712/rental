@@ -123,7 +123,7 @@ $daily_income = $hr[0]['daily_earnings'];
 $sql = "UPDATE user_hr SET claim = 0,income = income + $daily_income WHERE hr_id = $hr_id AND user_id = $user_id";
 $db->sql($sql);
 
-$sql = "UPDATE users SET earning_wallet = earning_wallet + $daily_income, today_income = today_income + $daily_income, total_income = total_income + $daily_income WHERE id = $user_id";
+$sql = "UPDATE users SET balance = balance + $daily_income, today_income = today_income + $daily_income, total_income = total_income + $daily_income WHERE id = $user_id";
 $db->sql($sql);
 
 $sql_insert_transaction = "INSERT INTO transactions (`user_id`, `amount`, `datetime`, `type`) VALUES ('$user_id', '$daily_income', '$datetime', 'daily_income')";

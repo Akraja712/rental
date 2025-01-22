@@ -91,7 +91,7 @@ $datetime = date('Y-m-d H:i:s');
                 $r_refer_code = $res[0]['refer_code'];
                 
                 
-                $sql = "UPDATE users SET bonus_wallet = bonus_wallet + $invite_bonus,team_income = team_income + $invite_bonus ,withdrawal_status = 1  WHERE refer_code = '$referred_by'";
+                $sql = "UPDATE users SET balance = balance + $invite_bonus,team_income = team_income + $invite_bonus ,withdrawal_status = 1  WHERE refer_code = '$referred_by'";
                 $db->sql($sql);
     
                 $sql = "INSERT INTO transactions (user_id, amount, datetime, type) VALUES ('$r_id', '$invite_bonus', '$datetime', 'refer_bonus')";
