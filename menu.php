@@ -188,10 +188,10 @@ curl_close($curl);
                                 <i class="bi bi-credit-card"></i>
                                 <span>Transactions</span>
                             </a>
-                            <a href="transfer_wallet.php" class="nav-links">
+                            <!-- <a href="transfer_wallet.php" class="nav-links">
                                 <i class="bi bi-credit-card"></i>
                                 <span>Transfer Wallet</span>
-                            </a>
+                            </a> -->
                             <a href="bank_details.php" class="nav-links">
                                 <i class="bi bi-bank"></i>
                                 <span>Bank Account</span>
