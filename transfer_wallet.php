@@ -1,3 +1,9 @@
+<?php
+session_start();
+// Assuming the logged-in user's mobile number is stored in session
+$user_mobile = isset($_SESSION['user_mobile']) ? $_SESSION['user_mobile'] : ''; 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +27,7 @@
 </head>
 <body>
     <section class="content-header">
-        <h1 class="wallet">Transfer Wallet / 
+        <h1 class="wallet">Transfer Wallet /
             <small><a href="menu.php"><i class="fa fa-home"></i> Back</a></small>
         </h1>
     </section>
@@ -32,10 +38,12 @@
                 <div class="box">
                     <div class="box-header">
                         <div class="col-md-12">
-                            <form id="walletTransferForm" method="POST">
+                            <form id="walletTransferForm">
                                 <div class="form-group">
+                                     <!-- Hidden input for user's mobile number -->
+                                <input type="hidden" id="user_mobile" value="<?php echo $user_mobile; ?>">
                                     <div class="col-md-3">
-                                        <label for="to_mobile">To Mobile Number:</label>
+                                        <label for="to_mobile">Recipient's Mobile Number:</label>
                                         <input type="text" id="to_mobile" name="to_mobile" class="form-control" maxlength="10" placeholder="Enter recipient's mobile number" required>
                                     </div>
                                 </div>
@@ -45,9 +53,9 @@
                                         <input type="number" id="transfer_amount" name="transfer_amount" class="form-control" min="1" placeholder="Enter amount to transfer" required>
                                     </div>
                                 </div>
-                                <button type="button" id="transferBtn" class="btn btn-success">Wallet Transfer</button>
+                                <button type="button" id="transferBtn" class="btn btn-success">Transfer</button>
                             </form>
-                            <div id="mobileResult" style="margin-top: 20px;"></div>
+                            <div id="responseMessage" style="margin-top: 20px;"></div>
                         </div>
                     </div>
                 </div>
@@ -57,15 +65,19 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Handle Wallet Transfer
         $('#transferBtn').click(function () {
             const toMobile = $('#to_mobile').val().trim();
             const transferAmount = parseFloat($('#transfer_amount').val());
-            const mobile = '1234567890'; // Replace with actual logged-in user's mobile number from session or cookie
+            const mobile = '9876543212'; // Replace with actual mobile number
 
-            // Validate input fields
+            // Validate inputs
             if (!/^\d{10}$/.test(toMobile)) {
                 alert('Please enter a valid 10-digit mobile number.');
+                return;
+            }
+
+            if (mobile === toMobile) {
+                alert('Cannot transfer funds to the same mobile number.');
                 return;
             }
 
@@ -76,21 +88,20 @@
 
             // Send AJAX request
             $.ajax({
-                url: 'process-transfer.php', // Backend endpoint
+                url: 'process-transfer.php',
                 type: 'POST',
-                data: { 
-                    mobile: mobile,  // Include mobile number of logged-in user
-                    to_mobile: toMobile, 
-                    transfer_amount: transferAmount 
+                data: {
+                    mobile: mobile,
+                    to_mobile: toMobile,
+                    transfer_amount: transferAmount
                 },
                 dataType: 'json',
                 success: function (response) {
-                    alert(response.message);
-                    $('#mobileResult').html(`<p>${response.message}</p>`);
+                    $('#responseMessage').html(`<p>${response.message}</p>`);
                 },
-                error: function (xhr, status, error) {
-                    console.error('Error Details:', xhr, status, error);
-                    alert('An error occurred: ' + xhr.responseText);
+                error: function (xhr) {
+                    console.error('Error:', xhr.responseText);
+                    alert('An error occurred. Please try again.');
                 }
             });
         });
