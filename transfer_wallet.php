@@ -1,7 +1,6 @@
 <?php
 session_start();
-// Assuming the logged-in user's mobile number is stored in session
-$user_mobile = isset($_SESSION['user_mobile']) ? $_SESSION['user_mobile'] : ''; 
+$mobile = isset($_SESSION['mobile']) ? $_SESSION['mobile'] : '';
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +40,7 @@ $user_mobile = isset($_SESSION['user_mobile']) ? $_SESSION['user_mobile'] : '';
                             <form id="walletTransferForm">
                                 <div class="form-group">
                                      <!-- Hidden input for user's mobile number -->
-                                <input type="hidden" id="user_mobile" value="<?php echo $user_mobile; ?>">
+                                     <input type="hidden" id="mobile" value="<?php echo $mobile; ?>">
                                     <div class="col-md-3">
                                         <label for="to_mobile">Recipient's Mobile Number:</label>
                                         <input type="text" id="to_mobile" name="to_mobile" class="form-control" maxlength="10" placeholder="Enter recipient's mobile number" required>
@@ -66,9 +65,10 @@ $user_mobile = isset($_SESSION['user_mobile']) ? $_SESSION['user_mobile'] : '';
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $('#transferBtn').click(function () {
+            const mobile = $('#mobile').val().trim();
             const toMobile = $('#to_mobile').val().trim();
             const transferAmount = parseFloat($('#transfer_amount').val());
-            const mobile = '9876543212'; // Replace with actual mobile number
+
 
             // Validate inputs
             if (!/^\d{10}$/.test(toMobile)) {

@@ -34,6 +34,7 @@ if (isset($_POST['btnLogin'])) {
                 $userdetails = $responseData["data"];
                 if (!empty($userdetails)) {
                     $_SESSION['id'] = $userdetails[0]["id"];
+                    $_SESSION['mobile'] = $mobile; 
                     header("Location: dashboard.php");
                 } else {
                     echo "No transactions found.";
