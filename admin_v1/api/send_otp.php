@@ -44,7 +44,7 @@ $otp = $_POST['otp'];
 
 // Define the API URL and parameters for OTP sending
 $apiUrl = 'https://api.authkey.io/request'; 
-$authKey = '673e807e1f672335'; // Your authkey here
+$authKey = 'dc0b07c812ca4934'; // Your authkey here
 $sid = '14324'; // SID, if applicable
 
 // Make the HTTP request to the OTP API
