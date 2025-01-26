@@ -115,9 +115,9 @@ $userdetails_level3 = fetchUserDetails("d", $user_id);
                 '3' => $userdetails_level3,
             ];
             $percentages = [
-                '1' => 5, // Level 1 shows 5%
-                '2' => 3, // Level 2 shows 3%
-                '3' => 1, // Level 3 shows 2%
+                '1' => 10, // Level 1 shows 5%
+                '2' => 5, // Level 2 shows 3%
+                '3' => 3, // Level 3 shows 2%
             ];
             foreach ($levels as $level => $userdetails): 
                 $percentage = $percentages[$level]; // Get the percentage for the current level
