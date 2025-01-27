@@ -34,6 +34,7 @@ if (isset($_POST['btnEdit'])) {
     $total_income = $db->escapeString(($_POST['total_income']));
     $balance = $db->escapeString(($_POST['balance']));
     $withdrawal_status = $db->escapeString(($_POST['withdrawal_status']));
+    $income_status = $db->escapeString(($_POST['income_status']));
     $recharge = $db->escapeString(($_POST['recharge']));
     $total_recharge = $db->escapeString($_POST['total_recharge']);
     $team_size = $db->escapeString($_POST['team_size']);
@@ -68,7 +69,7 @@ if (isset($_POST['btnEdit'])) {
     }
 
     
-            $sql_query = "UPDATE users SET name='$name',mobile = '$mobile',password = '$password',email='$email',age='$age',city='$city',referred_by='$referred_by',refer_code='$refer_code',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',withdrawal_status = '$withdrawal_status',recharge  = '$recharge ',balance = '$balance',today_income = '$today_income',device_id  = '$device_id',total_income  = '$total_income',state  = '$state',total_recharge  = '$total_recharge',team_size  = '$team_size',valid_team  = '$valid_team',total_assets  = '$total_assets',total_withdrawal  = '$total_withdrawal',team_income  = '$team_income',registered_datetime  = '$registered_datetime',blocked = '$blocked',latitude = '$latitude',longitude = '$longitude',earning_wallet = '$earning_wallet',bonus_wallet = '$bonus_wallet' WHERE id = $ID";
+            $sql_query = "UPDATE users SET name='$name',mobile = '$mobile',password = '$password',email='$email',age='$age',city='$city',referred_by='$referred_by',refer_code='$refer_code',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',withdrawal_status = '$withdrawal_status',recharge  = '$recharge ',balance = '$balance',today_income = '$today_income',device_id  = '$device_id',total_income  = '$total_income',state  = '$state',total_recharge  = '$total_recharge',team_size  = '$team_size',valid_team  = '$valid_team',total_assets  = '$total_assets',total_withdrawal  = '$total_withdrawal',team_income  = '$team_income',registered_datetime  = '$registered_datetime',blocked = '$blocked',latitude = '$latitude',longitude = '$longitude',earning_wallet = '$earning_wallet',bonus_wallet = '$bonus_wallet',income_status = '$income_status' WHERE id = $ID";
             $db->sql($sql_query);
             $update_result = $db->getResult();
     
@@ -227,6 +228,10 @@ if (isset($_POST['btnCancel'])) { ?>
                                 <label for="exampleInputEmail1">Total Recharge</label><i class="text-danger asterik">*</i>
                                     <input type="number" class="form-control" name="total_recharge" value="<?php echo $res[0]['total_recharge']; ?>">
                                 </div>
+                                <label for="">Income Status</label><br>
+                                    <input type="checkbox" id="income_button" class="js-switch" <?= isset($res[0]['income_status']) && $res[0]['income_status'] == 1 ? 'checked' : '' ?>>
+                                    <input type="hidden" id="income_status" name="income_status" value="<?= isset($res[0]['income_status']) && $res[0]['income_status'] == 1 ? 1 : 0 ?>">
+                                </div>
                            </div>
                      </div>
                      <br>
@@ -316,6 +321,19 @@ if (isset($_POST['btnCancel'])) { ?>
 
         } else {
             $('#blocked').val(0);
+            }
+    };
+</script>
+
+<script>
+    var changeCheckbox = document.querySelector('#income_button');
+    var init = new Switchery(changeCheckbox);
+    changeCheckbox.onchange = function() {
+        if ($(this).is(':checked')) {
+            $('#income_status').val(1);
+
+        } else {
+            $('#income_status').val(0);
             }
     };
 </script>
