@@ -228,6 +228,7 @@ if (isset($_POST['btnCancel'])) { ?>
                                 <label for="exampleInputEmail1">Total Recharge</label><i class="text-danger asterik">*</i>
                                     <input type="number" class="form-control" name="total_recharge" value="<?php echo $res[0]['total_recharge']; ?>">
                                 </div>
+                            <div class="col-md-3">
                                 <label for="">Income Status</label><br>
                                     <input type="checkbox" id="income_button" class="js-switch" <?= isset($res[0]['income_status']) && $res[0]['income_status'] == 1 ? 'checked' : '' ?>>
                                     <input type="hidden" id="income_status" name="income_status" value="<?= isset($res[0]['income_status']) && $res[0]['income_status'] == 1 ? 1 : 0 ?>">
