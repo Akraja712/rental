@@ -160,17 +160,17 @@ curl_close($curl);
                        <div class="profile-header">
                             <div class="wallet-item">
                                 <h5>Earning Wallet</h5>
-                                <p class="fw-bold">$<?php echo htmlspecialchars($earning_wallet); ?></p> <!-- Placeholder value -->
+                                <p class="fw-bold">₹<?php echo htmlspecialchars($earning_wallet); ?></p> <!-- Placeholder value -->
                             </div>
                             <div class="vr mx-3"></div> <!-- Vertical Line -->
                             <div class="wallet-item">
                                 <h5>Bonus Wallet</h5>
-                                <p class="fw-bold">$<?php echo htmlspecialchars($bonus_wallet); ?></p> <!-- Placeholder value -->
+                                <p class="fw-bold">₹<?php echo htmlspecialchars($bonus_wallet); ?></p> <!-- Placeholder value -->
                             </div>
                             <div class="vr mx-3"></div> <!-- Vertical Line -->
                             <div class="wallet-item">
                                 <h5>Main Wallet</h5>
-                                <p class="fw-bold">$<?php echo htmlspecialchars($balance); ?></p> <!-- Placeholder value -->
+                                <p class="fw-bold">₹<?php echo htmlspecialchars($balance); ?></p> <!-- Placeholder value -->
                             </div>
                         </div>
 
