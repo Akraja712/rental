@@ -75,7 +75,7 @@ $income_status = $user[0]['income_status'];
 
 if ($income_status == 0) {
     $response['success'] = false;
-    $response['message'] = "Today Holiday";
+    $response['message'] = "Income status disabled contact customer support";
     print_r(json_encode($response));
     return false;
 }
