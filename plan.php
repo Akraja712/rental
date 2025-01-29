@@ -130,6 +130,31 @@ if ($response === false) {
 }
 
 curl_close($curl);
+
+$apiUrl = API_URL . "recharge_plans.php";
+
+$curl = curl_init($apiUrl);
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$response = curl_exec($curl);
+
+$rechargeOptions = [];
+
+if ($response === false) {
+    echo "Error: " . curl_error($curl);
+} else {
+    $responseData = json_decode($response, true);
+    if ($responseData !== null && $responseData["success"]) {
+        $rechargeOptions = $responseData["data"];
+    } else {
+        echo "<script>alert('" . ($responseData["message"] ?? "Failed to load recharge plans") . "')</script>";
+    }
+}
+
+curl_close($curl);
 ?>
 
 <!DOCTYPE html>
@@ -353,15 +378,25 @@ curl_close($curl);
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <center><p>1.Click on the below link & complete the payment.</p></center>
-                <center><a href="https://www.jiyologistics.org/product/31855011/Jiyo-Retail-Career-Building-Course" class="btn" style = "background-color: #4A148C; color:#f8f9fa;" target="_blank">Click here for making payment</a></center>
-                 <center><a href="https://youtu.be/1elTq_diwjA?si=KW5etuxCu3ChvV41" target="_blank" class="small-font">Watch demo</a></center>
-                <a href="demo_video_url" class="watch-demo-link">Watch Demo Video</a>
+                <center>
+                    <p>1. Select an amount and click the link to complete the payment.</p>
+                    
+                    <select id="rechargeAmount" class="form-select" onchange="updatePaymentLink()">
+                        <?php foreach ($rechargeOptions as $option): ?>
+                            <option value="<?= $option['link'] ?>"><?= $option['amount'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <br>
+
+                    <a id="paymentLink" href="#" class="btn" style="background-color: #4A148C; color:#f8f9fa;" target="_blank" disabled>
+                        Click here for making payment
+                    </a>
+                </center>
             </div>
         </div>
     </div>
 </div>
-
 
     <!-- JavaScript to handle redirection based on plan_id -->
  
@@ -369,6 +404,20 @@ curl_close($curl);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Lightbox JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<script>
+function updatePaymentLink() {
+    var dropdown = document.getElementById("rechargeAmount");
+    var selectedLink = dropdown.value;
+    var paymentLink = document.getElementById("paymentLink");
 
+    if (selectedLink) {
+        paymentLink.href = selectedLink;
+        paymentLink.removeAttribute("disabled");
+    } else {
+        paymentLink.href = "#";
+        paymentLink.setAttribute("disabled", "true");
+    }
+}
+</script>
 </body>
 </html>
