@@ -389,7 +389,7 @@ curl_close($curl);
 
                     <br>
 
-                    <a id="paymentLink" href="#" class="btn" style="background-color: #4A148C; color:#f8f9fa;" target="_blank" disabled>
+                    <a id="paymentLink" href="https://www.jiyologistics.org/product/31855011/Jiyo-Retail-Career-Building-Course?vid=6405679" class="btn" style="background-color: #4A148C; color:#f8f9fa;" target="_blank" disabled>
                         Click here for making payment
                     </a>
                 </center>
@@ -414,7 +414,7 @@ function updatePaymentLink() {
         paymentLink.href = selectedLink;
         paymentLink.removeAttribute("disabled");
     } else {
-        paymentLink.href = "#";
+        paymentLink.href = "https://www.jiyologistics.org/product/31855011/Jiyo-Retail-Career-Building-Course?vid=6405679";
         paymentLink.setAttribute("disabled", "true");
     }
 }
