@@ -321,11 +321,7 @@ curl_close($curl);
                                     <p>Daily Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['daily_earnings']); ?></strong></p>
                                     <p>Monthly Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['monthly_earnings']); ?></strong></p>
                                     <p>Daily Codes: <strong><?php echo '' . htmlspecialchars($plan['daily_codes']); ?></strong></p>
-                                    <?php if ($plan['id'] != 1): ?>
-                                        <p>Validity: <span class="highlight">Life Time</span></p>
-                                    <?php else: ?>
-                                        <p>Validity: <span class="highlight">30 Days</span></p>
-                                    <?php endif; ?>
+                                    <p>Validity: <span class="highlight">Life Time</span></p>
                                     
                                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" style="margin-top: 10px;">
                                         <input type="hidden" name="plan_id" value="<?php echo htmlspecialchars($plan['id']); ?>">

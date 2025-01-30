@@ -178,9 +178,7 @@ curl_close($curl);
                                     <p>Daily Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['daily_earnings']); ?></strong></p>
                                     <p>Monthly Earnings: <strong><?php echo '₹' . htmlspecialchars($plan['monthly_earnings']); ?></strong></p>
                                     <p>Daily Codes: <strong><?php echo htmlspecialchars($plan['daily_codes']); ?></strong></p>
-                                    <p>Validity: <span class="highlight">
-                                        <?php echo ($plan['plan_id'] == 1) ? '30 Days' : 'Life Time'; ?>
-                                    </span></p>
+                                    <p>Validity: <span class="highlight">Life Time</span></p>
 
                                     <button class="btn btn-success" <?php echo ($plan['claim'] == '0') ? 'disabled' : ''; ?> onclick="startWork(<?php echo htmlspecialchars($plan['plan_id']); ?>)">
                                         Start Work
