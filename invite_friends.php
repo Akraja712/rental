@@ -181,14 +181,14 @@ curl_close($curl);
             <button type="button" id="copyButton" style="background-color:#4A148C; color:white;" class="btn">
                 <i class="fs-5 bi-copy"></i> Copy Link
             </button>
-            <br><br>
-            <button type="button" id="whatsappButton" style="background-color:#25D366; color:white;" class="btn">
+            <br>
+            <!-- <button type="button" id="whatsappButton" style="background-color:#25D366; color:white;" class="btn">
                 <i class="fs-5 bi-whatsapp"></i> Join WhatsApp
-            </button>
-            <!-- <br><br>
+            </button> -->
+             <br>
             <button type="button" id="telegramButton" style="background-color:#3290ec; color:white;" class="btn">
                 <i class="fs-5 bi-telegram"></i> Join Telegram
-            </button> -->
+            </button>
                 </form>
             </div>
         </div>
@@ -220,23 +220,23 @@ curl_close($curl);
                 });
         });
 
-        var whatsappButton = document.getElementById('whatsappButton');
-        whatsappButton.addEventListener('click', function() {
-            // Redirect to the WhatsApp channel
-            var whatsappChannelUrl = "https://whatsapp.com/channel/0029Vb2UNaWHFxP0YpoVU91B";
-            window.open(whatsappChannelUrl, '_blank');
-        });
-
-        // var telegramButton = document.getElementById('telegramButton');
-        // telegramButton.addEventListener('click', function() {
-        //     // Redirect to the Telegram channel
-        //     var telegramChannelUrl = <?php echo json_encode($telegram_channel); ?>;
-        //     if (telegramChannelUrl && telegramChannelUrl !== "N/A" && telegramChannelUrl !== "Failed to fetch telegram_channel.") {
-        //         window.open(telegramChannelUrl, '_blank');
-        //     } else {
-        //         alert('No valid Telegram channel URL available.');
-        //     }
+        // var whatsappButton = document.getElementById('whatsappButton');
+        // whatsappButton.addEventListener('click', function() {
+        //     // Redirect to the WhatsApp channel
+        //     var whatsappChannelUrl = "https://whatsapp.com/channel/0029Vb2UNaWHFxP0YpoVU91B";
+        //     window.open(whatsappChannelUrl, '_blank');
         // });
+
+        var telegramButton = document.getElementById('telegramButton');
+        telegramButton.addEventListener('click', function() {
+            // Redirect to the Telegram channel
+            var telegramChannelUrl = <?php echo json_encode($telegram_channel); ?>;
+            if (telegramChannelUrl && telegramChannelUrl !== "N/A" && telegramChannelUrl !== "Failed to fetch telegram_channel.") {
+                window.open(telegramChannelUrl, '_blank');
+            } else {
+                alert('No valid Telegram channel URL available.');
+            }
+        });
     });
 </script>
 
