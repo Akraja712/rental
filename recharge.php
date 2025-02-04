@@ -156,7 +156,7 @@ curl_close($curl);
     <style>
         /* Additional styles for the boxes */
         .info-box {
-            background-color: #f8f9fa;
+            background-color: #4A148C;
             border-radius: 5px;
             padding: 20px;
             text-align: center;
@@ -210,7 +210,7 @@ curl_close($curl);
                     <h3>Recharge Balance - <?php echo htmlspecialchars($recharge); ?></h3>
                 </div>
                 <div class="row">
-                <a href="recharge_video.mp4" style="color: #3eb3a8; text-decoration: underline; text-decoration-color: #3eb3a8;">How to Pay?</a>
+                <a href="recharge_video.mp4" style="color: #4A148C; text-decoration: underline; text-decoration-color: #4A148C;">How to Pay?</a>
 
                 </div>
             </div>
@@ -229,7 +229,7 @@ curl_close($curl);
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <button class="btn"  style="background-color:#3eb3a8; color:white;" onclick="redirectToOptionLink(document.querySelector('.form-select'))">Pay</button>
+                        <button class="btn"  style="background-color:#4A148C; color:white;" onclick="redirectToOptionLink(document.querySelector('.form-select'))">Pay</button>
                     </div>
                 </div>
                 <br>
@@ -242,7 +242,7 @@ curl_close($curl);
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <button type="submit" name="btnPay"  style="background-color:#3eb3a8; color:white;" class="btn">Submit Request</button>
+                            <button type="submit" name="btnPay"  style="background-color:#4A148C; color:white;" class="btn">Submit Request</button>
                         </div>
                 </form>
 
