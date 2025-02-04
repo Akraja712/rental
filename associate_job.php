@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $_SESSION['store_data'][$plan_id] = [
         'product_name' => $product_names[array_rand($product_names)], // New random name
         'weight' => $weights[array_rand($weights)], // New random weight
-        'expiry_date' => date('Y-m-d', strtotime("+" . rand(0, 365) . " days")), // New random expiry date
+        // 'expiry_date' => date('Y-m-d', strtotime("+" . rand(0, 365) . " days")), // New random expiry date
         'price' => rand(10, 1000), // New random price
     ];
 }
@@ -85,14 +85,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 $stored_data = $_SESSION['store_data'][$plan_id];
 $stored_product_name = $stored_data['product_name'] ?? '';
 $stored_weight = $stored_data['weight'] ?? '';
-$stored_expiry_date = $stored_data['expiry_date'] ?? '';
+// $stored_expiry_date = $stored_data['expiry_date'] ?? '';
 $stored_price = $stored_data['price'] ?? '';
 
 // Initialize error messages
 $errors = [
     "product_name" => "",
     "weight" => "",
-    "expiry_date" => "",
+    // "expiry_date" => "",
     "price" => ""
 ];
 
@@ -105,7 +105,7 @@ if (!isset($_SESSION['submission_countss'][$plan_id])) {
 if (isset($_POST['btnNext'])) {
     $product_name = $_POST['product_name'] ?? '';
     $weight = $_POST['weight'] ?? '';
-    $expiry_date = $_POST['expiry_date'] ?? '';
+    // $expiry_date = $_POST['expiry_date'] ?? '';
     $price = isset($_POST['price']) ? intval($_POST['price']) : null;
 
     // Validation checks
@@ -121,11 +121,11 @@ if (isset($_POST['btnNext'])) {
         $errors['weight'] = "Incorrect Weight.";
     }
 
-    if (empty($expiry_date)) {
-        $errors['expiry_date'] = "Expiry Date is required.";
-    } elseif ($expiry_date !== $stored_expiry_date) {
-        $errors['expiry_date'] = "Incorrect Expiry Date.";
-    }
+    // if (empty($expiry_date)) {
+    //     $errors['expiry_date'] = "Expiry Date is required.";
+    // } elseif ($expiry_date !== $stored_expiry_date) {
+    //     $errors['expiry_date'] = "Incorrect Expiry Date.";
+    // }
 
     if (empty($price) || $price < 1) {
         $errors['price'] = "Price is required and should be greater than 0.";
@@ -144,7 +144,7 @@ if (isset($_POST['btnNext'])) {
                 "user_id" => $user_id,
                 "product_name" => $product_name,
                 "weight" => $weight,
-                "expiry_date" => $expiry_date,
+                // "expiry_date" => $expiry_date,
                 "price" => $price
             ];
         
@@ -177,7 +177,7 @@ if (isset($_POST['btnNext'])) {
            $_SESSION['store_data'][$plan_id] = [
             'product_name' => $product_names[array_rand($product_names)],
             'weight' => $weights[array_rand($weights)],
-            'expiry_date' => date('Y-m-d', strtotime("+" . rand(0, 365) . " days")),
+            // 'expiry_date' => date('Y-m-d', strtotime("+" . rand(0, 365) . " days")),
             'price' => rand(10, 1000),
         ];
 
@@ -185,7 +185,7 @@ if (isset($_POST['btnNext'])) {
         $stored_data = $_SESSION['store_data'][$plan_id];
         $stored_product_name = $stored_data['product_name'];
         $stored_weight = $stored_data['weight'];
-        $stored_expiry_date = $stored_data['expiry_date'];
+        // $stored_expiry_date = $stored_data['expiry_date'];
         $stored_price = $stored_data['price'];
     }
 }
@@ -296,12 +296,12 @@ $display_count = $_SESSION['submission_countss'][$plan_id];
                             <span class="text-danger"><?php echo htmlspecialchars($errors['price']); ?></span>
                         </div>
 
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="expiry_date" class="form-label">Expiry Date:</label>
                             <span class="highlighted-value"><?php echo htmlspecialchars($stored_expiry_date); ?></span>
                             <input type="date" name="expiry_date" class="form-control" id="expiry_date" required>
                             <span class="text-danger"><?php echo htmlspecialchars($errors['expiry_date']); ?></span>
-                        </div>
+                        </div> -->
 
                         <button type="submit" name="btnNext" class="btn custom-btn">Generate</button>
                     </form>
