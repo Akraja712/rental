@@ -35,8 +35,11 @@ if ($response === false) {
         $userdetails = $responseData["data"];
         if (!empty($userdetails)) {
             $balance = $userdetails[0]["balance"];
-            $earning_wallet = $userdetails[0]["earning_wallet"];
-            $bonus_wallet = $userdetails[0]["bonus_wallet"];
+            $bank = $userdetails[0]["bank"];
+            $branch = $userdetails[0]["branch"];
+            $ifsc = $userdetails[0]["ifsc"];
+            $account_num = $userdetails[0]["account_num"];
+            $holder_name = $userdetails[0]["holder_name"];
         } else {
             $balance = "No balance information available.";
         }
@@ -94,96 +97,6 @@ if (isset($_POST['btnWithdrawal'])) {
     }
     
     curl_close($curl);
-}
-$_SESSION['earning_wallet'] = $earning_wallet;
-
-    if (isset($_POST['btnearningwallet'])) {
-        $wallet_type = isset($_POST['wallet_type']) ? $_POST['wallet_type'] : 'earning_wallet';
-        $data = array(
-            "user_id" => $user_id,
-            "wallet_type" => $wallet_type,
-        );
-        $apiUrl = API_URL . "add_main_balance.php";
-    
-        $curl = curl_init($apiUrl);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    
-        $response = curl_exec($curl);
-    
-        if ($response === false) {
-            // Error in cURL request
-            echo "Error: " . curl_error($curl);
-        } else {
-            // Successful API response
-            $responseData = json_decode($response, true);
-            if ($responseData !== null && isset($responseData["success"])) {
-                $message = $responseData["message"];
-                if (isset($responseData["earning_wallet"])) {
-                    $_SESSION['earning_wallet'] = $responseData['earning_wallet'];
-                    $earning_wallet = $_SESSION['earning_wallet'];
-                }
-                // Alert and redirect
-                echo "<script>
-                        alert('$message');
-                        window.location.href = 'withdrawal_request.php';
-                      </script>";
-            } else {
-                // Failed to fetch transaction details
-                if ($responseData !== null) {
-                    echo "<script>alert('".$responseData["message"]."')</script>";
-                }
-            }
-        }
-        
-        curl_close($curl);
-}
-$_SESSION['bonus_wallet'] = $bonus_wallet;
-
-    if (isset($_POST['btnbonuswallet'])) {
-        $wallet_type = isset($_POST['wallet_type']) ? $_POST['wallet_type'] : 'bonus_wallet';
-        $data = array(
-            "user_id" => $user_id,
-            "wallet_type" => $wallet_type,
-        );
-        $apiUrl = API_URL . "add_main_balance.php";
-    
-        $curl = curl_init($apiUrl);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    
-        $response = curl_exec($curl);
-    
-        if ($response === false) {
-            // Error in cURL request
-            echo "Error: " . curl_error($curl);
-        } else {
-            // Successful API response
-            $responseData = json_decode($response, true);
-            if ($responseData !== null && isset($responseData["success"])) {
-                $message = $responseData["message"];
-                if (isset($responseData["bonus_wallet"])) {
-                    $_SESSION['bonus_wallet'] = $responseData['bonus_wallet'];
-                    $bonus_wallet = $_SESSION['bonus_wallet'];
-                }
-                // Alert and redirect
-                echo "<script>
-                        alert('$message');
-                        window.location.href = 'withdrawal_request.php';
-                      </script>";
-            } else {
-                // Failed to fetch transaction details
-                if ($responseData !== null) {
-                    echo "<script>alert('".$responseData["message"]."')</script>";
-                }
-            }
-        }
-        
-        curl_close($curl);
 }
 ?>
 
@@ -262,34 +175,8 @@ $_SESSION['bonus_wallet'] = $bonus_wallet;
             <div class="withdrawal-container">
                 <!-- New Boxes for Wallets -->
                 <div class="row d-flex justify-content-start">
-            <div class="col-md-3 col-sm-6 mb-2">
-                <div class="info-box text-black">
-                <form action="withdrawal_request.php" method="post">
-                    <h4>Earning Wallet</h4>
-                    <div style="position: relative; width: 100px; margin: 10px auto; text-align: center;">
-                        <i class="bi bi-cash-coin" style="position: absolute; font-weight:bold; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1;"></i>
-                        <input type="number" class="form-control" id="earning_wallet" name="earning_wallet" 
-                            style="width: 120%; padding-left: 30px; text-align: center; font-weight:bold;" 
-                            value="<?php echo htmlspecialchars($earning_wallet); ?>" disabled>
-                    </div>
-                    <button type="submit" name="btnearningwallet" style="background-color:#4A148C; color:white;" class="btn">Add to Main Balance</button>
-                </div>
-             </form>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="info-box text-black">
-                <form action="withdrawal_request.php" method="post">
-                    <h4>Bonus Wallet</h4>
-                    <div style="position: relative; width: 100px; margin: 10px auto; text-align: center;">
-                        <i class="bi bi-cash-coin" style="position: absolute; font-weight:bold; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1;"></i>
-                        <input type="number" class="form-control" id="earning_wallet" name="earning_wallet" 
-                            style="width: 120%; padding-left: 30px; text-align: center; font-weight:bold;" 
-                            value="<?php echo htmlspecialchars($bonus_wallet); ?>" disabled>
-                    </div>
-                    <button type="submit" name="btnbonuswallet" style="background-color:#4A148C; color:white;" class="btn">Add to Main Balance</button>
-                </div>
-                </form>
-            </div>
+       
+         
         </div>
 
                 <!-- Existing Withdrawal Request Title and Form -->
@@ -311,6 +198,31 @@ $_SESSION['bonus_wallet'] = $bonus_wallet;
                         <button type="submit" name="btnWithdrawal" style="background-color:#4A148C; color:white;" class="btn">Submit Request</button>
                     </form>
                 </div>
+                    
+                    <!-- User Bank Details Table -->
+                    <div class="mt-4">
+                        <h4>User Bank Details</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Account Number</th>
+                                    <th>Holder Name</th>
+                                    <th>Bank</th>
+                                    <th>Branch</th>
+                                    <th>IFSC Code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($account_num); ?></td>
+                                    <td><?php echo htmlspecialchars($holder_name); ?></td>
+                                    <td><?php echo htmlspecialchars($bank); ?></td>
+                                    <td><?php echo htmlspecialchars($branch); ?></td>
+                                    <td><?php echo htmlspecialchars($ifsc); ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
             </div>
         </div>
     </div>

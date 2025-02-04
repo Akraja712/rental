@@ -158,16 +158,7 @@ curl_close($curl);
                 <div class="col-md-6">
                     <div class="card mt-3">
                        <div class="profile-header">
-                            <div class="wallet-item">
-                                <h5>Earning Wallet</h5>
-                                <p class="fw-bold">₹<?php echo htmlspecialchars($earning_wallet); ?></p> <!-- Placeholder value -->
-                            </div>
-                            <div class="vr mx-3"></div> <!-- Vertical Line -->
-                            <div class="wallet-item">
-                                <h5>Bonus Wallet</h5>
-                                <p class="fw-bold">₹<?php echo htmlspecialchars($bonus_wallet); ?></p> <!-- Placeholder value -->
-                            </div>
-                            <div class="vr mx-3"></div> <!-- Vertical Line -->
+                           
                             <div class="wallet-item">
                                 <h5>Main Wallet</h5>
                                 <p class="fw-bold">₹<?php echo htmlspecialchars($balance); ?></p> <!-- Placeholder value -->
@@ -188,10 +179,10 @@ curl_close($curl);
                                 <i class="bi bi-credit-card"></i>
                                 <span>Transactions</span>
                             </a>
-                            <a href="transfer_wallet.php" class="nav-links">
+                            <!-- <a href="transfer_wallet.php" class="nav-links">
                                 <i class="bi bi-credit-card"></i>
                                 <span>Transfer Wallet</span>
-                            </a>
+                            </a> -->
                             <a href="recharge.php" class="nav-links">
                                 <i class="bi bi-cash-stack"></i>
                                 <span>Instant Recharge</span>

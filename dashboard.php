@@ -283,13 +283,13 @@ if ($response === false) {
                     </div>
                 </div>
                 <!-- Today's Income -->
-                <div class="col-6 col-md-4 mb-3">
+                <!-- <div class="col-6 col-md-4 mb-3">
                     <div class="info-box today-income">
                         <i class="bi bi-graph-up-arrow"></i>
                         <h4>Today's Income</h4>
                         <p>₹<?php echo $today_income; ?></p>
                     </div>
-                </div>
+                </div> -->
                 <!-- Team Income -->
                 <div class="col-6 col-md-4 mb-3">
                     <div class="info-box team-income">

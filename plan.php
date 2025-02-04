@@ -282,7 +282,7 @@ curl_close($curl);
         <?php include_once('sidebar.php'); ?>
         <div class="col py-3">
             <!-- Recharge Alert positioned above the Activated Jobs Link -->
-            <div class="alert alert-info" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#rechargeGuideModal">
+            <div class="alert alert-info" style="cursor: pointer;" onclick="window.location.href='recharge.php';">
                 Recharge Value: <strong>₹<?php echo htmlspecialchars($recharge); ?></strong>
             </div>
 

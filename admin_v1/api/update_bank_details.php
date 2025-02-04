@@ -81,6 +81,15 @@ $res = $db->getResult();
 $num = $db->numRows($res);
 
 if ($num == 1) {
+
+    $user = $res[0];
+    if (!empty($user['account_num']) || !empty($user['holder_name']) || !empty($user['bank']) || !empty($user['branch']) || !empty($user['ifsc'])) {
+        $response['success'] = false;
+        $response['message'] = "Bank details have already been updated and cannot be changed again.";
+        print_r(json_encode($response));
+        return false;
+    }
+
     $sql = "UPDATE `users` SET `account_num` = '$account_num',`holder_name` = '$holder_name',`bank` = '$bank',`branch` = '$branch',`ifsc` = '$ifsc' WHERE `id` = $user_id";
     $db->sql($sql);
     $sql = "SELECT * FROM users WHERE id = $user_id";
