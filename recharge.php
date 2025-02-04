@@ -15,7 +15,7 @@ if (isset($_POST['btnPay'])) {
         "user_id" => $user_id,
         "order_id" => $order_id,
     );
-    $apiUrl = API_URL . "order_pay.php";
+    $apiUrl = API_URL . "instant_recharge.php";
 
     $curl = curl_init($apiUrl);
     curl_setopt($curl, CURLOPT_POST, true);
@@ -249,44 +249,7 @@ curl_close($curl);
                 </div>
             </div>
 
-            <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">S.No</th>
-                            <th scope="col">Order Id</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">DateTime</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Loop through all withdrawals and display each one -->
-                        <?php foreach ($userdetails as $index => $withdrawal): ?>
-                            <tr>
-                                <th scope="row"><?php echo $index + 1; ?></th>
-                                <td><?php echo htmlspecialchars($withdrawal['order_id']); ?></td>
-                                <td>
-                                    <?php 
-                                    if ($withdrawal['status'] === '1') {
-                                        echo '<span class="text-success">Success</span>';
-                                    } elseif ($withdrawal['status'] === '0') {
-                                        echo '<span class="text-primary">Pending</span>';
-                                    } elseif ($withdrawal['status'] === '2') {
-                                         echo '<span class="text-danger">Rejeted</span>';
-                                    } 
-                                    ?>
-                                </td>
-                                <td><?php echo htmlspecialchars($withdrawal['amount']); ?></td>
-                                <td><?php echo htmlspecialchars($withdrawal['datetime']); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                        <?php if (empty($userdetails)): ?>
-                            <tr>
-                                <td colspan="4">No transactions found.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+           
 
             <script>
                 function redirectToOptionLink(selectElement) {
