@@ -18,7 +18,7 @@ class Database
 
      private $db_host = "localhost";
      private $db_user = "u881539779_jiyo";
-     private $db_pass = "Jiyo@2024"; 
+     private $db_pass = "G$9vT!qXr2&Pd7L@"; 
      private $db_name = "u881539779_jiyo"; 
 
     //private $db_host = "localhost";
