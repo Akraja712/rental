@@ -104,7 +104,7 @@ include "header.php";
                     <div class="small-box bg-green">
                         <div class="inner">
                             <h3><?php
-                             $sql = "SELECT SUM(amount) AS amount  FROM  transactions  WHERE type = 'recharge' AND DATE(datetime) = '$date'";
+                             $sql = "SELECT SUM(amount) AS amount  FROM  transactions  WHERE type = 'recharge_orders' AND DATE(datetime) = '$date'";
                              $db->sql($sql);
                              $res = $db->getResult();
                              $totalamount = $res[0]['amount'];
