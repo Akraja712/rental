@@ -13,6 +13,9 @@ if (isset($_GET['id'])) {
     return false;
     exit(0);
 }
+$latitude = isset($_POST['latitude']) ? $db->escapeString($_POST['latitude']) : null;
+$longitude = isset($_POST['longitude']) ? $db->escapeString($_POST['longitude']) : null;
+$address = isset($_POST['address']) ? $db->escapeString($_POST['address']) : "Unknown";
 
 if (isset($_POST['btnEdit'])) {
 
@@ -69,7 +72,7 @@ if (isset($_POST['btnEdit'])) {
     }
 
     
-            $sql_query = "UPDATE users SET name='$name',mobile = '$mobile',password = '$password',email='$email',age='$age',city='$city',referred_by='$referred_by',refer_code='$refer_code',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',withdrawal_status = '$withdrawal_status',recharge  = '$recharge ',balance = '$balance',today_income = '$today_income',device_id  = '$device_id',total_income  = '$total_income',state  = '$state',total_recharge  = '$total_recharge',team_size  = '$team_size',valid_team  = '$valid_team',total_assets  = '$total_assets',total_withdrawal  = '$total_withdrawal',team_income  = '$team_income',registered_datetime  = '$registered_datetime',blocked = '$blocked',latitude = '$latitude',longitude = '$longitude',earning_wallet = '$earning_wallet',bonus_wallet = '$bonus_wallet',income_status = '$income_status' WHERE id = $ID";
+            $sql_query = "UPDATE users SET name='$name',mobile = '$mobile',password = '$password',email='$email',age='$age',city='$city',referred_by='$referred_by',refer_code='$refer_code',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',withdrawal_status = '$withdrawal_status',recharge  = '$recharge ',balance = '$balance',today_income = '$today_income',device_id  = '$device_id',total_income  = '$total_income',state  = '$state',total_recharge  = '$total_recharge',team_size  = '$team_size',valid_team  = '$valid_team',total_assets  = '$total_assets',total_withdrawal  = '$total_withdrawal',team_income  = '$team_income',registered_datetime  = '$registered_datetime',blocked = '$blocked',earning_wallet = '$earning_wallet',bonus_wallet = '$bonus_wallet',income_status = '$income_status' WHERE id = $ID";
             $db->sql($sql_query);
             $update_result = $db->getResult();
     
@@ -81,7 +84,8 @@ if (isset($_POST['btnEdit'])) {
     
             if ($update_result == 1) {
                 $datetime = date('Y-m-d H:i:s'); 
-                $tracking_sql = "INSERT INTO tracking (type, datetime) VALUES ('edit', '$datetime')";
+                $tracking_sql = "INSERT INTO tracking (type, datetime, latitude, longitude, address) 
+                    VALUES ('edit', '$datetime', '$latitude', '$longitude', '$address')";
                 $db->sql($tracking_sql);
             }
 
@@ -294,7 +298,10 @@ if (isset($_POST['btnCancel'])) { ?>
                           
                         </div>
                         <div class="box-footer">
-                        <button type="submit" class="btn btn-primary" name="btnEdit">Update</button>
+                        <input type="hidden" name="latitude" id="latitude">
+                        <input type="hidden" name="longitude" id="longitude">
+                        <input type="hidden" name="address" id="address">
+                        <button type="submit" class="btn btn-primary " name="btnEdit">Update</button>
                     </div>
             
                      
@@ -343,4 +350,59 @@ if (isset($_POST['btnCancel'])) { ?>
             $('#income_status').val(0);
             }
     };
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Enable location tracking when the page loads
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            async function (position) {
+                let lat = position.coords.latitude;
+                let lon = position.coords.longitude;
+
+                // Set the latitude and longitude input fields
+                document.getElementById("latitude").value = lat;
+                document.getElementById("longitude").value = lon;
+
+                // Fetch the address using reverse geocoding (OpenStreetMap API)
+                try {
+                    let response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                    let data = await response.json();
+                    // Display the fetched address
+                    document.getElementById("address").value = data.display_name || "Unknown";
+                } catch (error) {
+                    console.error("Error fetching address:", error);
+                    document.getElementById("address").value = "Unknown";
+                }
+            },
+            function (error) {
+                console.log("Geolocation Error:", error); // Log error if location services are off or denied
+                document.getElementById("latitude").value = ""; // Clear latitude
+                document.getElementById("longitude").value = ""; // Clear longitude
+                document.getElementById("address").value = "Unknown"; // Set a default value
+            },
+            {
+                enableHighAccuracy: true,  // Request high accuracy (GPS)
+                timeout: 10000,            // Set timeout (10 seconds)
+                maximumAge: 0              // Ensure fresh location (no cache)
+            }
+        );
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+        document.getElementById("latitude").value = "";
+        document.getElementById("longitude").value = "";
+        document.getElementById("address").value = "Unknown";
+    }
+
+    // Handle form submission (Update button)
+    document.getElementById("edit_project_form").addEventListener("submit", function(event) {
+        // Check if latitude and longitude are empty
+        if (document.getElementById("latitude").value === "" || document.getElementById("longitude").value === "") {
+            event.preventDefault(); // Prevent form submission
+            return false;
+        }
+        return true; // Proceed with the form submission if location is available
+    });
+});
+
 </script>
