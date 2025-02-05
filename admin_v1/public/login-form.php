@@ -33,6 +33,13 @@ if (isset($_POST['btnLogin'])) {
                 $_SESSION['username'] = 'admin';
                 $_SESSION['email'] = $email;
                 $_SESSION['timeout'] = $currentTime + $expired;
+
+                $type = 'login';
+                $datetime = date('Y-m-d H:i:s');
+        
+                $sql = "INSERT INTO tracking (type, datetime) VALUES ('$type', '$datetime')";
+                $db->sql($sql);
+                
                 header("location: home.php");
         } else {
             $error['failed'] = "<span class='label label-danger'>Invalid Email or Password!</span>";
