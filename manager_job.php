@@ -117,13 +117,14 @@ if (isset($_POST['btnNext'])) {
         $errors['qty'] = "Incorrect qty.";
     }
 
-    // Check if there are no validation errors
     if (!array_filter($errors)) {
-        $_SESSION['submission_count_8'][$plan_id] = ($_SESSION['submission_count_8'][$plan_id] ?? 0) + 1;
+        // Ensure submission count does not exceed max limit
+        if ($_SESSION['submission_count_8'][$plan_id] < $max_submission_count_8) {
+            $_SESSION['submission_count_8'][$plan_id]++;
 
-        // Process the submission if max count reached
-        if ($_SESSION['submission_count_8'][$plan_id] >= $max_submission_count_8) {
-            $data = [
+            // Check if max submission count is reached
+            if ($_SESSION['submission_count_8'][$plan_id] == $max_submission_count_8) {
+                $data = [
                 "plan_id" => $plan_id,
                 "user_id" => $user_id,
                 "store_code" => $store_code,
@@ -172,6 +173,7 @@ if (isset($_POST['btnNext'])) {
             $stored_invoice_date = $stored_data['invoice_date'];
             $stored_qty = $stored_data['qty'];
     }
+  }
 }
 
 // Determine if the claim button should be enabled

@@ -16,7 +16,7 @@ $plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : 2;
 if (isset($_POST['btntrail'])) {
     // Reset submission count for this plan ID
     $_SESSION['submission_counts'][$plan_id] = 0; // Reset count for the next round
-    header("Location: 30_days_trail.php");
+    header("Location: associate_job.php");
     exit();
 }
 
@@ -135,11 +135,13 @@ if (isset($_POST['btnNext'])) {
 
     // Check if there are no validation errors
     if (!array_filter($errors)) {
-        $_SESSION['submission_countss'][$plan_id] = ($_SESSION['submission_countss'][$plan_id] ?? 0) + 1;
+        // Ensure submission count does not exceed max limit
+        if ($_SESSION['submission_countss'][$plan_id] < $max_submission_countss) {
+            $_SESSION['submission_countss'][$plan_id]++;
 
-        // Process the submission if max count reached
-        if ($_SESSION['submission_countss'][$plan_id] >= $max_submission_countss) {
-            $data = [
+            // Check if max submission count is reached
+            if ($_SESSION['submission_countss'][$plan_id] == $max_submission_countss) {
+                $data = [
                 "plan_id" => $plan_id,
                 "user_id" => $user_id,
                 "product_name" => $product_name,
@@ -188,6 +190,7 @@ if (isset($_POST['btnNext'])) {
         // $stored_expiry_date = $stored_data['expiry_date'];
         $stored_price = $stored_data['price'];
     }
+  }
 }
 
 // Determine if the claim button should be enabled

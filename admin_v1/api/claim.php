@@ -146,19 +146,7 @@ if ($plan_id == 5) {
     }
 } 
 */
-if ($plan_id == 1) {
-    $joined_date = $user_plan[0]['joined_date'];
-    $current_date = new DateTime($datetime);
-    $plan_joined_date = new DateTime($joined_date);
-    $interval = $current_date->diff($plan_joined_date);
 
-    if ($interval->days > 30) {
-        $response['success'] = false;
-        $response['message'] = "Your plan has ended";
-        echo json_encode($response);
-        return;
-    }
-}  
 
 $sql = "SELECT daily_earnings FROM plan WHERE id = $plan_id";
 $db->sql($sql);

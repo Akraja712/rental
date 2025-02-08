@@ -12,6 +12,8 @@ if (!$user_id) {
 // Set the default plan_id to 1 if not set
 $plan_id = isset($_POST['plan_id']) ? $_POST['plan_id'] : 1;
 
+
+
 // Fetch the plan list using API
 $data = ["user_id" => $user_id];
 $apiUrl = API_URL . "user_plan_list.php"; 
@@ -65,8 +67,8 @@ $product_names = [
 // List of specific weights
 $weights = ["250 Gm", "500 Gm", "1 Kg", "2 Kg", "5 Kg", "10 Kg"];
 
-// Initialize store data for plan_id if not set
-if (!isset($_SESSION['store_data'][$plan_id]) || $_SESSION['submission_counts'][$plan_id] === 0) {
+// Resetting session data on refresh and generating new data
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $_SESSION['store_data'][$plan_id] = [
         'product_name' => $product_names[array_rand($product_names)], // Random fruit/vegetable name
         'weight' => $weights[array_rand($weights)], // Random weight from list
@@ -90,11 +92,17 @@ $errors = [
     "price" => ""
 ];
 
+
+// Check if the submission count is set in the session for this plan_id; if not, initialize to 0
+if (!isset($_SESSION['submission_counts'][$plan_id])) {
+    $_SESSION['submission_counts'][$plan_id] = 0;
+}
+
+
 // Check for form submission
 if (isset($_POST['btnNext'])) {
     $product_name = $_POST['product_name'] ?? '';
     $weight = $_POST['weight'] ?? '';
-    // $expiry_date = $_POST['expiry_date'] ?? '';
     $price = isset($_POST['price']) ? intval($_POST['price']) : null;
 
     // Validation checks
@@ -110,12 +118,6 @@ if (isset($_POST['btnNext'])) {
         $errors['weight'] = "Incorrect Weight.";
     }
 
-    // if (empty($expiry_date)) {
-    //     $errors['expiry_date'] = "Expiry Date is required.";
-    // } elseif ($expiry_date !== $stored_expiry_date) {
-    //     $errors['expiry_date'] = "Incorrect Expiry Date.";
-    // }
-
     if (empty($price) || $price < 1) {
         $errors['price'] = "Price is required and should be greater than 0.";
     } elseif ($price !== $stored_price) {
@@ -124,66 +126,66 @@ if (isset($_POST['btnNext'])) {
 
     // Check if there are no validation errors
     if (!array_filter($errors)) {
-        $_SESSION['submission_count'][$plan_id] = ($_SESSION['submission_count'][$plan_id] ?? 0) + 1;
+        // Ensure submission count does not exceed max limit
+        if ($_SESSION['submission_counts'][$plan_id] < $max_submission_count) {
+            $_SESSION['submission_counts'][$plan_id]++;
 
-        // Process the submission if max count reached
-        if ($_SESSION['submission_count'][$plan_id] >= $max_submission_count) {
-            $data = [
-                "plan_id" => $plan_id,
-                "user_id" => $user_id,
-                "product_name" => $product_name,
-                "weight" => $weight,
-                // "expiry_date" => $expiry_date,
-                "price" => $price
-            ];
-        
-            $apiUrl = API_URL . "claim.php";
-            $curl = curl_init($apiUrl);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        
-            $response = curl_exec($curl);
-            curl_close($curl);
-        
-            $responseData = json_decode($response, true);
-            if ($responseData !== null && isset($responseData["success"]) && $responseData["success"]) {
-                $message = $responseData["message"];
-                if (isset($responseData["balance"])) {
-                    $_SESSION['balance'] = $responseData['balance'];
+            // Check if max submission count is reached
+            if ($_SESSION['submission_counts'][$plan_id] == $max_submission_count) {
+                $data = [
+                    "plan_id" => $plan_id,
+                    "user_id" => $user_id,
+                    "product_name" => $product_name,
+                    "weight" => $weight,
+                    "price" => $price
+                ];
+
+                $apiUrl = API_URL . "claim.php";
+                $curl = curl_init($apiUrl);
+                curl_setopt($curl, CURLOPT_POST, true);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            
+                $response = curl_exec($curl);
+                curl_close($curl);
+            
+                $responseData = json_decode($response, true);
+                if ($responseData !== null && isset($responseData["success"]) && $responseData["success"]) {
+                    $message = $responseData["message"];
+                    if (isset($responseData["balance"])) {
+                        $_SESSION['balance'] = $responseData['balance'];
+                    }
+                    echo "<script>alert('$message');</script>";
+                    echo "<script>window.location.href = 'my_plans.php';</script>";
+                    exit();
+                } else {
+                    // Log the error if API response is not successful
+                    error_log("API response error: " . print_r($responseData, true));
                 }
-                echo "<script>alert('$message');</script>";
-                echo "<script>window.location.href = 'my_plans.php';</script>";
-                exit();
-            } else {
-                // Log the error if API response is not successful
-                error_log("API response error: " . print_r($responseData, true));
             }
+
+            // Regenerate stored data for the next submission
+            $_SESSION['store_data'][$plan_id] = [
+                'product_name' => $product_names[array_rand($product_names)],
+                'weight' => $weights[array_rand($weights)],
+                'price' => rand(10, 1000),
+            ];
+
+            // Refresh stored data for display
+            $stored_data = $_SESSION['store_data'][$plan_id];
+            $stored_product_name = $stored_data['product_name'];
+            $stored_weight = $stored_data['weight'];
+            $stored_price = $stored_data['price'];
         }
-
-        // Regenerate stored data for the next submission
-        $_SESSION['store_data'][$plan_id] = [
-            'product_name' => $product_names[array_rand($product_names)],
-            'weight' => $weights[array_rand($weights)],
-            // 'expiry_date' => date('Y-m-d', strtotime("+" . rand(0, 365) . " days")),
-            'price' => rand(10, 1000),
-        ];
-
-        // Refresh stored data for display
-        $stored_data = $_SESSION['store_data'][$plan_id];
-        $stored_product_name = $stored_data['product_name'];
-        $stored_weight = $stored_data['weight'];
-        // $stored_expiry_date = $stored_data['expiry_date'];
-        $stored_price = $stored_data['price'];
     }
 }
 
 // Determine if the claim button should be enabled
-$claim_button_enabled = isset($_SESSION['submission_count'][$plan_id]) && $_SESSION['submission_count'][$plan_id] >= $max_submission_count;
+$claim_button_enabled = isset($_SESSION['submission_counts'][$plan_id]) && $_SESSION['submission_counts'][$plan_id] >= $max_submission_count;
 
 // Display the submission count
-$display_count = $_SESSION['submission_count'][$plan_id] ?? 0;
+$display_count = $_SESSION['submission_counts'][$plan_id] ?? 0;
 
 ?>
 

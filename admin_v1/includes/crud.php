@@ -9,28 +9,44 @@ define('MIN_WITHDRAWAL', 12);
 define('REFER_COINS', 20);
 class Database
 {
-    /* 
-     * Create variables for credentials to MySQL database
-     * The variables have been declared as private. This
-     * means that they will only be available with the 
-     * Database class
-     */
+    private $db_host;
+    private $db_user;
+    private $db_pass;
+    private $db_name;
 
-     private $db_host = "localhost";
-     private $db_user = "u881539779_jiyo";
-     private $db_pass = "G$9vT!qXr2&Pd7L@"; 
-     private $db_name = "u881539779_jiyo"; 
+    private $con = false; // Check if the connection is active
+    private $myconn = null; // MySQLi object
+    private $result = array(); // Store query results
+    private $myQuery = ""; // Debugging SQL queries
+    private $numResults = 0; // Number of rows
 
-    //private $db_host = "localhost";
-    //private $db_user = "root";
-    //private $db_pass = ""; 
-    //private $db_name = "bm"; 
+    // Constructor to initialize database connection
+    public function __construct() {
+        $this->loadEnv(); // Load environment variables
 
-    private $con = false; // Check to see if the connection is active
-    private $myconn = ""; // This will be our mysqli object
-    private $result = array(); // Any results from a query will be stored here
-    private $myQuery = ""; // used for debugging process with SQL return
-    private $numResults = ""; // used for returning the number of rows
+        $this->db_host = getenv('DB_HOST');
+        $this->db_user = getenv('DB_USER');
+        $this->db_pass = getenv('DB_PASS');
+        $this->db_name = getenv('DB_NAME');
+
+        $this->connect(); // Automatically connect on object creation
+    }
+
+    private function loadEnv() {
+        if (!file_exists(__DIR__ . '/.env')) {
+            die("Error: .env file not found.");
+        }
+
+        $lines = file(__DIR__ . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            if (strpos($line, '=') !== false) {
+                list($key, $value) = explode('=', $line, 2);
+                $key = trim($key);
+                $value = trim($value);
+                putenv("$key=$value");
+            }
+        }
+    }
 
     // Function to make connection to database
     public function connect()
