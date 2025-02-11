@@ -51,7 +51,7 @@ if ($response !== false) {
 }
 
 // Set custom maximum submission count for plan_id 1, otherwise default to 50
-$max_submission_count = 10;
+$max_submission_count = 5;
 
 // Initialize session data
 if (!isset($_SESSION['store_data'])) {

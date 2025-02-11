@@ -49,7 +49,7 @@ if ($response !== false) {
 }
 
 // Set custom maximum submission count for plan_id 1, otherwise default to 50
-$max_submission_count_2 = 50;
+$max_submission_count_2 = 5;
 
 // List of fruit and vegetable names
 $product_names = [
